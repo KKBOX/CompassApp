@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+    <key>NSUIElement</key>
+    <string>1</string>
+    <key>CFBundleName</key>
+    <string>compass.app</string>
+    <key>CFBundleVersion</key>
+    <string>0.0.1</string>
+    <key>CFBundleAllowMixedLocalizations</key>
+    <string>true</string>
+    <key>CFBundleExecutable</key>
+    <string>JavaApplicationStub</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleIconFile</key>
+    <string>icon-osx.icns</string>
+    <key>Java</key>
+    <dict>
+        <key>MainClass</key>
+        <string>org.rubyforge.rawr.Main</string>
+        <key>JVMVersion</key>
+        <string>1.6*</string>
+        <key>ClassPath</key>
+            <array>
+                <string>$JAVAROOT/compass-app.jar</string>
+            </array>
+        <key>Properties</key>
+        <dict>
+            <key>apple.laf.useScreenMenuBar</key>
+            <string>true</string>
+        </dict>
+        <key>JVMArchs</key>
+        <array>
+        <string>i386</string>
+        </array>
+        <key>StartOnMainThread</key> 
+         <string>true</string>
+        <key>VMOptions</key>
+          <array>
+            <string>-Xverify:none</string>
+            <string>-Xbootclasspath/p:$APP_PACKAGE/Contents/Resources/Java/lib/java/jruby-complete.jar</string>
+          </array>
+    </dict>
+</dict>
+</plist>
