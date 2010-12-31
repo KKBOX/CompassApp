@@ -11,10 +11,12 @@ http://compass.handlino.com/
 Copyright (c) 2010 Handlino Inc.
 Licensed under GPL v2.
 
-We sell prebuild software in our offical site. If you know how to build it, free free to download the sourceand build your own.
+We sell prebuild software in our offical site. If you know how to build it, free free to download the source and build your own.
 
 # System Requirement
 
-* Java
-* JRuby http://jruby.org/
-* rawr http://rawr.rubyforge.org/
+* Java Runtime
+
+# Build Your Own
+
+If you want to build your own copy, you will need [JRuby](http://jruby.org/) and [rawr](http://rawr.rubyforge.org/).
