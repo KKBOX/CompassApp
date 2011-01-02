@@ -1,0 +1,6 @@
+package
+packages
+lib/java/swt*
+*.swp
+update_url
+src/compile_version.rb
