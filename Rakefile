@@ -72,6 +72,7 @@ INFO_ENDL
       %x{mv #{CONFIG.project_name}.app compass.app;}
       @osx_bundle_file="compass.app.osx.#{@compile_time}-#{@revision}.zip"
       %x{zip -9 -r #{@packages_dir}/#{@osx_bundle_file} compass.app}
+      %x{mkdir #{@packages_dir}/osx; cp -R compass.app #{@packages_dir}/osx}
     end
     
     task(:app64).clear_prerequisites.clear_actions
@@ -86,6 +87,7 @@ INFO_ENDL
       %x{mv #{CONFIG.project_name}.app compass.app;}
       @osx64_bundle_file="compass.app.osx64.#{@compile_time}-#{@revision}.zip"
       %x{zip -9 -r #{@packages_dir}/#{@osx64_bundle_file} compass.app}
+      %x{mkdir #{@packages_dir}/osx64; cp -R compass.app #{@packages_dir}/osx64}
     end
 
     task(:exe).clear_prerequisites.clear_actions
@@ -101,6 +103,7 @@ INFO_ENDL
       %x{rm -rf compass.app windows/*.xml; mv windows compass.app}
       @windows_bundle_file="compass.app.windows.#{@compile_time}-#{@revision}.zip"
       %x{zip -9 -r #{@packages_dir}/#{@windows_bundle_file} compass.app}
+      %x{mkdir #{@packages_dir}/windows; cp -R compass.app #{@packages_dir}/windows}
     end
     
     desc "Bundles the jar from rawr:jar into a Linux script"
@@ -113,6 +116,7 @@ INFO_ENDL
       Dir.chdir 'package'
       @linux_bundle_file="compass.app.linux.#{@compile_time}-#{@revision}.zip"
       %x{zip -9 -r #{@packages_dir}/#{@linux_bundle_file} compass.app}
+      %x{mkdir #{@packages_dir}/linux; cp -R compass.app #{@packages_dir}/linux}
     end
 
     desc "Bundles Linux, OSX and Window package"
