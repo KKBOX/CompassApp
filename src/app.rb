@@ -10,13 +10,14 @@ module App
   include CompileVersion
   VERSION = "1.1"
   OS = org.jruby.platform.Platform::OS
+
   
   def version
     VERSION
   end
 
   def compile_version
-    "#{OS}.#{COMPILE_TIME}.#{REVISION}"
+    "#{OS}.#{org.jruby.platform.Platform::ARCH}.#{COMPILE_TIME}.#{REVISION}"
   end
 
   CONFIG_DIR = File.join( java.lang.System.getProperty("user.home") , '.compass-ui' )

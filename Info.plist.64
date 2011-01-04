@@ -7,7 +7,7 @@
     <key>CFBundleName</key>
     <string>compass.app</string>
     <key>CFBundleVersion</key>
-    <string>1.0</string>
+    <string>1.0.0</string>
     <key>CFBundleAllowMixedLocalizations</key>
     <string>true</string>
     <key>CFBundleExecutable</key>
@@ -27,7 +27,7 @@
         <key>MainClass</key>
         <string>org.rubyforge.rawr.Main</string>
         <key>JVMVersion</key>
-        <string>1.6*</string>
+        <string>1.*</string>
         <key>ClassPath</key>
             <array>
                 <string>$JAVAROOT/compass-app.jar</string>
@@ -37,10 +37,6 @@
             <key>apple.laf.useScreenMenuBar</key>
             <string>true</string>
         </dict>
-        <key>JVMArchs</key>
-        <array>
-        <string>i386</string>
-        </array>
         <key>StartOnMainThread</key> 
          <string>true</string>
         <key>VMOptions</key>

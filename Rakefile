@@ -32,6 +32,11 @@ namespace :rawr do
       @current_os = "osx"
       copy( File.join( File.dirname(__FILE__), 'lib','swt','swt_osx32.jar'), @swt_file )
     end
+
+    task :osx64 => ['rawr:link_swt:clean'] do
+      @current_os = "osx64"
+      copy( File.join( File.dirname(__FILE__), 'lib','swt','swt_osx64.jar'), @swt_file )
+    end
   end
 
   namespace :bundle do
@@ -44,6 +49,7 @@ namespace :rawr do
       @revision ||= (%x{git log | head -c 17 | tail -c 10}).strip
       @compile_time ||= Time.now.strftime('%Y%m%d%H%M')
       @update_url = open('update_url').readline.strip if File.exists?("update_url")
+      @update_url ||= ''
       File.open "src/compile_version.rb", 'w' do |file|
         file << <<-INFO_ENDL
 	module CompileVersion
@@ -68,11 +74,25 @@ INFO_ENDL
       %x{zip -9 -r #{@packages_dir}/#{@osx_bundle_file} compass.app}
     end
     
+    task(:app64).clear_prerequisites.clear_actions
+    desc "Bundles the jar from rawr:jar into a native Mac OS X 64bit application (.app)"
+    task :app64 => ["rawr:bundle:create_packages_dir", "rawr:link_swt:osx64", "rawr:bundle:write_version_info", "rawr:jar", CONFIG.osx_output_dir ] do
+      Rawr::AppBundler.new.deploy CONFIG
+      Dir.chdir File.dirname(__FILE__)
+      %x{cp -R lib/ruby #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/ruby}
+      %x{cp -R lib/applescript #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/applescript}    
+      %x{cp Info.plist.64 #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Info.plist}    
+      Dir.chdir CONFIG.osx_output_dir
+      %x{mv #{CONFIG.project_name}.app compass.app;}
+      @osx64_bundle_file="compass.app.osx64.#{@compile_time}-#{@revision}.zip"
+      %x{zip -9 -r #{@packages_dir}/#{@osx64_bundle_file} compass.app}
+    end
+
     task(:exe).clear_prerequisites.clear_actions
     desc "Bundles the jar from rawr:jar into a native Windows application (.exe)"
     task :exe => ["rawr:bundle:create_packages_dir", "rawr:link_swt:win", "rawr:bundle:write_version_info", "rawr:jar", CONFIG.windows_output_dir ] do
       Dir.chdir File.dirname(__FILE__)
-      %x{mkdir -p package/windows/package/windows} # yo~ show me the monkey, path for launch4j link fle
+      %x{mkdir -p package/windows/package/windows} # path for launch4j link fle
       Rawr::ExeBundler.new.deploy CONFIG
       %x{cp -R lib/ruby #{CONFIG.windows_output_dir}/lib}
       %x{mv package/windows/package/windows/*.exe package/windows}
@@ -104,6 +124,11 @@ INFO_ENDL
       Rake::Task.tasks.each{|t| t.reenable}
       Dir.chdir File.dirname(__FILE__)
       %x{rm -rf package/*}
+      Rake::Task['rawr:bundle:app64'].invoke
+
+      Rake::Task.tasks.each{|t| t.reenable}
+      Dir.chdir File.dirname(__FILE__)
+      %x{rm -rf package/*}
       Rake::Task['rawr:bundle:exe'].invoke
       
       Rake::Task.tasks.each{|t| t.reenable}
@@ -113,6 +138,7 @@ INFO_ENDL
       url_base=File.dirname(@update_url)
       info={ "linux"   => { "compile_version"=> @compile_time, "url"=> File.join(url_base, @linux_bundle_file)  },
              "osx"     => { "compile_version"=> @compile_time, "url"=> File.join(url_base, @osx_bundle_file)    },
+             "osx64"   => { "compile_version"=> @compile_time, "url"=> File.join(url_base, @osx64_bundle_file)    },
              "windows" => { "compile_version"=> @compile_time, "url"=> File.join(url_base, @windows_bundle_file)} }
       open( File.join(@packages_dir,'update.yml'),'w' ) do |f|
         f.write info.to_yaml
