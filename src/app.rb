@@ -48,7 +48,12 @@ module App
   end
  
   CONFIG = get_config
-
+  ruby_lib_path = File.join(File.dirname(File.dirname(File.dirname(__FILE__))), "ruby").to_s()[5..-1]
+  if File.exists?( ruby_lib_path )
+  LIB_PATH = File.join(File.dirname(File.dirname(File.dirname(__FILE__)))).to_s()[5..-1]
+  else
+  LIB_PATH = 'lib'
+  end  
  
   def require_compass
 
@@ -64,14 +69,9 @@ module App
       if CONFIG["use_specify_gem_path"]
         alert(" Load Compass fail, Use Default Compass library, please check the Gem Path")
       end
-      ruby_lib_path = File.join(File.dirname(File.dirname(File.dirname(__FILE__))), "ruby").to_s()[5..-1]
-      if File.exists?( ruby_lib_path )
-        lib_path = File.join(File.dirname(File.dirname(File.dirname(__FILE__)))).to_s()[5..-1]
-      else
-        lib_path = 'lib'
-      end 
+ 
 
-      gems_path=File.join(lib_path, "ruby", "gem", "gems")
+      gems_path=File.join(LIB_PATH, "ruby", "gem", "gems")
       Dir.new( gems_path).entries.reject{|e| e =~ /^\./}.each do |dir|
         $LOAD_PATH.unshift( File.join(gems_path, dir,'lib'))
       end 
