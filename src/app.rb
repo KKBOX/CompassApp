@@ -53,9 +53,11 @@ module App
   def require_compass
 
     begin
-      ENV["GEM_HOME"] = CONFIG["gem_path"] 
-      ENV["GEM_PATH"] = CONFIG["gem_path"] 
-      require "rubygems"
+      if CONFIG["use_specify_gem_path"]
+        ENV["GEM_HOME"] = CONFIG["gem_path"] 
+        ENV["GEM_PATH"] = CONFIG["gem_path"]
+        require "rubygems"
+      end
       require "compass"
       require "compass/exec"
     rescue LoadError => e
