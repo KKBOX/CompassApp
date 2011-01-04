@@ -146,7 +146,7 @@ class Tray
           actual = App.get_stdout do
             Compass::Commands::CreateProject.new( dir, {:framework => framework, :pattern => pattern } ).execute
           end
-          App.alert( actual)
+          App.report( actual)
         end
 
         watch(dir)
@@ -165,10 +165,12 @@ class Tray
           pattern = 'project'
         end
 
-        actual = App.get_stdout do
-          Compass::Commands::StampPattern.new( @watching_dir, {:framework => framework, :pattern => pattern } ).execute
+        App.try do 
+          actual = App.get_stdout do
+            Compass::Commands::StampPattern.new( @watching_dir, {:framework => framework, :pattern => pattern } ).execute
+          end
+          App.report( actual)
         end
-        App.alert( actual)
 
       end
   end

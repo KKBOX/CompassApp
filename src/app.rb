@@ -1,6 +1,7 @@
 require "compile_version.rb"
 require "notification.rb"
 require "report.rb"
+require "alert.rb"
 require "preferance_panel.rb"
 
 
@@ -138,16 +139,21 @@ module App
     end
   end
 
-  def alert(msg, target_display = nil)
+  def report(msg, target_display = nil)
     Report.new(msg, target_display)
+  end
+  
+  def alert(msg, target_display = nil)
+    Alert.new(msg, target_display)
   end
 
   def try
     begin
       yield
     rescue Exception => e
-      alert("#{e.message}\n#{e.backtrace.join("\n")}")
+      report("#{e.message}\n#{e.backtrace.join("\n")}")
     end
   end
 
 end
+

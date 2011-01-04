@@ -29,7 +29,7 @@ class PreferencePanel
       data.left = Swt::Layout::FormAttachment.new(text, 5)
       data.top = Swt::Layout::FormAttachment.new(text, 0, Swt::SWT::CENTER)
       button = Swt::Widgets::Button.new(shell, Swt::SWT::PUSH )
-      button.setText("Select Folder")
+      button.setText("Choose Folder")
       button.setLayoutData(data)
       button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
         dia = Swt::Widgets::DirectoryDialog.new(shell)
