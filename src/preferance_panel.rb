@@ -24,9 +24,21 @@ class PreferencePanel
       text.setLayoutData(data)
       text.setText(App::CONFIG['gem_path'] || '')
       @gem_path_text=text
+      
+      data = Swt::Layout::FormData.new(50, Swt::SWT::DEFAULT)
+      data.left = Swt::Layout::FormAttachment.new(text, 5)
+      data.top = Swt::Layout::FormAttachment.new(text, 0, Swt::SWT::CENTER)
+      button = Swt::Widgets::Button.new(shell, Swt::SWT::PUSH )
+      button.setText("Select Folder")
+      button.setLayoutData(data)
+      button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
+        dia = Swt::Widgets::DirectoryDialog.new(shell)
+        dir = dia.open
+        @gem_path_text.setText(dir) if dir
+      end)
 
       data = Swt::Layout::FormData.new(100, Swt::SWT::DEFAULT)
-      data.left = Swt::Layout::FormAttachment.new(text, 0, Swt::SWT::CENTER)
+      data.left = Swt::Layout::FormAttachment.new(text, 140, Swt::SWT::LEFT)
       data.top = Swt::Layout::FormAttachment.new(text, 25)
       button = Swt::Widgets::Button.new(shell, Swt::SWT::PUSH )
       button.setText("Save")
