@@ -25,7 +25,7 @@ class PreferencePanel
       text.setText(App::CONFIG['gem_path'] || '')
       @gem_path_text=text
       
-      data = Swt::Layout::FormData.new(50, Swt::SWT::DEFAULT)
+      data = Swt::Layout::FormData.new(120, Swt::SWT::DEFAULT)
       data.left = Swt::Layout::FormAttachment.new(text, 5)
       data.top = Swt::Layout::FormAttachment.new(text, 0, Swt::SWT::CENTER)
       button = Swt::Widgets::Button.new(shell, Swt::SWT::PUSH )
