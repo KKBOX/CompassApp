@@ -177,7 +177,7 @@ class Tray
 
   def preference_handler 
     Swt::Widgets::Listener.impl do |method, evt|
-      PreferencePanel.new
+      PreferencePanel.instance.open
     end
   end
 

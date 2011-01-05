@@ -1,9 +1,4 @@
 require "compile_version.rb"
-require "notification.rb"
-require "report.rb"
-require "alert.rb"
-require "preferance_panel.rb"
-
 
 module App
   extend self
@@ -12,7 +7,6 @@ module App
   VERSION = "1.1"
   OS = org.jruby.platform.Platform::OS
 
-  
   def version
     VERSION
   end
@@ -68,7 +62,7 @@ module App
       require "compass/exec"
     rescue LoadError => e
       if CONFIG["use_specify_gem_path"]
-        alert(" Load Compass fail, Use Default Compass library, please check the Gem Path")
+        alert("Load Compass fail, Use Default Compass library, please check the Gem Path")
       end
  
 

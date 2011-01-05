@@ -12,6 +12,7 @@ module Swt
     import org.eclipse.swt.widgets.Event
     import org.eclipse.swt.widgets.DirectoryDialog
     import org.eclipse.swt.widgets.FileDialog
+    import org.eclipse.swt.widgets.Group
     import org.eclipse.swt.widgets.Label
     import org.eclipse.swt.widgets.List
     import org.eclipse.swt.widgets.Menu

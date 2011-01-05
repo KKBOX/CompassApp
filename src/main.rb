@@ -8,14 +8,15 @@ if Dir.pwd =~ / /
   return 
 end
 
-# don't use ruby gem add start speed 
-#ENV['GEM_HOME']="#{LIB_PATH}/ruby/gem"
-
 
 require 'stringio'
 require 'thread'
 require "open-uri"
 require "yaml"
+
+%w{alert notification quit_window tray preferance_panel report}.each do | f |
+  require "ui/#{f}"
+end
 
 require "app.rb"
 
@@ -25,8 +26,6 @@ begin
   require "html5-boilerplate"
 rescue LoadError
 end
-
-require "tray.rb"
 
 Tray.new.run
 
