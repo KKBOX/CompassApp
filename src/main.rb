@@ -14,7 +14,7 @@ require 'thread'
 require "open-uri"
 require "yaml"
 
-%w{alert notification quit_window tray preferance_panel report}.each do | f |
+%w{alert notification quit_window tray preference_panel report}.each do | f |
   require "ui/#{f}"
 end
 
