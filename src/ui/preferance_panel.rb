@@ -44,7 +44,7 @@ class PreferencePanel
     data.left = Swt::Layout::FormAttachment.new(button, 20, Swt::SWT::LEFT)
     data.top = Swt::Layout::FormAttachment.new(button, 5, Swt::SWT::BOTTOM )
     label = Swt::Widgets::Label.new(@shell, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    label.setText("Compass.app comes with some default extensions. if you want use RubyGem to manage extensons, you can specify your own gem path.")
+    label.setText("Compass.app comes with some default extensions. if you want use RubyGem to manage extensions, you can specify your own gem path.")
     label.setLayoutData(data)
 
     layout = Swt::Layout::FormLayout.new()
