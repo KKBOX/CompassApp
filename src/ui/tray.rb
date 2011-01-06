@@ -4,13 +4,16 @@ class Tray
     @watching_dir = nil
     @history_dirs  = App.get_history
     @shell    = App.create_shell(Swt::SWT::ON_TOP | Swt::SWT::MODELESS)
-    tray = App.display.system_tray
-    item = Swt::Widgets::TrayItem.new(tray, Swt::SWT::NONE)
-    item.image = App.create_image("icon/16_dark.png")
-    item.tool_tip_text = "Compass.app"
-    item.addListener(Swt::SWT::Selection,  update_menu_position_handler) unless org.jruby.platform.Platform::IS_MAC
-    item.addListener(Swt::SWT::MenuDetect, update_menu_position_handler)
+    
+    @standby_icon = App.create_image("icon/16_dark.png")
+    @watching_icon = App.create_image("icon/16.png")
 
+    @tray_item = Swt::Widgets::TrayItem.new( App.display.system_tray, Swt::SWT::NONE)
+    @tray_item.image = @standby_icon
+    @tray_item.tool_tip_text = "Compass.app"
+    @tray_item.addListener(Swt::SWT::Selection,  update_menu_position_handler) unless org.jruby.platform.Platform::IS_MAC
+    @tray_item.addListener(Swt::SWT::MenuDetect, update_menu_position_handler)
+    
     @menu = Swt::Widgets::Menu.new(@shell, Swt::SWT::POP_UP)
     
     add_menu_item( "Watch a Folder...", open_dir_handler)
@@ -236,6 +239,7 @@ class Tray
         item.menu = Swt::Widgets::Menu.new( @menu )
         build_compass_framework_menuitem( item.menu, install_project_handler )
         add_menu_separator(@menu, 2) if @menu.items[2].getStyle != Swt::SWT::SEPARATOR
+        @tray_item.image = @watching_icon
         return true
 
       else
@@ -252,6 +256,7 @@ class Tray
     @menu.items[0].text="Watch a Folder..."
     @menu.items[1].dispose()
     @watching_dir = nil
+    @tray_item.image = @standby_icon
   end
 
 end
