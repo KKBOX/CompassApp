@@ -27,7 +27,7 @@
         <key>MainClass</key>
         <string>org.rubyforge.rawr.Main</string>
         <key>JVMVersion</key>
-        <string>1.*</string>
+        <string>1.6*</string>
         <key>ClassPath</key>
             <array>
                 <string>$JAVAROOT/compass-app.jar</string>

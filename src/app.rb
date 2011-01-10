@@ -43,12 +43,6 @@ module App
   end
  
   CONFIG = get_config
-  ruby_lib_path = File.join(File.dirname(File.dirname(File.dirname(__FILE__))), "ruby").to_s()[5..-1]
-  if File.exists?( ruby_lib_path )
-  LIB_PATH = File.join(File.dirname(File.dirname(File.dirname(__FILE__)))).to_s()[5..-1]
-  else
-  LIB_PATH = 'lib'
-  end  
  
   def require_compass
 
@@ -107,8 +101,8 @@ module App
   end
 
   def create_image(path)
-    Swt::Graphics::Image.new( Swt::Widgets::Display.get_current,  
-                             JRuby.runtime.jruby_class_loader.get_resource_as_stream( 'data/images/' +path ))
+    #Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, JRuby.runtime.jruby_class_loader.get_resource_as_stream( 'data/images/' +path ))
+    Swt::Graphics::Image.new( Swt::Widgets::Display.get_current,  File.join(LIB_PATH, 'images', path) )
   end
 
   def get_stdout

@@ -1,3 +1,16 @@
+SWT_LIB_PATH ="#{LIB_PATH}/swt"
+if org.jruby.platform.Platform::IS_MAC  
+   if org.jruby.platform.Platform::ARCH == 'x86_64'
+     require "#{SWT_LIB_PATH}/swt_osx64"
+   else
+     require "#{SWT_LIB_PATH}/swt_osx32"
+   end
+elsif org.jruby.platform.Platform::IS_LINUX 
+   require "#{SWT_LIB_PATH}/swt_linux32"
+elsif org.jruby.platform.Platform::IS_WINDOWS 
+   require "#{SWT_LIB_PATH}/swt_win32"
+end
+
 module Swt
   import org.eclipse.swt.SWT
   import org.eclipse.swt.program.Program

@@ -204,7 +204,7 @@ class Tray
   
   def exit_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      App.set_histoy(@history_dirs[0,10])
+      App.set_histoy(@history_dirs[0,5])
       @shell.close
     end
   end
