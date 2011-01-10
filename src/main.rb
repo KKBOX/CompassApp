@@ -1,3 +1,10 @@
+ruby_lib_path = File.join(File.dirname(File.dirname(File.dirname(__FILE__))), "ruby").to_s()[5..-1] 
+if File.exists?( ruby_lib_path ) 
+  LIB_PATH = File.join(File.dirname(File.dirname(File.dirname(__FILE__)))).to_s()[5..-1] 
+else 
+  LIB_PATH = 'lib' 
+end
+
 require "swt_wrapper.rb"
 
 if Dir.pwd =~ / /
@@ -8,38 +15,24 @@ if Dir.pwd =~ / /
   return 
 end
 
-# for mac app bundle
-ruby_lib_path = File.join(File.dirname(File.dirname(File.dirname(__FILE__))), "ruby").to_s()[5..-1]
-if File.exists?( ruby_lib_path )
-  LIB_PATH = File.join(File.dirname(File.dirname(File.dirname(__FILE__)))).to_s()[5..-1]
-else
-  LIB_PATH = 'lib'
-end
-# don't use ruby gem add start speed 
-# ENV['GEM_HOME']="#{LIB_PATH}/ruby/gem"
-# require "rubygems"
-
-gems_path=File.join(LIB_PATH, "ruby", "gem", "gems")
-Dir.new( gems_path).entries.reject{|e| e =~ /^\./}.each do |dir|
-  $LOAD_PATH.unshift( File.join(gems_path, dir,'lib'))
-end
-$LOAD_PATH.unshift "."
 
 require 'stringio'
 require 'thread'
 require "open-uri"
 require "yaml"
 
-
-
-require "compass"
-require "compass/exec"
-require "ninesixty"
-require "html5-boilerplate"
+%w{alert notification quit_window tray preference_panel report}.each do | f |
+  require "ui/#{f}"
+end
 
 require "app.rb"
-require "compass_patch.rb"
-require "tray.rb"
+
+App.require_compass
+begin
+  require "ninesixty"
+  require "html5-boilerplate"
+rescue LoadError
+end
 
 Tray.new.run
 

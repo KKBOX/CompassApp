@@ -1,7 +1,5 @@
 #!/bin/sh
 if [ "$1" = "full" ]; then
-  rm `pwd`/lib/java/swt*
-  cp `pwd`/lib/swt/swt_linux32.jar `pwd`/lib/java/swt.jar
   rake rawr:clean
 fi
 rake rawr:jar

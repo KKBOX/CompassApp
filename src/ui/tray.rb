@@ -4,13 +4,16 @@ class Tray
     @watching_dir = nil
     @history_dirs  = App.get_history
     @shell    = App.create_shell(Swt::SWT::ON_TOP | Swt::SWT::MODELESS)
-    tray = App.display.system_tray
-    item = Swt::Widgets::TrayItem.new(tray, Swt::SWT::NONE)
-    item.image = App.create_image("icon/16_dark.png")
-    item.tool_tip_text = "Compass.app"
-    item.addListener(Swt::SWT::Selection,  update_menu_position_handler) unless org.jruby.platform.Platform::IS_MAC
-    item.addListener(Swt::SWT::MenuDetect, update_menu_position_handler)
+    
+    @standby_icon = App.create_image("icon/16_dark.png")
+    @watching_icon = App.create_image("icon/16.png")
 
+    @tray_item = Swt::Widgets::TrayItem.new( App.display.system_tray, Swt::SWT::NONE)
+    @tray_item.image = @standby_icon
+    @tray_item.tool_tip_text = "Compass.app"
+    @tray_item.addListener(Swt::SWT::Selection,  update_menu_position_handler) unless org.jruby.platform.Platform::IS_MAC
+    @tray_item.addListener(Swt::SWT::MenuDetect, update_menu_position_handler)
+    
     @menu = Swt::Widgets::Menu.new(@shell, Swt::SWT::POP_UP)
     
     add_menu_item( "Watch a Folder...", open_dir_handler)
@@ -24,12 +27,13 @@ class Tray
 
     add_menu_separator
 
-    App.discover_compass_frameworks   
     item =  add_menu_item( "Create Compass Project", create_project_handler, Swt::SWT::CASCADE)
 
     item.menu = Swt::Widgets::Menu.new( @menu )
     build_compass_framework_menuitem( item.menu, create_project_handler )
     
+    item =  add_menu_item( "Preference...", preference_handler, Swt::SWT::PUSH)
+
     item =  add_menu_item( "About", open_about_link_handler, Swt::SWT::CASCADE)
     item.menu = Swt::Widgets::Menu.new( @menu )
     add_menu_item( 'Homepage',                      open_about_link_handler,   Swt::SWT::PUSH, item.menu)
@@ -140,11 +144,13 @@ class Tray
           framework = evt.widget.txt
           pattern = 'project'
         end
-
-        actual = App.get_stdout do
-          Compass::Commands::CreateProject.new( dir, {:framework => framework, :pattern => pattern } ).execute
+        
+        App.try do 
+          actual = App.get_stdout do
+            Compass::Commands::CreateProject.new( dir, {:framework => framework, :pattern => pattern } ).execute
+          end
+          App.report( actual)
         end
-        App.alert( actual)
 
         watch(dir)
       end
@@ -162,12 +168,20 @@ class Tray
           pattern = 'project'
         end
 
-        actual = App.get_stdout do
-          Compass::Commands::StampPattern.new( @watching_dir, {:framework => framework, :pattern => pattern } ).execute
+        App.try do 
+          actual = App.get_stdout do
+            Compass::Commands::StampPattern.new( @watching_dir, {:framework => framework, :pattern => pattern } ).execute
+          end
+          App.report( actual)
         end
-        App.alert( actual)
 
       end
+  end
+
+  def preference_handler 
+    Swt::Widgets::Listener.impl do |method, evt|
+      PreferencePanel.instance.open
+    end
   end
 
   def open_about_link_handler 
@@ -190,7 +204,7 @@ class Tray
   
   def exit_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      App.set_histoy(@history_dirs[0,10])
+      App.set_histoy(@history_dirs[0,5])
       @shell.close
     end
   end
@@ -202,34 +216,37 @@ class Tray
   end
 
   def watch(dir)
-    x = Compass::Commands::UpdateProject.new( dir, {})
-    if !x.new_compiler_instance.sass_files.empty?
-      stop_watch
-      current_display = App.display
-      @compass_thread = Thread.new do
-         Compass::Commands::WatchProject.new( dir, { :logger => Compass::Logger.new({ :display => current_display,
-                                                                                      :log_dir => dir}) }).execute
-      end
-      @watching_dir = dir
-      @history_dirs.delete_if { |x| x == dir }
-      @history_dirs.unshift(dir)
-      @menu.items.each do |item|
-        item.dispose if item.text == dir 
-      end
-      menuitem = add_compass_item(dir)
-      
-      @menu.items[0].text="Watching " + dir
+    App.try do 
+      x = Compass::Commands::UpdateProject.new( dir, {})
+      if !x.new_compiler_instance.sass_files.empty?
+        stop_watch
+        current_display = App.display
+        @compass_thread = Thread.new do
+          Compass::Commands::WatchProject.new( dir, { :logger => Compass::Logger.new({ :display => current_display,
+                                                                                     :log_dir => dir}) }).execute
+        end
+        @watching_dir = dir
+        @history_dirs.delete_if { |x| x == dir }
+        @history_dirs.unshift(dir)
+        @menu.items.each do |item|
+          item.dispose if item.text == dir 
+        end
+        menuitem = add_compass_item(dir)
 
-      item =  add_menu_item( "Install Compass Project", install_project_handler, Swt::SWT::CASCADE, @menu, 1)
-      item.menu = Swt::Widgets::Menu.new( @menu )
-      build_compass_framework_menuitem( item.menu, install_project_handler )
-      add_menu_separator(@menu, 2) if @menu.items[2].getStyle != Swt::SWT::SEPARATOR
-      return true
+        @menu.items[0].text="Watching " + dir
 
-    else
-      App.notify( dir +' Not A Compass Directory')
+        item =  add_menu_item( "Install Compass Project", install_project_handler, Swt::SWT::CASCADE, @menu, 1)
+        item.menu = Swt::Widgets::Menu.new( @menu )
+        build_compass_framework_menuitem( item.menu, install_project_handler )
+        add_menu_separator(@menu, 2) if @menu.items[2].getStyle != Swt::SWT::SEPARATOR
+        @tray_item.image = @watching_icon
+        return true
+
+      else
+        App.notify( dir +' Not A Compass Directory')
+      end
     end
-   
+
     return false
   end
 
@@ -239,7 +256,8 @@ class Tray
     @menu.items[0].text="Watch a Folder..."
     @menu.items[1].dispose()
     @watching_dir = nil
+    @tray_item.image = @standby_icon
   end
-  
+
 end
 

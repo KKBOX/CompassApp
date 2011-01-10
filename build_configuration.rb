@@ -52,7 +52,7 @@ configuration do |c|
 	# Undocumented option 'target_jvm_version'
 	# default value: 1.6
 	#
-	#c.target_jvm_version = 1.6
+	# c.target_jvm_version = 1.6
 
 	# Undocumented option 'jvm_arguments'
 	# default value: ""
@@ -79,11 +79,11 @@ configuration do |c|
 	# Undocumented option 'mac_icon_path'
 	# default value: nil
 	#
-	c.mac_icon_path = Dir.pwd + "/src/data/images/icon/icon-osx.icns"
+	c.mac_icon_path = Dir.pwd + "/lib/images/icon/icon-osx.icns"
 
 	# Undocumented option 'windows_icon_path'
 	# default value: nil
 	#
-	c.windows_icon_path = Dir.pwd + "/src/data/images/icon/icon-win.ico"
+	c.windows_icon_path = Dir.pwd + "/lib/images/icon/icon-win.ico"
 
 end

@@ -12,28 +12,6 @@ module Rawr
 end
 
 namespace :rawr do
-  namespace :link_swt do
-    task :clean do
-      @swt_file = File.join( File.dirname(__FILE__), 'lib', 'java', 'swt.jar') 
-      File.delete( File.join( File.dirname(__FILE__), 'lib', 'java', 'swt.jar')) if File.exists?( @swt_file )
-    end
-
-    task :win => ['rawr:link_swt:clean'] do
-      @current_os = "win"
-      copy( File.join( File.dirname(__FILE__), 'lib','swt','swt_win32.jar'), @swt_file )
-    end
-    
-    task :linux => ['rawr:link_swt:clean'] do
-      @current_os = "linux"
-      copy( File.join( File.dirname(__FILE__), 'lib','swt','swt_linux32.jar'), @swt_file )
-    end
-
-    task :osx => ['rawr:link_swt:clean'] do
-      @current_os = "osx"
-      copy( File.join( File.dirname(__FILE__), 'lib','swt','swt_osx32.jar'), @swt_file )
-    end
-  end
-
   namespace :bundle do
     task :create_packages_dir do
       @packages_dir = File.join(File.dirname(__FILE__), 'packages')
@@ -44,6 +22,7 @@ namespace :rawr do
       @revision ||= (%x{git log | head -c 17 | tail -c 10}).strip
       @compile_time ||= Time.now.strftime('%Y%m%d%H%M')
       @update_url = open('update_url').readline.strip if File.exists?("update_url")
+      @update_url ||= ''
       File.open "src/compile_version.rb", 'w' do |file|
         file << <<-INFO_ENDL
 	module CompileVersion
@@ -57,42 +36,56 @@ INFO_ENDL
 
     task(:app).clear_prerequisites.clear_actions
     desc "Bundles the jar from rawr:jar into a native Mac OS X application (.app)"
-    task :app => ["rawr:bundle:create_packages_dir", "rawr:link_swt:osx", "rawr:bundle:write_version_info", "rawr:jar", CONFIG.osx_output_dir ] do
+    task :app => ["rawr:bundle:create_packages_dir", "rawr:bundle:write_version_info", "rawr:jar", CONFIG.osx_output_dir ] do
       Rawr::AppBundler.new.deploy CONFIG
       Dir.chdir File.dirname(__FILE__)
+      %x{mkdir -p  #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/swt}
+      %x{cp -R lib/swt/swt_osx* #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/swt}
+
       %x{cp -R lib/ruby #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/ruby}
+      %x{cp -R lib/images #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/images}
       %x{cp -R lib/applescript #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/applescript}    
       Dir.chdir CONFIG.osx_output_dir
       %x{mv #{CONFIG.project_name}.app compass.app;}
       @osx_bundle_file="compass.app.osx.#{@compile_time}-#{@revision}.zip"
       %x{zip -9 -r #{@packages_dir}/#{@osx_bundle_file} compass.app}
+      %x{mkdir #{@packages_dir}/osx; cp -R compass.app #{@packages_dir}/osx}
     end
     
     task(:exe).clear_prerequisites.clear_actions
     desc "Bundles the jar from rawr:jar into a native Windows application (.exe)"
-    task :exe => ["rawr:bundle:create_packages_dir", "rawr:link_swt:win", "rawr:bundle:write_version_info", "rawr:jar", CONFIG.windows_output_dir ] do
+    task :exe => ["rawr:bundle:create_packages_dir",  "rawr:bundle:write_version_info", "rawr:jar", CONFIG.windows_output_dir ] do
       Dir.chdir File.dirname(__FILE__)
-      %x{mkdir -p package/windows/package/windows} # yo~ show me the monkey, path for launch4j link fle
+      %x{mkdir -p package/windows/package/windows} # path for launch4j link fle
       Rawr::ExeBundler.new.deploy CONFIG
+
+      %x{mkdir -p  #{CONFIG.windows_output_dir}/lib/swt}
+      %x{cp -R lib/swt/swt_win* #{CONFIG.windows_output_dir}/lib/swt}
       %x{cp -R lib/ruby #{CONFIG.windows_output_dir}/lib}
+      %x{cp -R lib/images #{CONFIG.windows_output_dir}/lib}
       %x{mv package/windows/package/windows/*.exe package/windows}
       %x{rm -rf package/windows/package}
       Dir.chdir 'package'
       %x{rm -rf compass.app windows/*.xml; mv windows compass.app}
       @windows_bundle_file="compass.app.windows.#{@compile_time}-#{@revision}.zip"
       %x{zip -9 -r #{@packages_dir}/#{@windows_bundle_file} compass.app}
+      %x{mkdir #{@packages_dir}/windows; cp -R compass.app #{@packages_dir}/windows}
     end
     
     desc "Bundles the jar from rawr:jar into a Linux script"
-    task :linux => ["rawr:bundle:create_packages_dir", "rawr:link_swt:linux", "rawr:bundle:write_version_info", "rawr:jar" ] do
+    task :linux => ["rawr:bundle:create_packages_dir", "rawr:bundle:write_version_info", "rawr:jar" ] do
       Dir.chdir File.dirname(__FILE__)
+      %x{mkdir -p  package/jar/lib/swt}
+      %x{cp -R lib/swt/swt_linux* package/jar/lib/swt}
       %x{cp -R lib/ruby package/jar/lib}
+      %x{cp -R lib/images package/jar/lib}
       %x{mv package/jar package/compass.app}
       %x{echo "#!/bin/sh\njava -d32 -client -jar compass-app.jar" > package/compass.app/run.sh}
       %x{chmod +x package/compass.app/run.sh}
       Dir.chdir 'package'
       @linux_bundle_file="compass.app.linux.#{@compile_time}-#{@revision}.zip"
       %x{zip -9 -r #{@packages_dir}/#{@linux_bundle_file} compass.app}
+      %x{mkdir #{@packages_dir}/linux; cp -R compass.app #{@packages_dir}/linux}
     end
 
     desc "Bundles Linux, OSX and Window package"
