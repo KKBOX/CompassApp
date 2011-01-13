@@ -101,8 +101,7 @@ module App
   end
 
   def create_image(path)
-    #Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, JRuby.runtime.jruby_class_loader.get_resource_as_stream( 'data/images/' +path ))
-    Swt::Graphics::Image.new( Swt::Widgets::Display.get_current,  File.join(LIB_PATH, 'images', path) )
+    Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, java.io.FileInputStream.new( File.join(LIB_PATH, 'images', path)))
   end
 
   def get_stdout

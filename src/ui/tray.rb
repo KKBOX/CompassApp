@@ -7,7 +7,7 @@ class Tray
     
     @standby_icon = App.create_image("icon/16_dark.png")
     @watching_icon = App.create_image("icon/16.png")
-
+    
     @tray_item = Swt::Widgets::TrayItem.new( App.display.system_tray, Swt::SWT::NONE)
     @tray_item.image = @standby_icon
     @tray_item.tool_tip_text = "Compass.app"
