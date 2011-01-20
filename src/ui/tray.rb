@@ -243,7 +243,7 @@ class Tray
         return true
 
       else
-        App.notify( dir +' Not A Compass Directory')
+        App.notify( dir +": Nothing to compile. If you're trying to start a new project, you have left off the directory argument")
       end
     end
 
