@@ -1,0 +1,90 @@
+@import "compass/utilities/sprites/base";
+
+// General Sprite Defaults
+// You can override them before you import this file.
+$emblem-sprite-base-class: ".emblem-sprite" !default;
+$emblem-sprite-dimensions: false !default;
+$emblem-position: 0% !default;
+$emblem-spacing: 0 !default;
+$emblem-repeat: no-repeat !default;
+
+// These variables control the generated sprite output
+// You can override them selectively before you import this file.
+$emblem-favorite-position: $emblem-position !default;
+$emblem-favorite-spacing: $emblem-spacing !default;
+$emblem-favorite-repeat: $emblem-repeat !default;
+$emblem-important-position: $emblem-position !default;
+$emblem-important-spacing: $emblem-spacing !default;
+$emblem-important-repeat: $emblem-repeat !default;
+$emblem-photos-position: $emblem-position !default;
+$emblem-photos-spacing: $emblem-spacing !default;
+$emblem-photos-repeat: $emblem-repeat !default;
+$emblem-readonly-position: $emblem-position !default;
+$emblem-readonly-spacing: $emblem-spacing !default;
+$emblem-readonly-repeat: $emblem-repeat !default;
+$emblem-symbolic-link-position: $emblem-position !default;
+$emblem-symbolic-link-spacing: $emblem-spacing !default;
+$emblem-symbolic-link-repeat: $emblem-repeat !default;
+$emblem-system-position: $emblem-position !default;
+$emblem-system-spacing: $emblem-spacing !default;
+$emblem-system-repeat: $emblem-repeat !default;
+$emblem-unreadable-position: $emblem-position !default;
+$emblem-unreadable-spacing: $emblem-spacing !default;
+$emblem-unreadable-repeat: $emblem-repeat !default;
+
+
+$emblem-sprites: sprite-map("emblem/*.png",
+  $favorite-position: $emblem-favorite-position,
+  $favorite-spacing: $emblem-favorite-spacing,
+  $favorite-repeat: $emblem-favorite-repeat,
+  $important-position: $emblem-important-position,
+  $important-spacing: $emblem-important-spacing,
+  $important-repeat: $emblem-important-repeat,
+  $photos-position: $emblem-photos-position,
+  $photos-spacing: $emblem-photos-spacing,
+  $photos-repeat: $emblem-photos-repeat,
+  $readonly-position: $emblem-readonly-position,
+  $readonly-spacing: $emblem-readonly-spacing,
+  $readonly-repeat: $emblem-readonly-repeat,
+  $symbolic-link-position: $emblem-symbolic-link-position,
+  $symbolic-link-spacing: $emblem-symbolic-link-spacing,
+  $symbolic-link-repeat: $emblem-symbolic-link-repeat,
+  $system-position: $emblem-system-position,
+  $system-spacing: $emblem-system-spacing,
+  $system-repeat: $emblem-system-repeat,
+  $unreadable-position: $emblem-unreadable-position,
+  $unreadable-spacing: $emblem-unreadable-spacing,
+  $unreadable-repeat: $emblem-unreadable-repeat);
+
+// All sprites should extend this class
+// The emblem-sprite mixin will do so for you.
+#{$emblem-sprite-base-class} {
+  background: $emblem-sprites no-repeat;
+}
+
+// Use this to set the dimensions of an element
+// based on the size of the original image.
+@mixin emblem-sprite-dimensions($name) {
+  @include sprite-dimensions($emblem-sprites, $name)
+}
+
+// Move the background position to display the sprite.
+@mixin emblem-sprite-position($name, $offset-x: 0, $offset-y: 0) {
+  @include sprite-position($emblem-sprites, $name, $offset-x, $offset-y)
+}
+
+// Extends the sprite base class and set the background position for the desired sprite.
+// It will also apply the image dimensions if $dimensions is true.
+@mixin emblem-sprite($name, $dimensions: $emblem-sprite-dimensions, $offset-x: 0, $offset-y: 0) {
+  @extend #{$emblem-sprite-base-class};
+  @include sprite($emblem-sprites, $name, $dimensions, $offset-x, $offset-y)
+}
+
+@mixin emblem-sprites($sprite-names, $dimensions: $emblem-sprite-dimensions, $prefix: sprite-map-name($emblem-sprites)) {
+  @include sprites($emblem-sprites, $sprite-names, $emblem-sprite-base-class, $dimensions, $prefix)
+}
+
+// Generates a class for each sprited image.
+@mixin all-emblem-sprites($dimensions: $emblem-sprite-dimensions, $prefix: sprite-map-name($emblem-sprites)) {
+  @include emblem-sprites(favorite important photos readonly symbolic-link system unreadable, $dimensions, $prefix);
+}
