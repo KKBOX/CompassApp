@@ -65,6 +65,11 @@ module App
         $LOAD_PATH.unshift( File.join(gems_path, dir,'lib'))
       end 
       $LOAD_PATH.unshift "." 
+
+      # require fssm first,
+      # we have a special version, to use jruby + rb-fsevent 
+      require "fssm" 
+
       require "compass"
       require "compass/exec"
     end
