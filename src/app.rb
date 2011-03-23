@@ -5,14 +5,15 @@ module App
 
   include CompileVersion
   VERSION = "1.1"
-  OS = org.jruby.platform.Platform::OS
+  OS = org.jruby.platform.Platform::OS 
+  OS_VERSION = java.lang.System.getProperty("os.version")
 
   def version
     VERSION
   end
 
   def compile_version
-    "#{OS}.#{org.jruby.platform.Platform::ARCH}.#{COMPILE_TIME}.#{REVISION}"
+    "#{OS}.#{OS_VERSION}.#{org.jruby.platform.Platform::ARCH}.#{COMPILE_TIME}.#{REVISION}"
   end
 
   CONFIG_DIR = File.join( java.lang.System.getProperty("user.home") , '.compass-ui' )
@@ -66,9 +67,8 @@ module App
       end 
       $LOAD_PATH.unshift "." 
 
-      # require fssm first,
-      # we have a special version, to use jruby + rb-fsevent 
-      require "fssm" 
+      # we have a special version fssm for osx 10.6 ,  to use rb-fsevent 
+      require "fssm" if OS == 'darwin' && OS_VERSION =~ /^10.6/
 
       require "compass"
       require "compass/exec"
