@@ -1,0 +1,81 @@
+//--------------------------------
+// CSS Reset
+//--------------------------------
+@include html5-boilerplate-reset;
+
+
+//--------------------------------
+// Base Fonts
+//--------------------------------
+@include html5-boilerplate-fonts($base-font-family, $base-font-size, $base-line-height);
+
+
+//--------------------------------
+// Minimal Base Styles
+//--------------------------------
+body, select, input, textarea { color: $font-color; }
+
+html { @include force-scrollbar; }
+
+a, a:active, a:visited { color: $link-color; }
+a:hover { color: $link-hover-color; }
+
+ul, ol { margin-left: $list-left-margin; }
+ol { list-style-type: decimal; }
+
+td, td img { vertical-align: top; }
+
+sub { @include sub; }
+
+sup { @include sup; }
+
+@include accessible-focus;
+
+@include quoted-pre;
+
+@include align-input-labels;
+
+@include hand-cursor-inputs;
+
+@include selected-text;
+
+@include webkit-tap-highlight;
+
+@include ie-hacks;
+
+@include no-nav-margins;
+
+
+//--------------------------------
+// Helpers
+//--------------------------------
+.ir { @include image-replacement; }
+
+.hidden { @include hidden; }
+
+.visuallyhidden { @include visually-hidden; }
+
+.clearfix {
+  @include pie-clearfix;  // defined by compass core
+}
+
+
+//--------------------------------
+// Media
+//--------------------------------
+@media print {
+  @include media-print;
+}
+
+@media all and (orientation:portrait) { 
+  // Style adjustments for portrait mode goes here
+}
+
+@media all and (orientation:landscape) {
+  // Style adjustments for landscape mode goes here
+}
+
+@media screen and (max-device-width: 480px) {
+  // Pass in false if you don't want iOS and WinMobile to mobile-optimize the text for you
+  @include media-mobile(true);
+}

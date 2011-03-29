@@ -61,8 +61,8 @@ module App
       end
  
 
-      gems_path=File.join(LIB_PATH, "ruby", "gem", "gems")
-      Dir.new( gems_path).entries.reject{|e| e =~ /^\./}.each do |dir|
+      gems_path=File.join(LIB_PATH, "ruby", "compass_0.11")
+      Dir.new( gems_path ).entries.reject{|e| e =~ /^\./}.each do |dir|
         $LOAD_PATH.unshift( File.join(gems_path, dir,'lib'))
       end 
       $LOAD_PATH.unshift "." 
