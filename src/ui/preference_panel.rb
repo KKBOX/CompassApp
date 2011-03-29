@@ -23,37 +23,57 @@ class PreferencePanel
     @shell.setSize(800,480)
     layout = Swt::Layout::FormLayout.new
     layout.marginWidth = layout.marginHeight = 10
+    layout.spacing = 0
     @shell.layout = layout
-
-    button = Swt::Widgets::Button.new(@shell, Swt::SWT::CHECK )
-    font_data=button.getFont().getFontData()
+ 
+    font_data=@shell.getFont().getFontData()
     font_data.each do |fd|
       fd.setHeight(14)
     end
     font=Swt::Graphics::Font.new(@display, font_data)
-    button.setFont(font)
-    button.setText("Specify gem path")
+
+    button_group =Swt::Widgets::Composite.new(@shell, Swt::SWT::NO_MERGE_PAINTS );
+    layout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
+    layout.marginBottom = 0;
+    layout.spacing = 2;
+    button_group.setLayout( layout );
+    data = Swt::Layout::FormData.new(400,70)
+    button_group.setLayoutData(data)
+
+    @button_v11 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    @button_v11.setText("v0.11")
+    @button_v11.setSelection( App::CONFIG['use_version'] == 0.11 || !(App::CONFIG['use_specify_gem_path'] || App::CONFIG['use_version']) )
+    
+    @button_v10 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    @button_v10.setText("v0.10")
+    @button_v10.setSelection( App::CONFIG['use_version'] == 0.10 )
+
+
+    button = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    button.setText("Use specify gem path")
     button.setSelection(App::CONFIG['use_specify_gem_path'])
     button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
       @gem_path_text.setEnabled(evt.widget.getSelection)
       @gem_path_choose_btn.setEnabled(evt.widget.getSelection)
+      @speial_gem_label.setEnabled(evt.widget.getSelection)
     end)
     @use_specify_gem_path_btn=button
-    
-    data = Swt::Layout::FormData.new(480, 40)
-    data.left = Swt::Layout::FormAttachment.new(button, 20, Swt::SWT::LEFT)
-    data.top = Swt::Layout::FormAttachment.new(button, 5, Swt::SWT::BOTTOM )
-    label = Swt::Widgets::Label.new(@shell, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    label.setText("Compass.app comes with some default extensions. if you want use RubyGem to manage extensions, you can specify your own gem path.")
-    label.setLayoutData(data)
+
+    data = Swt::Layout::FormData.new(480, 35)
+    data.left = Swt::Layout::FormAttachment.new( button_group, 22, Swt::SWT::LEFT)
+    data.top = Swt::Layout::FormAttachment.new( button_group, 0, Swt::SWT::BOTTOM)
+    @speial_gem_label = Swt::Widgets::Label.new( @shell, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    @speial_gem_label.setText("Compass.app comes with some default extensions. if you want use RubyGem to manage extensions, you can specify your own gem path.")
+    @speial_gem_label.setLayoutData(data)
+    @speial_gem_label.setEnabled(@use_specify_gem_path_btn.getSelection)
 
     layout = Swt::Layout::FormLayout.new()
-    layout.marginHeight=15
-    layout.marginWidth=15
+    layout.marginHeight=0
+    layout.marginWidth=0
     data = Swt::Layout::FormData.new()
-    data.left = Swt::Layout::FormAttachment.new( @use_specify_gem_path_btn, 0, Swt::SWT::LEFT)
-    data.top = Swt::Layout::FormAttachment.new( label, 10, Swt::SWT::BOTTOM)
-    group = Swt::Widgets::Group.new(@shell, Swt::SWT::SHADOW_ETCHED_IN)
+    data.left = Swt::Layout::FormAttachment.new( @speial_gem_label, 0, Swt::SWT::LEFT)
+    data.top = Swt::Layout::FormAttachment.new( @speial_gem_label,0, Swt::SWT::BOTTOM)
+    group = Swt::Widgets::Composite.new(@shell, Swt::SWT::SHADOW_ETCHED_IN)
     group.setLayout(layout)
     group.setLayoutData(data)
 
@@ -79,12 +99,19 @@ class PreferencePanel
     @gem_path_choose_btn=button
 
     data = Swt::Layout::FormData.new()
-    data.left = Swt::Layout::FormAttachment.new(group, 0, Swt::SWT::LEFT)
+    data.left = Swt::Layout::FormAttachment.new(group, -20, Swt::SWT::LEFT)
     data.top = Swt::Layout::FormAttachment.new(group, 10)
     button = Swt::Widgets::Button.new(@shell, Swt::SWT::PUSH )
     button.setText("Apply")
     button.setLayoutData(data)
     button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
+      if @button_v11.getSelection
+        App::CONFIG['use_version'] = 0.11
+      elsif  @button_v10.getSelection
+        App::CONFIG['use_version'] = 0.10
+      else
+        App::CONFIG['use_version'] = false
+      end
       App::CONFIG['use_specify_gem_path']=@use_specify_gem_path_btn.getSelection
       App::CONFIG['gem_path']=@gem_path_text.getText
       App.save_config

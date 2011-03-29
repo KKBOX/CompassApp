@@ -4,7 +4,7 @@ module App
   extend self
 
   include CompileVersion
-  VERSION = "1.1"
+  VERSION = "1.2"
   OS = org.jruby.platform.Platform::OS 
   OS_VERSION = java.lang.System.getProperty("os.version")
 
@@ -38,6 +38,7 @@ module App
       x = {} 
     end
     {
+      "use_version" => 0.11,
       "use_specify_gem_path" => false,
       "gem_path" => App.get_system_default_gem_path
     }.merge!(x)
@@ -57,11 +58,15 @@ module App
       require "compass/exec"
     rescue LoadError => e
       if CONFIG["use_specify_gem_path"]
-        alert("Load Compass fail, Use Default Compass library, please check the Gem Path")
+        alert("Load Custom Compass fail, Use Default Compass v0.11 library, please check the Gem Path")
       end
  
+      gems_path = if App::CONFIG['use_version'] == 0.10 
+        File.join(LIB_PATH, "ruby", "compass_0.10")
+      else
+        File.join(LIB_PATH, "ruby", "compass_0.11")
+      end
 
-      gems_path=File.join(LIB_PATH, "ruby", "compass_0.11")
       Dir.new( gems_path ).entries.reject{|e| e =~ /^\./}.each do |dir|
         $LOAD_PATH.unshift( File.join(gems_path, dir,'lib'))
       end 
