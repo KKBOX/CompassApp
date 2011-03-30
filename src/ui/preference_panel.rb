@@ -24,7 +24,7 @@ class PreferencePanel
     @shell.layout = Swt::Layout::FillLayout.new
 
     @tabFolder = Swt::Widgets::TabFolder.new(@shell, Swt::SWT::BORDER);
-    
+
     compass_version_tab = Swt::Widgets::TabItem.new( @tabFolder, Swt::SWT::NONE)
     compass_version_tab.setControl( self.compass_version_composite );
     compass_version_tab.setText('Compass version')
@@ -33,41 +33,42 @@ class PreferencePanel
     notification_tab.setControl( self.notification_composite );
     notification_tab.setText('Notification')
     @shell.pack
- end
+  end
 
- def notification_composite
+  def notification_composite
     composite =Swt::Widgets::Composite.new(@tabFolder, Swt::SWT::NO_MERGE_PAINTS );
-   layout = Swt::Layout::FormLayout.new
-   layout.marginWidth = layout.marginHeight = 10
-   layout.spacing = 0
-   composite.layout = layout
-    
-   label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-   label.setText('Notification Types')
+    layout = Swt::Layout::FormLayout.new
+    layout.marginWidth = layout.marginHeight = 10
+    layout.spacing = 0
+    composite.layout = layout
+
+    label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    label.setText('Notification Types')
 
     button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
     layoutdata = Swt::Layout::FormData.new()
     layoutdata.left = Swt::Layout::FormAttachment.new( label, 10, Swt::SWT::LEFT)
     layoutdata.top = Swt::Layout::FormAttachment.new( label,  5, Swt::SWT::BOTTOM)
     button_group.setLayoutData( layoutdata )
-    layout = Swt::Layout::GridLayout.new( 3, true ) 
-    layout.horizontalSpacing = 10
-    layout.verticalSpacing   = 10
+    layout = Swt::Layout::RowLayout.new( ) 
+    layout.spacing = 10
     button_group.setLayout( layout );
 
-    [:directory, :exists, :remove, :create, :overwrite, :compile, :error, :identical, :warning].each do | action |
-      button = Swt::Widgets::Button.new(button_group, Swt::SWT::CHECK )
-      button.setText( action.to_s )
-      button.setSelection(App::CONFIG["notifications"].include?( action ))
-      button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
-        if button.getSelection 
-          App::CONFIG["notifications"] << evt.widget.getText().to_sym
-        else
-          App::CONFIG["notifications"].delete evt.widget.getText().to_sym
-        end
-          App.save_config
-      end)
-    end
+    notification_error_button = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    notification_error_button.setText( 'only errors' )
+    notification_error_button.setSelection( App::CONFIG["notifications"] == [:error] )
+    notification_error_button.addListener(Swt::SWT::Selection, notification_button_handler)
+
+    notification_warning_button = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    notification_warning_button.setText( 'errors and warnings' )
+    notification_warning_button.setSelection( App::CONFIG["notifications"] == [:error, :warnings])
+    notification_warning_button.addListener(Swt::SWT::Selection, notification_button_handler)
+
+    notification_everything_button = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    notification_everything_button.setText( 'errors, warnings and success' )
+    notification_everything_button.setSelection(App::CONFIG["notifications"].include?( :directory ))
+    notification_everything_button.addListener(Swt::SWT::Selection, notification_button_handler)
+
 
     button = Swt::Widgets::Button.new(composite, Swt::SWT::CHECK )
     button.setText( "save notification to compass_app_log.txt which in the project folder" )
@@ -83,47 +84,65 @@ class PreferencePanel
     button.setLayoutData( layoutdata )
 
     return  composite
- end
+  end
 
- def compass_version_composite()
-   composite =Swt::Widgets::Composite.new(@tabFolder, Swt::SWT::NO_MERGE_PAINTS );
-   layout = Swt::Layout::FormLayout.new
-   layout.marginWidth = layout.marginHeight = 10
-   layout.spacing = 0
-   composite.layout = layout
+  def notification_button_handler 
+    Swt::Widgets::Listener.impl do |method, evt|   
+      btn = evt.widget
+      puts btn.getSelection
+      if btn.getSelection 
+          if btn.getText =~ /success/
+            App::CONFIG["notifications"] = [:directory, :exists, :remove, :create, :overwrite, :compile, :error, :identical, :warning]
+          elsif btn.getText =~ /warning/
+            App::CONFIG["notifications"] = [:error, :warning]
+          else
+            App::CONFIG["notifications"] = [:error]
+          end
+          puts App::CONFIG["notifications"]
+          App.save_config
+      end
+    end
+  end
 
-   font_data=@shell.getFont().getFontData()
-   font_data.each do |fd|
-     fd.setHeight(12)
-   end
-   font=Swt::Graphics::Font.new(@display, font_data)
+  def compass_version_composite()
+    composite =Swt::Widgets::Composite.new(@tabFolder, Swt::SWT::NO_MERGE_PAINTS );
+    layout = Swt::Layout::FormLayout.new
+    layout.marginWidth = layout.marginHeight = 10
+    layout.spacing = 0
+    composite.layout = layout
 
-   button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
-   layout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
-   layout.marginBottom = 0;
-   layout.spacing = 10;
-   button_group.setLayout( layout );
+    font_data=@shell.getFont().getFontData()
+    font_data.each do |fd|
+      fd.setHeight(12)
+    end
+    font=Swt::Graphics::Font.new(@display, font_data)
 
-   @button_v11 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-   @button_v11.setText("v0.11")
-   @button_v11.setSelection( App::CONFIG['use_version'] == 0.11 || !(App::CONFIG['use_specify_gem_path'] || App::CONFIG['use_version']) )
-   @button_v11.setFont(font)
+    button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
+    layout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
+    layout.marginBottom = 0;
+    layout.spacing = 10;
+    button_group.setLayout( layout );
 
-   @button_v10 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-   @button_v10.setText("v0.10")
-   @button_v10.setSelection( App::CONFIG['use_version'] == 0.10 )
-   @button_v10.setFont(font)
+    @button_v11 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    @button_v11.setText("v0.11.beta.5")
+    @button_v11.setSelection( App::CONFIG['use_version'] == 0.11 || !(App::CONFIG['use_specify_gem_path'] || App::CONFIG['use_version']) )
+    @button_v11.setFont(font)
+
+    @button_v10 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    @button_v10.setText("v0.10.6")
+    @button_v10.setSelection( App::CONFIG['use_version'] == 0.10 )
+    @button_v10.setFont(font)
 
 
-   button = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-   button.setText("Use specify gem path")
-   button.setSelection(App::CONFIG['use_specify_gem_path'])
-   button.setFont(font)
-   button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
-     @gem_path_text.setEnabled(evt.widget.getSelection)
-     @speial_gem_label.setEnabled(evt.widget.getSelection)
-   end)
-   @use_specify_gem_path_btn=button
+    button = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    button.setText("Use specify gem path")
+    button.setSelection(App::CONFIG['use_specify_gem_path'])
+    button.setFont(font)
+    button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
+      @gem_path_text.setEnabled(evt.widget.getSelection)
+      @speial_gem_label.setEnabled(evt.widget.getSelection)
+    end)
+    @use_specify_gem_path_btn=button
 
     data = Swt::Layout::FormData.new(480,Swt::SWT::DEFAULT)
     data.left = Swt::Layout::FormAttachment.new( button_group, 22, Swt::SWT::LEFT)
@@ -180,7 +199,7 @@ class PreferencePanel
     button.setText("Cancel")
     button.setLayoutData(data)
     button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|
-	@shell.dispose
+      @shell.dispose
     end)
 
     return composite;
