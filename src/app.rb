@@ -40,7 +40,9 @@ module App
     {
       "use_version" => 0.11,
       "use_specify_gem_path" => false,
-      "gem_path" => App.get_system_default_gem_path
+      "gem_path" => App.get_system_default_gem_path,
+      "notifications" => [ :error ],
+      "save_notification_to_file" => true,
     }.merge!(x)
   end
  

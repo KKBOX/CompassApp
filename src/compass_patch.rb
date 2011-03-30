@@ -23,7 +23,6 @@ module Compass
       self.options = actions.last.is_a?(Hash) ? actions.pop : {}
       @display   = self.options[:display]
       @log_dir = self.options[:log_dir] 
-      @logfile = open(@log_dir + '/compass_app_log.txt','a+') if @log_dir
       @actions = DEFAULT_ACTIONS.dup
       @actions += actions
     end
@@ -31,24 +30,30 @@ module Compass
     # Record an action that has occurred
     def record(action, *arguments)
       msg = "#{action_padding(action)}#{action} #{arguments.join(' ')}"
-      App.notify(msg.strip, @display) if action == :error
-      log msg
+      if App::CONFIG["notifications"].include?(action)
+        App.notify( msg.strip, @display )
+        log( msg )
+      end
     end
-    
-     def emit(msg)
-	log(msg)
-     end
+
+    def emit(msg)
+      log(msg)
+    end
 
     def log(msg)
       puts msg
-      if  @logfile
+      if App::CONFIG["save_notification_to_file"]
+        @logfile = open(@log_dir + '/compass_app_log.txt','a+') unless @logfile
         @logfile.puts Time.now.strftime("%Y-%m-%d %H:%M:%S") + " " + msg
         @logfile.flush
+      else
+        @logfile.close if @logfile
+        @logfile = nil
       end
     end
   end
-
 end
+
 
 default_path = File.join( java.lang.System.getProperty("user.home"), '.compass','extensions' )
 if File.exists?( default_path ) 
