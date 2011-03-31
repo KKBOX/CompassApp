@@ -16,6 +16,7 @@ module App
     "#{OS}.#{OS_VERSION}.#{org.jruby.platform.Platform::ARCH}.#{COMPILE_TIME}.#{REVISION}"
   end
 
+  
   CONFIG_DIR = File.join( java.lang.System.getProperty("user.home") , '.compass-ui' )
 
   Dir.mkdir( CONFIG_DIR ) unless File.exists?( CONFIG_DIR )

@@ -1,10 +1,17 @@
+require "webrick";
+
+
+
 class Tray
+  include WEBrick;
+
   def initialize()
+    @http_server = nil
     @compass_thread = nil
     @watching_dir = nil
     @history_dirs  = App.get_history
     @shell    = App.create_shell(Swt::SWT::ON_TOP | Swt::SWT::MODELESS)
-    
+      
     @standby_icon = App.create_image("icon/16_dark.png")
     @watching_icon = App.create_image("icon/16.png")
     
@@ -217,6 +224,9 @@ class Tray
 
   def watch(dir)
     App.try do 
+      @http_server = HTTPServer.new(:Port =>  58888) unless @http_server
+      @http_server.unmount(@watching_dir) if @watching_dir
+
       x = Compass::Commands::UpdateProject.new( dir, {})
       if !x.new_compiler_instance.sass_files.empty?
         stop_watch
@@ -240,6 +250,11 @@ class Tray
         build_compass_framework_menuitem( item.menu, install_project_handler )
         add_menu_separator(@menu, 2) if @menu.items[2].getStyle != Swt::SWT::SEPARATOR
         @tray_item.image = @watching_icon
+
+        @http_server_thread = Thread.new do 
+          @http_server.mount("/",HTTPServlet::FileHandler, dir, true);
+          @http_server.start
+        end
         return true
 
       else
