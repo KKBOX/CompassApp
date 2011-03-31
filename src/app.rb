@@ -38,12 +38,18 @@ module App
     rescue => e
       x = {} 
     end
+
+    x.delete("services_http_port") unless x["services_http_port"].to_i > 0
+                                
+
     {
       "use_version" => 0.11,
       "use_specify_gem_path" => false,
       "gem_path" => App.get_system_default_gem_path,
       "notifications" => [ :error ],
       "save_notification_to_file" => true,
+      "services" => [ ],
+      "services_http_port" => 24680
     }.merge!(x)
   end
  

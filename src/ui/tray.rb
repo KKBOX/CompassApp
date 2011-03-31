@@ -224,17 +224,17 @@ class Tray
 
   def watch(dir)
     App.try do 
-      @http_server = HTTPServer.new(:Port =>  58888) unless @http_server
-      @http_server.unmount(@watching_dir) if @watching_dir
-
       x = Compass::Commands::UpdateProject.new( dir, {})
       if !x.new_compiler_instance.sass_files.empty?
         stop_watch
+        start_http_server( dir ) if App::CONFIG['services'].include?( :http )
+
         current_display = App.display
         @compass_thread = Thread.new do
           Compass::Commands::WatchProject.new( dir, { :logger => Compass::Logger.new({ :display => current_display,
                                                                                      :log_dir => dir}) }).execute
         end
+
         @watching_dir = dir
         @history_dirs.delete_if { |x| x == dir }
         @history_dirs.unshift(dir)
@@ -251,10 +251,7 @@ class Tray
         add_menu_separator(@menu, 2) if @menu.items[2].getStyle != Swt::SWT::SEPARATOR
         @tray_item.image = @watching_icon
 
-        @http_server_thread = Thread.new do 
-          @http_server.mount("/",HTTPServlet::FileHandler, dir, true);
-          @http_server.start
-        end
+        
         return true
 
       else
@@ -272,6 +269,24 @@ class Tray
     @menu.items[1].dispose()
     @watching_dir = nil
     @tray_item.image = @standby_icon
+
+    shutdown_http_server
+  end
+
+  def start_http_server(dir)
+    shutdown_http_server if @http_server 
+
+    @http_server = HTTPServer.new(:Port =>  App::CONFIG['services_http_port']) unless @http_server
+    @http_server_thread = Thread.new do 
+      @http_server.mount("/",HTTPServlet::FileHandler, dir, true);
+      @http_server.start
+    end
+  end
+
+  def shutdown_http_server
+    @http_server.shutdown if @http_server
+    @http_server = nil 
+    @http_server_thread.kill if @http_server_thread && @http_server_thread.alive?
   end
 
 end
