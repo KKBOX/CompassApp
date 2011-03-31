@@ -32,8 +32,8 @@ module Compass
       msg = "#{action_padding(action)}#{action} #{arguments.join(' ')}"
       if App::CONFIG["notifications"].include?(action)
         App.notify( msg.strip, @display )
-        log( msg )
       end
+      log( msg )
     end
 
     def emit(msg)
@@ -42,7 +42,7 @@ module Compass
 
     def log(msg)
       puts msg
-      if App::CONFIG["save_notification_to_file"]
+      if App::CONFIG["save_notification_to_file"] && @log_dir
         @logfile = open(@log_dir + '/compass_app_log.txt','a+') unless @logfile
         @logfile.puts Time.now.strftime("%Y-%m-%d %H:%M:%S") + " " + msg
         @logfile.flush
