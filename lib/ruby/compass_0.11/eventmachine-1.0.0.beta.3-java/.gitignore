@@ -1,0 +1,16 @@
+pkg
+rdoc
+Makefile
+
+*.bundle
+*.dll
+*.so
+*.jar
+*.class
+*.o
+*.log
+*.def
+*.pdb
+*.dSYM
+java/src/.project
+*.rbc

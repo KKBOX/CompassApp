@@ -291,11 +291,14 @@ class Tray
   
   def start_livereload
     shutdown_livereload
+    Thread.abort_on_exception = true
     @livereload_thread = Thread.new do 
-      EventMachine::WebSocket.start(:host => '0.0.0.0', :port => 35729, :debug => false) do |ws|
+      EventMachine::WebSocket.start(:host => '127.0.0.1', :port => App::CONFIG["services_livereload_port"], :debug => true) do |ws|
         ws.onopen do
           begin
-            puts "Browser connected."; ws.send "!!ver:#{1.6}"; App::LIVERELOAD_CLIENTS << ws
+            puts "Browser connected."; 
+            ws.send "!!ver:#{1.6}";
+            App::LIVERELOAD_CLIENTS << ws
           rescue
             puts $!
             puts $!.backtrace
@@ -310,10 +313,36 @@ class Tray
         end
       end
     end
+    start_watch_project
   end
 
   def shutdown_livereload
-    @livereload_thread.kill if @livereload_thread && @livereload_thread.alive?
+    @livereload_thread.kill    if @livereload_thread && @livereload_thread.alive?
+    @watch_project_thread.kill if @watch_project_thread && @watch_project_thread.alive?
   end
+
+  def start_watch_project
+
+   @watch_project_thread = Thread.new do
+      FSSM.monitor do |monitor|
+        monitor.path Compass.configuration.project_path do |path|
+          path.glob '**/*.{css,png,jpg,gif,js,html}'
+          path.update do |base, relative|
+            puts ">>> Change detected to: #{relative}"
+            App.send_livereload_msg( base, relative )
+          end 
+          path.create do |base, relative|
+            puts ">>> New file detected: #{relative}"
+            App.send_livereload_msg( base, relative )
+          end 
+          path.delete do |base, relative|
+            puts ">>> File Removed: #{relative}"
+            App.send_livereload_msg( base, relative )
+          end 
+        end 
+      end 
+    end 
+  end 
+
 end
 

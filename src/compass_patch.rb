@@ -59,8 +59,5 @@ default_path = File.join( java.lang.System.getProperty("user.home"), '.compass',
 if File.exists?( default_path ) 
   Compass::Frameworks.discover( default_path ) 
 end 
-Compass.configuration.watch("**/*") do |base, relative|
-  puts base
-  puts relative
-  App.send_livereload_msg( base, relative )
-end
+
+

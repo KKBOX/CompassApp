@@ -59,13 +59,12 @@ module App
   LIVERELOAD_CLIENTS = []
   
   def send_livereload_msg( base, relative )
-    data = JSON.dump( ['refresh', { :path => relative,
-      :apply_js_live  => true,
+    data = JSON.dump( ['refresh', { :path => File.join(base, relative),
+      :apply_js_live  => false,
       :apply_css_live => true,
       :apply_images_live => true }] )
-    puts data 
     LIVERELOAD_CLIENTS.each do |ws|
-      ws.send data
+      ws.send(data)
     end
   end
 
@@ -96,7 +95,7 @@ module App
       $LOAD_PATH.unshift "." 
 
       # we have a special version fssm for osx 10.6 ,  to use rb-fsevent 
-      require "fssm" if OS == 'darwin' && OS_VERSION =~ /^10.6/
+      require "fssm" if (OS == 'darwin' && OS_VERSION =~ /^10.6/) || OS == 'linux'
 
       require "compass"
       require "compass/exec"
