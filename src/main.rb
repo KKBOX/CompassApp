@@ -29,6 +29,8 @@ require "app.rb"
 
 App.require_compass
 begin
+  require 'em-websocket'
+  require 'json'
   require "ninesixty"
   require "html5-boilerplate"
 rescue LoadError

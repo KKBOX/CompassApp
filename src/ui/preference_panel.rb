@@ -69,9 +69,9 @@ class PreferencePanel
     service_http_button.setSelection( App::CONFIG["services"] == [:http])
     service_http_button.addListener(Swt::SWT::Selection, services_button_handler)
 
-    #service_livereload_button = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    #service_livereload_button.setText( 'http and livereload' )
-    #service_livereload_button.setSelection(App::CONFIG["services"] == [:http, :livereload])
+    service_livereload_button = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    service_livereload_button.setText( 'http and livereload' )
+    service_livereload_button.setSelection(App::CONFIG["services"] == [:http, :livereload])
 
     
     layoutdata = Swt::Layout::FormData.new()
@@ -98,8 +98,24 @@ class PreferencePanel
     http_port_text.addListener(Swt::SWT::Selection, services_button_handler)
  
     layoutdata = Swt::Layout::FormData.new()
+    layoutdata.left = Swt::Layout::FormAttachment.new( http_port_label, 0, Swt::SWT::LEFT)
+    layoutdata.top = Swt::Layout::FormAttachment.new( http_port_label, 10, Swt::SWT::BOTTOM)
+    livereload_port_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    livereload_port_label.setText("livereload port:")
+    livereload_port_label.setLayoutData(layoutdata)
+
+
+    layoutdata = Swt::Layout::FormData.new(50, Swt::SWT::DEFAULT)
+    layoutdata.left = Swt::Layout::FormAttachment.new( livereload_port_label, 1, Swt::SWT::RIGHT)
+    layoutdata.top = Swt::Layout::FormAttachment.new( livereload_port_label, 0, Swt::SWT::TOP)
+    livereload_port_text = Swt::Widgets::Text.new(composite, Swt::SWT::BORDER)
+    livereload_port_text.setText( App::CONFIG["services_livereload_port"].to_s )
+    livereload_port_text.setLayoutData( layoutdata )
+    livereload_port_text.addListener(Swt::SWT::Selection, services_button_handler)
+
+    layoutdata = Swt::Layout::FormData.new()
     layoutdata.left = Swt::Layout::FormAttachment.new(0, 0)
-    layoutdata.top = Swt::Layout::FormAttachment.new(http_port_text, 10, Swt::SWT::BOTTOM)
+    layoutdata.top = Swt::Layout::FormAttachment.new(livereload_port_label, 10, Swt::SWT::BOTTOM)
     @services_apply_button = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH )
     @services_apply_button.setLayoutData(layoutdata)
     @services_apply_button.setText("Apply")
@@ -111,6 +127,7 @@ class PreferencePanel
       when service_livereload_button.getSelection then [ :http, :livereload] 
       end
       App::CONFIG['services_http_port'] = http_port_text.getText
+      App::CONFIG['services_livereload_port'] = livereload_port_text.getText
       App.save_config
       App.alert('done')  
       evt.widget.setEnabled(false)

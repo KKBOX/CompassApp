@@ -40,6 +40,7 @@ module App
     end
 
     x.delete("services_http_port") unless x["services_http_port"].to_i > 0
+    x.delete("services_livereload_port") unless x["services_livereload_port"].to_i > 0
                                 
 
     {
@@ -49,12 +50,25 @@ module App
       "notifications" => [ :error ],
       "save_notification_to_file" => true,
       "services" => [ ],
-      "services_http_port" => 24680
+      "services_http_port" => 24680,
+      "services_livereload_port" => 35729
     }.merge!(x)
   end
  
   CONFIG = get_config
- 
+  LIVERELOAD_CLIENTS = []
+  
+  def send_livereload_msg( base, relative )
+    data = JSON.dump( ['refresh', { :path => relative,
+      :apply_js_live  => true,
+      :apply_css_live => true,
+      :apply_images_live => true }] )
+    puts data 
+    LIVERELOAD_CLIENTS.each do |ws|
+      ws.send data
+    end
+  end
+
   def require_compass
 
     begin

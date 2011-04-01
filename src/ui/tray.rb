@@ -1,7 +1,6 @@
 require "webrick";
 
 
-
 class Tray
   include WEBrick;
 
@@ -228,6 +227,7 @@ class Tray
       if !x.new_compiler_instance.sass_files.empty?
         stop_watch
         start_http_server( dir ) if App::CONFIG['services'].include?( :http )
+        start_livereload if App::CONFIG['services'].include?( :livereload )
 
         current_display = App.display
         @compass_thread = Thread.new do
@@ -288,6 +288,32 @@ class Tray
     @http_server = nil 
     @http_server_thread.kill if @http_server_thread && @http_server_thread.alive?
   end
+  
+  def start_livereload
+    shutdown_livereload
+    @livereload_thread = Thread.new do 
+      EventMachine::WebSocket.start(:host => '0.0.0.0', :port => 35729, :debug => false) do |ws|
+        ws.onopen do
+          begin
+            puts "Browser connected."; ws.send "!!ver:#{1.6}"; App::LIVERELOAD_CLIENTS << ws
+          rescue
+            puts $!
+            puts $!.backtrace
+          end
+        end
+        ws.onmessage do |msg|
+          puts "Browser URL: #{msg}"
+        end
+        ws.onclose do
+          App::LIVERELOAD_CLIENTS.delete ws
+          puts "Browser disconnected."
+        end
+      end
+    end
+  end
 
+  def shutdown_livereload
+    @livereload_thread.kill if @livereload_thread && @livereload_thread.alive?
+  end
 end
 
