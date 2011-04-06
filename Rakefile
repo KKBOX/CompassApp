@@ -80,7 +80,7 @@ INFO_ENDL
       %x{cp -R lib/ruby package/jar/lib}
       %x{cp -R lib/images package/jar/lib}
       %x{mv package/jar package/compass.app}
-      %x{echo "#!/bin/sh\njava -d32 -client -jar compass-app.jar" > package/compass.app/run.sh}
+      %x{echo "#!/bin/sh\njava -client -jar compass-app.jar" > package/compass.app/run.sh}
       %x{chmod +x package/compass.app/run.sh}
       Dir.chdir 'package'
       @linux_bundle_file="compass.app.linux.#{@compile_time}-#{@revision}.zip"
