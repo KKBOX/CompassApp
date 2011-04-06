@@ -56,17 +56,6 @@ module App
   end
  
   CONFIG = get_config
-  LIVERELOAD_CLIENTS = []
-  
-  def send_livereload_msg( base, relative )
-    data = JSON.dump( ['refresh', { :path => File.join(base, relative),
-      :apply_js_live  => false,
-      :apply_css_live => true,
-      :apply_images_live => true }] )
-    LIVERELOAD_CLIENTS.each do |ws|
-      ws.send(data)
-    end
-  end
 
   def require_compass
 

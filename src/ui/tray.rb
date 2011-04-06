@@ -1,8 +1,4 @@
-require "webrick";
-
-
 class Tray
-  include WEBrick;
 
   def initialize()
     @http_server = nil
@@ -226,8 +222,13 @@ class Tray
       x = Compass::Commands::UpdateProject.new( dir, {})
       if !x.new_compiler_instance.sass_files.empty?
         stop_watch
-        start_http_server( dir ) if App::CONFIG['services'].include?( :http )
-        start_livereload if App::CONFIG['services'].include?( :livereload )
+        if App::CONFIG['services'].include?( :http )
+          SimpleHTTPServer.instance.start(dir, :Port =>  App::CONFIG['services_http_port'])
+        end
+
+        if App::CONFIG['services'].include?( :livereload )
+          Livereload.instance.watch(dir, { :port => App::CONFIG["services_livereload_port"] }) 
+        end
 
         current_display = App.display
         @compass_thread = Thread.new do
@@ -269,80 +270,9 @@ class Tray
     @menu.items[1].dispose()
     @watching_dir = nil
     @tray_item.image = @standby_icon
-
-    shutdown_http_server
-  end
-
-  def start_http_server(dir)
-    shutdown_http_server if @http_server 
-
-    @http_server = HTTPServer.new(:Port =>  App::CONFIG['services_http_port']) unless @http_server
-    @http_server_thread = Thread.new do 
-      @http_server.mount("/",HTTPServlet::FileHandler, dir, true);
-      @http_server.start
-    end
-  end
-
-  def shutdown_http_server
-    @http_server.shutdown if @http_server
-    @http_server = nil 
-    @http_server_thread.kill if @http_server_thread && @http_server_thread.alive?
+    Livereload.instance.unwatch
+    SimpleHTTPServer.instance.stop
   end
   
-  def start_livereload
-    shutdown_livereload
-    Thread.abort_on_exception = true
-    @livereload_thread = Thread.new do 
-      EventMachine::WebSocket.start(:host => '127.0.0.1', :port => App::CONFIG["services_livereload_port"], :debug => true) do |ws|
-        ws.onopen do
-          begin
-            puts "Browser connected."; 
-            ws.send "!!ver:#{1.6}";
-            App::LIVERELOAD_CLIENTS << ws
-          rescue
-            puts $!
-            puts $!.backtrace
-          end
-        end
-        ws.onmessage do |msg|
-          puts "Browser URL: #{msg}"
-        end
-        ws.onclose do
-          App::LIVERELOAD_CLIENTS.delete ws
-          puts "Browser disconnected."
-        end
-      end
-    end
-    start_watch_project
-  end
-
-  def shutdown_livereload
-    @livereload_thread.kill    if @livereload_thread && @livereload_thread.alive?
-    @watch_project_thread.kill if @watch_project_thread && @watch_project_thread.alive?
-  end
-
-  def start_watch_project
-
-   @watch_project_thread = Thread.new do
-      FSSM.monitor do |monitor|
-        monitor.path Compass.configuration.project_path do |path|
-          path.glob '**/*.{css,png,jpg,gif,js,html}'
-          path.update do |base, relative|
-            puts ">>> Change detected to: #{relative}"
-            App.send_livereload_msg( base, relative )
-          end 
-          path.create do |base, relative|
-            puts ">>> New file detected: #{relative}"
-            App.send_livereload_msg( base, relative )
-          end 
-          path.delete do |base, relative|
-            puts ">>> File Removed: #{relative}"
-            App.send_livereload_msg( base, relative )
-          end 
-        end 
-      end 
-    end 
-  end 
-
 end
 

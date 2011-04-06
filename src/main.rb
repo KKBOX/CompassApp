@@ -5,7 +5,9 @@ else
   LIB_PATH = 'lib' 
 end
 
-require "swt_wrapper.rb"
+require "swt_wrapper"
+require "livereload"
+require "simplehttpserver"
 
 if Dir.pwd =~ / /
   display  = Swt::Widgets::Display.get_current 
