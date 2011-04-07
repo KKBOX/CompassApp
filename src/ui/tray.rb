@@ -223,6 +223,7 @@ class Tray
   end
 
   def watch(dir)
+    dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
     App.try do 
       x = Compass::Commands::UpdateProject.new( dir, {})
       if !x.new_compiler_instance.sass_files.empty?
