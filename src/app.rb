@@ -40,6 +40,7 @@ module App
     end
 
     x.delete("services_http_port") unless x["services_http_port"].to_i > 0
+    x.delete("services_livereload_port") unless x["services_livereload_port"].to_i > 0
                                 
 
     {
@@ -49,12 +50,13 @@ module App
       "notifications" => [ :error ],
       "save_notification_to_file" => true,
       "services" => [ ],
-      "services_http_port" => 24680
+      "services_http_port" => 24680,
+      "services_livereload_port" => 35729
     }.merge!(x)
   end
  
   CONFIG = get_config
- 
+
   def require_compass
 
     begin
@@ -82,7 +84,7 @@ module App
       $LOAD_PATH.unshift "." 
 
       # we have a special version fssm for osx 10.6 ,  to use rb-fsevent 
-      require "fssm" if OS == 'darwin' && OS_VERSION =~ /^10.6/
+      require "fssm" if (OS == 'darwin' && OS_VERSION =~ /^10.6/) || OS == 'linux'
 
       require "compass"
       require "compass/exec"

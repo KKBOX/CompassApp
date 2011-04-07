@@ -5,7 +5,9 @@ else
   LIB_PATH = 'lib' 
 end
 
-require "swt_wrapper.rb"
+require "swt_wrapper"
+require "livereload"
+require "simplehttpserver"
 
 if Dir.pwd =~ / /
   display  = Swt::Widgets::Display.get_current 
@@ -20,7 +22,6 @@ require 'stringio'
 require 'thread'
 require "open-uri"
 require "yaml"
-
 %w{alert notification quit_window tray preference_panel report}.each do | f |
   require "ui/#{f}"
 end
@@ -28,7 +29,10 @@ end
 require "app.rb"
 
 App.require_compass
+
 begin
+  require 'em-websocket'
+  require 'json'
   require "ninesixty"
   require "html5-boilerplate"
 rescue LoadError

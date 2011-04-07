@@ -1,9 +1,4 @@
-require "webrick";
-
-
-
 class Tray
-  include WEBrick;
 
   def initialize()
     @http_server = nil
@@ -228,7 +223,13 @@ class Tray
       x = Compass::Commands::UpdateProject.new( dir, {})
       if !x.new_compiler_instance.sass_files.empty?
         stop_watch
-        start_http_server( dir ) if App::CONFIG['services'].include?( :http )
+        if App::CONFIG['services'].include?( :http )
+          SimpleHTTPServer.instance.start(dir, :Port =>  App::CONFIG['services_http_port'])
+        end
+
+        if App::CONFIG['services'].include?( :livereload )
+          Livereload.instance.watch(dir, { :port => App::CONFIG["services_livereload_port"] }) 
+        end
 
         current_display = App.display
         @compass_thread = Thread.new do
@@ -270,25 +271,9 @@ class Tray
     @menu.items[1].dispose()
     @watching_dir = nil
     @tray_item.image = @standby_icon
-
-    shutdown_http_server
+    Livereload.instance.unwatch
+    SimpleHTTPServer.instance.stop
   end
-
-  def start_http_server(dir)
-    shutdown_http_server if @http_server 
-
-    @http_server = HTTPServer.new(:Port =>  App::CONFIG['services_http_port']) unless @http_server
-    @http_server_thread = Thread.new do 
-      @http_server.mount("/",HTTPServlet::FileHandler, dir, true);
-      @http_server.start
-    end
-  end
-
-  def shutdown_http_server
-    @http_server.shutdown if @http_server
-    @http_server = nil 
-    @http_server_thread.kill if @http_server_thread && @http_server_thread.alive?
-  end
-
+  
 end
 

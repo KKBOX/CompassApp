@@ -59,3 +59,5 @@ default_path = File.join( java.lang.System.getProperty("user.home"), '.compass',
 if File.exists?( default_path ) 
   Compass::Frameworks.discover( default_path ) 
 end 
+
+
