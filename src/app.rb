@@ -85,6 +85,7 @@ module App
 
       # we have a special version fssm for osx 10.6 ,  to use rb-fsevent 
       require "fssm" if (OS == 'darwin' && OS_VERSION =~ /^10.6/) || OS == 'linux'
+      require "fsevent_patch" if OS == 'darwin'
 
       require "compass"
       require "compass/exec"
