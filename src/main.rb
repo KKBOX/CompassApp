@@ -38,5 +38,5 @@ begin
 rescue LoadError
 end
 
-Tray.new.run
+Tray.instance.run
 

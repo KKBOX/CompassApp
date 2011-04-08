@@ -31,6 +31,7 @@ module Swt
     import org.eclipse.swt.widgets.FileDialog
     import org.eclipse.swt.widgets.Group
     import org.eclipse.swt.widgets.Label
+    import org.eclipse.swt.widgets.Link
     import org.eclipse.swt.widgets.List
     import org.eclipse.swt.widgets.Menu
     import org.eclipse.swt.widgets.MenuItem

@@ -1,4 +1,6 @@
+require "singleton"
 class Tray
+  include Singleton
 
   def initialize()
     @http_server = nil
@@ -39,8 +41,8 @@ class Tray
     item =  add_menu_item( "About", open_about_link_handler, Swt::SWT::CASCADE)
     item.menu = Swt::Widgets::Menu.new( @menu )
     add_menu_item( 'Homepage',                      open_about_link_handler,   Swt::SWT::PUSH, item.menu)
-    add_menu_item( 'Compass v.' + Compass::VERSION, open_compass_link_handler, Swt::SWT::PUSH, item.menu)
-    add_menu_item( 'Sass v.' + Sass::VERSION,       open_sass_link_handler,    Swt::SWT::PUSH, item.menu)
+    add_menu_item( 'Compass ' + Compass::VERSION, open_compass_link_handler, Swt::SWT::PUSH, item.menu)
+    add_menu_item( 'Sass ' + Sass::VERSION,       open_sass_link_handler,    Swt::SWT::PUSH, item.menu)
     add_menu_separator( item.menu )
     
     add_menu_item( "App Version: #{App.version}",                          nil, Swt::SWT::PUSH, item.menu)
@@ -57,7 +59,14 @@ class Tray
     App.display.dispose
 
   end
-
+  
+  def rewatch
+    if @watching_dir
+      dir = @watching_dir
+      stop_watch
+      watch(dir)
+    end
+  end
 
   private 
   def add_menu_separator(menu=nil, index=nil)
@@ -273,7 +282,7 @@ class Tray
     @tray_item.image = @standby_icon
     Livereload.instance.unwatch
     SimpleHTTPServer.instance.stop
-    FSEvent.stop_all_instances if FSEvent && FSEvent.methods.include?("stop_all_instances")
+    FSEvent.stop_all_instances if Object.const_defined?("FSEvent") && FSEvent.methods.include?("stop_all_instances")
   end
   
 end
