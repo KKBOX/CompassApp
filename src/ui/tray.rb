@@ -273,6 +273,7 @@ class Tray
     @tray_item.image = @standby_icon
     Livereload.instance.unwatch
     SimpleHTTPServer.instance.stop
+    FSEvent.stop_all_instances if FSEvent && FSEvent.methods.include?("stop_all_instances")
   end
   
 end
