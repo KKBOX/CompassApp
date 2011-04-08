@@ -290,7 +290,7 @@ class PreferencePanel
     special_gem_label_ex.setText("You have to restart Commpass.app to apply this change")
 
     compass_version_apply_button = Swt::Widgets::Button.new(@apply_group, Swt::SWT::PUSH )
-    compass_version_apply_button.setText("Apply & Quit")
+    compass_version_apply_button.setText("Apply && Quit")
     compass_version_apply_button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
       if @button_v11.getSelection
         App::CONFIG['use_version'] = 0.11
