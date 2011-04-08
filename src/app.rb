@@ -71,15 +71,23 @@ module App
         alert("Load Custom Compass fail, Use Default Compass v0.11 library, please check the Gem Path")
       end
  
-      gems_path = if App::CONFIG['use_version'] == 0.10 
+
+      compass_gems_path = if App::CONFIG['use_version'] == 0.10 
         File.join(LIB_PATH, "ruby", "compass_0.10")
       else
         File.join(LIB_PATH, "ruby", "compass_0.11")
       end
 
-      Dir.new( gems_path ).entries.reject{|e| e =~ /^\./}.each do |dir|
-        $LOAD_PATH.unshift( File.join(gems_path, dir,'lib'))
+      Dir.new( compass_gems_path ).entries.reject{|e| e =~ /^\./}.each do |dir|
+        $LOAD_PATH.unshift( File.join(compass_gems_path, dir,'lib'))
       end 
+
+      common_gems_path = File.join(LIB_PATH, "ruby", "common" )
+
+      Dir.new( common_gems_path ).entries.reject{|e| e =~ /^\./}.each do |dir|
+        $LOAD_PATH.unshift( File.join(common_gems_path, dir,'lib') )
+      end 
+
       $LOAD_PATH.unshift "." 
 
       # we have a special version fssm for osx 10.6 ,  to use rb-fsevent 
