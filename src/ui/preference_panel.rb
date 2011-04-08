@@ -49,7 +49,7 @@ class PreferencePanel
     
     # ====== web server =====
     @service_http_button = Swt::Widgets::Button.new(composite, Swt::SWT::CHECK )
-    @service_http_button.setText( 'Enables Web Server (use WEBrick)' )
+    @service_http_button.setText( 'Enable Web Server (use WEBrick)' )
     @service_http_button.setSelection( App::CONFIG["services"].include? :http )
     @service_http_button.addListener(Swt::SWT::Selection, services_button_handler)
 
@@ -81,7 +81,7 @@ class PreferencePanel
     layoutdata.left = Swt::Layout::FormAttachment.new( @service_http_button, 0, Swt::SWT::LEFT )
     layoutdata.top  = Swt::Layout::FormAttachment.new( http_service_info, 10, Swt::SWT::BOTTOM)
     @service_livereload_button = Swt::Widgets::Button.new(composite, Swt::SWT::CHECK )
-    @service_livereload_button.setText( 'Enabled livereload' )
+    @service_livereload_button.setText( 'Enable livereload' )
     @service_livereload_button.setSelection( App::CONFIG["services"].include? :livereload )
     @service_livereload_button.addListener(Swt::SWT::Selection, services_button_handler)
     @service_livereload_button.setLayoutData(layoutdata)
