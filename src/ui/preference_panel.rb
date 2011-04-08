@@ -303,6 +303,7 @@ class PreferencePanel
       App::CONFIG['gem_path']=gem_path_text.getText
       App.save_config
       evt.widget.shell.dispose();
+      Tray.instance.stop_watch
       java.lang.System.exit(0)
     end)
 

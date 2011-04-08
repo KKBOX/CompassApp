@@ -68,7 +68,6 @@ class Tray
     end
   end
 
-  private 
   def add_menu_separator(menu=nil, index=nil)
     menu = @menu unless menu
     if index
@@ -215,6 +214,7 @@ class Tray
   
   def exit_handler
     Swt::Widgets::Listener.impl do |method, evt|
+      stop_watch
       App.set_histoy(@history_dirs[0,5])
       @shell.close
     end
