@@ -49,7 +49,7 @@ class PreferencePanel
     
     # ====== web server =====
     @service_http_button = Swt::Widgets::Button.new(composite, Swt::SWT::CHECK )
-    @service_http_button.setText( 'Enable Web Server (use WEBrick)' )
+    @service_http_button.setText( 'Enable Web Server' )
     @service_http_button.setSelection( App::CONFIG["services"].include? :http )
     @service_http_button.addListener(Swt::SWT::Selection, services_button_handler)
 
@@ -73,7 +73,7 @@ class PreferencePanel
     layoutdata.left = Swt::Layout::FormAttachment.new( http_port_label, 0, Swt::SWT::LEFT )
     layoutdata.top  = Swt::Layout::FormAttachment.new( http_port_label, 10, Swt::SWT::BOTTOM)
     http_service_info = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    http_service_info.setText("It will runs a tiny web server when you watch a folder, so you can use absolute path in your files.")
+    http_service_info.setText("It will run a tiny web server when you watch a folder, so you can use absolute path in your files.")
     http_service_info.setLayoutData(layoutdata)
 
     # ====== livereload server =====
@@ -112,6 +112,15 @@ class PreferencePanel
        Swt::Program.launch(evt.text)
     end)
     
+    layoutdata = Swt::Layout::FormData.new(480, Swt::SWT::DEFAULT)
+    layoutdata.left = Swt::Layout::FormAttachment.new( livereload_service_info, 0, Swt::SWT::LEFT )
+    layoutdata.top  = Swt::Layout::FormAttachment.new( livereload_service_info, 00, Swt::SWT::BOTTOM)
+    livereload_service_help_info = Swt::Widgets::Link.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    livereload_service_help_info.setText("You have to install <a href=\"https://github.com/handlino/CompassApp/wiki/livereload-browser-extension\">livereload browser extension</a> to use this feature.")
+    livereload_service_help_info.setLayoutData(layoutdata)
+    livereload_service_help_info.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt| 
+       Swt::Program.launch(evt.text)
+    end)
      return composite
   end
 
@@ -241,7 +250,7 @@ class PreferencePanel
 
 
     @use_specify_gem_path_btn = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @use_specify_gem_path_btn.setText("Use specify gem path")
+    @use_specify_gem_path_btn.setText("Use specific gem path")
     @use_specify_gem_path_btn.setSelection(App::CONFIG['use_specify_gem_path'])
     @use_specify_gem_path_btn.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
@@ -250,7 +259,7 @@ class PreferencePanel
     data.left = Swt::Layout::FormAttachment.new( button_group, 22, Swt::SWT::LEFT)
     data.top = Swt::Layout::FormAttachment.new( button_group, 0, Swt::SWT::BOTTOM)
     special_gem_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    special_gem_label.setText("If you want use RubyGem to manage extensions, you can specify your own gem path.")
+    special_gem_label.setText("If you want use RubyGems to manage extensions, you can specify your own gem path.")
     special_gem_label.setLayoutData(data)
 
     data = Swt::Layout::FormData.new(480,Swt::SWT::DEFAULT)
