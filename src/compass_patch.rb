@@ -56,7 +56,10 @@ end
 
 
 default_path = File.join( java.lang.System.getProperty("user.home"), '.compass','extensions' )
+
+#require "rubygems"
 if File.exists?( default_path ) 
+  App.scan_library( default_path )
   Compass::Frameworks.discover( default_path ) 
 end 
 

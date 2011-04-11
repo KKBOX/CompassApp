@@ -60,7 +60,6 @@ module App
 
     begin
       if CONFIG["use_specify_gem_path"]
-        ENV["GEM_HOME"] = CONFIG["gem_path"] 
         ENV["GEM_PATH"] = CONFIG["gem_path"]
         require "rubygems"
       end
@@ -77,16 +76,10 @@ module App
       else
         File.join(LIB_PATH, "ruby", "compass_0.11")
       end
-
-      Dir.new( compass_gems_path ).entries.reject{|e| e =~ /^\./}.each do |dir|
-        $LOAD_PATH.unshift( File.join(compass_gems_path, dir,'lib'))
-      end 
+      scan_library(compass_gems_path)
 
       common_gems_path = File.join(LIB_PATH, "ruby", "common" )
-
-      Dir.new( common_gems_path ).entries.reject{|e| e =~ /^\./}.each do |dir|
-        $LOAD_PATH.unshift( File.join(common_gems_path, dir,'lib') )
-      end 
+      scan_library( common_gems_path )
 
       $LOAD_PATH.unshift "." 
 
@@ -169,6 +162,14 @@ module App
     rescue Exception => e
       report("#{e.message}\n#{e.backtrace.join("\n")}")
     end
+  end
+
+  def scan_library( dir )
+    Dir.new( dir ).entries.reject{|e| e =~ /^\./}.each do | subfolder|
+      lib_path = File.join(dir, subfolder,'lib')
+      $LOAD_PATH.unshift( File.join( dir, subfolder, 'lib') ) if File.exists?(lib_path)
+    end
+
   end
 
 end
