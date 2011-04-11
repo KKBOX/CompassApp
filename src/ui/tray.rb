@@ -237,7 +237,7 @@ class Tray
         end
 
         if App::CONFIG['services'].include?( :livereload )
-          Livereload.instance.watch(dir, { :port => App::CONFIG["services_livereload_port"] }) 
+          SimpleLivereload.instance.watch(dir, { :port => App::CONFIG["services_livereload_port"] }) 
         end
 
         current_display = App.display
@@ -280,7 +280,7 @@ class Tray
     @menu.items[1].dispose()
     @watching_dir = nil
     @tray_item.image = @standby_icon
-    Livereload.instance.unwatch
+    SimpleLivereload.instance.unwatch
     SimpleHTTPServer.instance.stop
     FSEvent.stop_all_instances if Object.const_defined?("FSEvent") && FSEvent.methods.include?("stop_all_instances")
   end

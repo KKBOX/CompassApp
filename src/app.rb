@@ -60,11 +60,19 @@ module App
 
     begin
       if CONFIG["use_specify_gem_path"]
+        ENV["GEM_HOME"] = CONFIG["gem_path"]
         ENV["GEM_PATH"] = CONFIG["gem_path"]
         require "rubygems"
       end
+
+      # make sure use java version library, ex json-java, eventmachine-java
+      jruby_gems_path = File.join(LIB_PATH, "ruby", "jruby" )
+      scan_library( jruby_gems_path )
+      require "fssm" if (OS == 'darwin' && OS_VERSION =~ /^10.6/) || OS == 'linux'
+      
       require "compass"
       require "compass/exec"
+      
     rescue LoadError => e
       if CONFIG["use_specify_gem_path"]
         alert("Load Custom Compass fail, Use Default Compass v0.11 library, please check the Gem Path")
@@ -78,19 +86,14 @@ module App
       end
       scan_library(compass_gems_path)
 
-      common_gems_path = File.join(LIB_PATH, "ruby", "common" )
-      scan_library( common_gems_path )
-
-      $LOAD_PATH.unshift "." 
-
-      # we have a special version fssm for osx 10.6 ,  to use rb-fsevent 
-      require "fssm" if (OS == 'darwin' && OS_VERSION =~ /^10.6/) || OS == 'linux'
-      require "fsevent_patch" if OS == 'darwin'
+      extensions_gems_path = File.join(LIB_PATH, "ruby", "compass_extensions" )
+      scan_library( extensions_gems_path )
 
       require "compass"
       require "compass/exec"
     end
 
+    require "fsevent_patch" if OS == 'darwin'
     require "compass_patch.rb"
   end
 

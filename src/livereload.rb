@@ -1,5 +1,7 @@
 require "singleton"
-class Livereload
+require 'em-websocket'
+require 'json'
+class SimpleLivereload
   include Singleton
   attr_accessor :clients
 
@@ -28,7 +30,7 @@ class Livereload
           begin
             puts "Browser connected."; 
             ws.send "!!ver:#{1.6}";
-            Livereload.instance.clients << ws
+            SimpleLivereload.instance.clients << ws
           rescue
             puts $!
             puts $!.backtrace
@@ -38,7 +40,7 @@ class Livereload
           puts "Browser URL: #{msg}"
         end
         ws.onclose do
-          Livereload.instance.clients.delete ws
+          SimpleLivereload.instance.clients.delete ws
           puts "Browser disconnected."
         end
       end
@@ -72,15 +74,15 @@ class Livereload
           path.glob '**/*.{css,png,jpg,gif,js,html}'
           path.update do |base, relative|
             puts ">>> Change detected to: #{relative}"
-            Livereload.instance.send_livereload_msg( base, relative )
+            SimpleLivereload.instance.send_livereload_msg( base, relative )
           end 
           path.create do |base, relative|
             puts ">>> New file detected: #{relative}"
-            Livereload.instance.send_livereload_msg( base, relative )
+            SimpleLivereload.instance.send_livereload_msg( base, relative )
           end 
           path.delete do |base, relative|
             puts ">>> File Removed: #{relative}"
-            Livereload.instance.send_livereload_msg( base, relative )
+            SimpleLivereload.instance.send_livereload_msg( base, relative )
           end 
         end 
       end 

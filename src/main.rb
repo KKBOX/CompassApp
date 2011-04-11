@@ -6,8 +6,6 @@ else
 end
 
 require "swt_wrapper"
-require "livereload"
-require "simplehttpserver"
 
 if Dir.pwd =~ / /
   display  = Swt::Widgets::Display.get_current 
@@ -31,12 +29,13 @@ require "app.rb"
 App.require_compass
 
 begin
-  require 'em-websocket'
-  require 'json'
   require "ninesixty"
   require "html5-boilerplate"
 rescue LoadError
 end
+
+require "livereload"
+require "simplehttpserver"
 
 Tray.instance.run
 
