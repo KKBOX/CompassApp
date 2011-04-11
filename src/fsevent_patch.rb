@@ -1,15 +1,6 @@
 class FSEvent
-  def self.instances
-    @instances ||=[ ]
-  end
   def self.stop_all_instances
-    sleep 0.1
-    instances.each do |x|
-      x.stop if x.pipe
-    end
-  end
-  def initialize
-    self.class.instances << self
+    system('killall fsevent_watch_for_compass_app')
   end
   def stop
     if pipe
@@ -20,5 +11,4 @@ class FSEvent
   ensure
     @pipe = false
   end
-
 end
