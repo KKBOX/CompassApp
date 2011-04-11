@@ -18,6 +18,23 @@ module Compass
     end
   end
 
+  module Frameworks
+    def register_directory(directory)
+      loaders = [
+        File.join(directory, "compass_init.rb"),
+        File.join(directory, 'lib', File.basename(directory)+".rb"),
+        File.join(directory, File.basename(directory)+".rb")
+      ]
+      loader = loaders.detect{|l| File.exists?(l)}
+      registered_framework = detect_registration do
+        load loader if loader # force reload file, to make sure framework registered
+      end
+      unless registered_framework
+        register File.basename(directory), directory
+      end
+    end
+  end
+
   class Logger
     def initialize(*actions)
       self.options = actions.last.is_a?(Hash) ? actions.pop : {}
@@ -57,7 +74,6 @@ end
 
 default_path = File.join( java.lang.System.getProperty("user.home"), '.compass','extensions' )
 
-#require "rubygems"
 if File.exists?( default_path ) 
   App.scan_library( default_path )
   Compass::Frameworks.discover( default_path ) 
