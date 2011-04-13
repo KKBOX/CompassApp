@@ -16,6 +16,7 @@ class  Notification
         shell.setBackgroundMode(Swt::SWT::INHERIT_DEFAULT)
         label = Swt::Widgets::Label.new(shell, Swt::SWT::HORIZONTAL )
         label.text = msg
+
         shell.addListener(Swt::SWT::Resize, Swt::Widgets::Listener.impl do |method, evt|
           # get the size of the drawing area
           rect = shell.getClientArea();
@@ -33,7 +34,9 @@ class  Notification
 
           # now set the background image on the shell
           shell.setBackgroundImage(newImage)
-
+          
+          # to dispose the GC object!
+          newImage.dispose
         end)
 
         m=target_display.getPrimaryMonitor()
@@ -52,6 +55,7 @@ class  Notification
 
         target_display.timerExec(5000, Swt::RRunnable.new do
           shell.dispose
+          shell = nil
           NOTIFICATIONS.delete_if{ | x | x.isDisposed }
         end)
       end)
