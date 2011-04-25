@@ -34,7 +34,7 @@ textarea { overflow: auto; }
 
 @include hand-cursor-inputs;
 
-@include webkit-reset-form-elements;
+@include reset-form-elements;
 
 @include selected-text;
 

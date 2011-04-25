@@ -1,11 +1,10 @@
 !!! 5
 -# paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/
-<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!-->
-%html.no-js
+<!--[if lt IE 7]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if gt IE 8]><!-->
+%html.no-js{ :lang => "en" }
   <!--<![endif]-->
   %head
     %meta{ :charset => "utf-8" }/
@@ -13,11 +12,11 @@
     -# 
       Always force latest IE rendering engine (even in intranet) & Chrome Frame
       Remove this if you use the .htaccess
-    %meta{ :content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible" }/
+    %meta{ "http-equiv" => "X-UA-Compatible", :content => "IE=edge,chrome=1" }/
     
     %title
-    %meta{ :content => "", :name => "description" }/
-    %meta{ :content => "", :name => "author" }/
+    %meta{ :name => "description", :content => "" }/
+    %meta{ :name => "author", :content => "" }/
     
     -# Mobile viewport optimized: j.mp/bplateviewport
     %meta{ :content => "width=device-width, initial-scale=1.0", :name => "viewport" }/
@@ -35,7 +34,7 @@
     -# All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects
     %script{ :src => "js/modernizr.min.js" }
     
-  %body{ :lang => "en" }
+  %body
     #container
       %header
       #main
@@ -44,9 +43,9 @@
     -# 
       Javascript at the bottom for fast page loading
       Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary
-    %script{ :src => "http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js" }
+    %script{ :src => "//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.js" }
     :javascript
-      !window.jQuery && document.write(unescape('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))
+      window.jQuery || document.write("<script src='js/jquery.min.js'>\x3C/script>")
     
     %script{ :src => "js/plugins.js?v=1" }
     %script{ :src => "js/script.js?v=1" }
@@ -59,12 +58,8 @@
     -#  asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet
     -#  change the UA-XXXXX-X to be your site's ID
     :javascript
-      var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
-      (function(d, t) {
-       var g = d.createElement(t),
-           s = d.getElementsByTagName(t)[0];
-       g.async = true;
-       g.src = ('https:' == location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-       s.parentNode.insertBefore(g, s);
-      })(document, 'script');
+      var _gaq=[["_setAccount","UA-XXXXX-X"],["_trackPageview"]];
+      (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+      g.src=("https:"==location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js";
+      s.parentNode.insertBefore(g,s)}(document,"script"));
 

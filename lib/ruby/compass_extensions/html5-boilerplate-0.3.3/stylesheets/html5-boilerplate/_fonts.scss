@@ -3,7 +3,7 @@ $base-font-size: 13px !default;
 $base-line-height: 1.231 !default;
 
 //
-// Font normalization inspired by YUI Library's fonts.css: developer.yahoo.com/yui
+// Font normalization inspired by YUI Library's fonts.css: developer.yahoo.com/yui/
 // Whatever parts of this port of YUI to Sass that are copyrightable, are Copyright (c) 2008, Christopher Eppstein. All Rights Reserved.
 //
 
@@ -17,15 +17,13 @@ $base-line-height: 1.231 !default;
 
   select, input, textarea, button { font: 99% $family; }
 
-  // normalize monospace sizing 
-  // meyerweb.com/eric/thoughts/2010/02/12/fixed-monospace-sizing/
+  // Normalize monospace sizing:
   // en.wikipedia.org/wiki/MediaWiki_talk:Common.css/Archive_11#Teletype_style_fix_for_Chrome
   pre, code, kbd, samp { font-family: monospace, sans-serif; }
 }
 
-// maxvoltar.com/archive/-webkit-font-smoothing
 @mixin font-smoothing {
-  -webkit-font-smoothing: antialiased;
+  @warn "The 'font-smoothing' mixin has been deprecated as it made monospace too thin.";
 }
 
 // Sets the font size specified in pixels using percents so that the base
