@@ -241,6 +241,8 @@ class Tray
         end
 
         current_display = App.display
+
+        Thread.abort_on_exception = true
         @compass_thread = Thread.new do
           Compass::Commands::WatchProject.new( dir, { :logger => Compass::Logger.new({ :display => current_display,
                                                                                      :log_dir => dir}) }).execute

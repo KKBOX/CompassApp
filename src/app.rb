@@ -93,6 +93,7 @@ module App
       require "compass/exec"
     end
 
+    $LOAD_PATH.unshift('.')
     require "fsevent_patch" if OS == 'darwin'
     require "compass_patch.rb"
   end
