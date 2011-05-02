@@ -52,6 +52,7 @@ class Tray
   end
 
   def run
+    puts 'tray OK, spend '+(Time.now.to_f - INITAT.to_f).to_s
     while(!@shell.is_disposed) do
       App.display.sleep if(!App.display.read_and_dispatch) 
     end
@@ -144,6 +145,7 @@ class Tray
     Swt::Widgets::Listener.impl do |method, evt|
       dia = Swt::Widgets::FileDialog.new(@shell,Swt::SWT::SAVE)
       dir = dia.open
+      dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
       if dir
         
         # if select a pattern
