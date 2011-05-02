@@ -12,7 +12,7 @@ configuration do |c|
 	# The main ruby file to invoke, minus the .rb extension
 	# default value: "main"
 	#
-	#c.main_ruby_file = "main"
+	c.main_ruby_file = "src/main"
 
 	# The fully-qualified name of the main Java file used to initiate the application.
 	# default value: "org.rubyforge.rawr.Main"
@@ -62,7 +62,7 @@ configuration do |c|
 	# Undocumented option 'java_library_path'
 	# default value: ""
 	#
-	#c.java_library_path = ""
+	c.java_library_path = "src"
 
 	# Undocumented option 'extra_user_jars'
 	# default value: {}

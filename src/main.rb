@@ -1,6 +1,7 @@
-ruby_lib_path = File.join(File.dirname(File.dirname(File.dirname(__FILE__))), "ruby").to_s()[5..-1] 
+$LOAD_PATH << 'src'
+ruby_lib_path = File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__)))), "ruby").to_s()[5..-1] 
 if File.exists?( ruby_lib_path ) 
-  LIB_PATH = File.join(File.dirname(File.dirname(File.dirname(__FILE__)))).to_s()[5..-1] 
+  LIB_PATH = File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__))))).to_s()[5..-1] 
 else 
   LIB_PATH = 'lib' 
 end
