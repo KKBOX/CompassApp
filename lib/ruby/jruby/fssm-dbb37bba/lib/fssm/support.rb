@@ -37,7 +37,7 @@ module FSSM::Support
     end
 
     def mac?
-      Config::CONFIG['target_os'] =~ /darwin/i
+      Config::CONFIG['target_os'] =~ /darwin/i && App::OS_VERSION =~ /^10.6/
     end
 
     def lion?
@@ -60,8 +60,12 @@ module FSSM::Support
 
     def rb_fsevent?
       begin
-        require 'rb-fsevent'
-        defined?(FSEvent::VERSION) ? FSEvent::VERSION.to_f >= 0.4 : false
+        #require 'rb-fsevent' # we require it in app.rb
+        if defined?(FSEvent) && defined?(FSEvent::VERSION) 
+         FSEvent::VERSION.to_f >= 0.4 
+        else
+         false
+        end
       rescue LoadError
         false
       end
