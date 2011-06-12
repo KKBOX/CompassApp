@@ -243,12 +243,6 @@ class PreferencePanel
     @button_v11.setSelection( App::CONFIG['use_version'] == 0.11 || !(App::CONFIG['use_specify_gem_path'] || App::CONFIG['use_version']) )
     @button_v11.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
-    @button_v10 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_v10.setText("Sass 3.0.24 + Compass 0.10.6 (older syntax)")
-    @button_v10.setSelection( App::CONFIG['use_version'] == 0.10 )
-    @button_v10.addListener(Swt::SWT::Selection, compass_version_button_handler)
-
-
     @use_specify_gem_path_btn = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
     @use_specify_gem_path_btn.setText("Use specific gem path")
     @use_specify_gem_path_btn.setSelection(App::CONFIG['use_specify_gem_path'])
@@ -303,8 +297,6 @@ class PreferencePanel
     compass_version_apply_button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
       if @button_v11.getSelection
         App::CONFIG['use_version'] = 0.11
-      elsif  @button_v10.getSelection
-        App::CONFIG['use_version'] = 0.10
       else
         App::CONFIG['use_version'] = false
       end
@@ -323,7 +315,6 @@ class PreferencePanel
   def compass_version_button_handler 
     Swt::Widgets::Listener.impl do |method, evt|   
       if ( @button_v11.getSelection && App::CONFIG['use_version'] == 0.11 ) || 
-         ( @button_v10.getSelection && App::CONFIG['use_version'] == 0.10 ) ||
          ( @use_specify_gem_path_btn.getSelection && App::CONFIG['use_version'] == false )
         @apply_group.setVisible(false)
       else
