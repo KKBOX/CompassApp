@@ -1,1 +1,0 @@
-require 'compass/sass_extensions/sprites/engines/chunky_png_engine'
