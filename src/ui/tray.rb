@@ -20,10 +20,11 @@ class Tray
     
     @menu = Swt::Widgets::Menu.new(@shell, Swt::SWT::POP_UP)
     
-    add_menu_item( "Watch a Folder...", open_dir_handler)
+    @watch_item = add_menu_item( "Watch a Folder...", open_dir_handler)
+
     add_menu_separator
 
-    add_menu_item( "History:")
+    @history_item = add_menu_item( "History:")
     
     @history_dirs.reverse.each do | dir |
       add_compass_item(dir)
@@ -228,12 +229,24 @@ class Tray
     end
   end
 
+  def clean_project_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      dir = @watching_dir
+      stop_watch
+      App.try do 
+        Compass::Commands::CleanProject.new(dir, {}).perform
+      end
+      watch(dir)
+    end
+  end
+
   def watch(dir)
     dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
     App.try do 
       x = Compass::Commands::UpdateProject.new( dir, {})
-      if !x.new_compiler_instance.sass_files.empty?
+      if !x.new_compiler_instance.sass_files.empty? # make sure we watch a compass project
         stop_watch
+
         if App::CONFIG['services'].include?( :http )
           SimpleHTTPServer.instance.start(dir, :Port =>  App::CONFIG['services_http_port'])
         end
@@ -258,12 +271,25 @@ class Tray
         end
         menuitem = add_compass_item(dir)
 
-        @menu.items[0].text="Watching " + dir
+        @watch_item.text="Watching " + dir
+        @install_item =  add_menu_item( "Install...", 
+                                        install_project_handler, 
+                                        Swt::SWT::CASCADE,
+                                        @menu, 
+                                        @menu.indexOf(@watch_item) +1 )
 
-        item =  add_menu_item( "Install Compass Project", install_project_handler, Swt::SWT::CASCADE, @menu, 1)
-        item.menu = Swt::Widgets::Menu.new( @menu )
-        build_compass_framework_menuitem( item.menu, install_project_handler )
-        add_menu_separator(@menu, 2) if @menu.items[2].getStyle != Swt::SWT::SEPARATOR
+        @install_item.menu = Swt::Widgets::Menu.new( @menu )
+        build_compass_framework_menuitem( @install_item.menu, install_project_handler )
+
+        @clean_item =  add_menu_item( "Force Recomplie", 
+                                        clean_project_handler, 
+                                        Swt::SWT::PUSH,
+                                        @menu, 
+                                        @menu.indexOf(@install_item) +1 )
+
+        if @menu.items[ @menu.indexOf(@clean_item)+1 ].getStyle != Swt::SWT::SEPARATOR
+          add_menu_separator(@menu, @menu.indexOf(@clean_item) + 1 )
+        end
         @tray_item.image = @watching_icon
 
         
@@ -280,8 +306,9 @@ class Tray
   def stop_watch
     @compass_thread.kill if @compass_thread && @compass_thread.alive?
     @compass_thread = nil
-    @menu.items[0].text="Watch a Folder..."
-    @menu.items[1].dispose()
+    @watch_item.text="Watch a Folder..."
+    @install_item.dispose() if @install_item && !@install_item.isDisposed
+    @clean_item.dispose()   if @clean_item && !@clean_item.isDisposed
     @watching_dir = nil
     @tray_item.image = @standby_icon
     SimpleLivereload.instance.unwatch
