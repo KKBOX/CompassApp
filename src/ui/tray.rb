@@ -139,7 +139,6 @@ class Tray
   def build_change_options_menuitem( index )
 
       file_name = Compass.detect_configuration_file(@watching_dir)
-      puts file_name
       file = File.new(file_name, 'r')
       bind = binding
       eval(file.read, bind)
@@ -276,16 +275,20 @@ class Tray
 
   def clean_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      dir = @watching_dir
-      stop_watch
-      App.try do 
-          actual = App.get_stdout do
-            Compass::Commands::CleanProject.new(dir, {}).perform
-          end
-          App.report( actual)
-      end
-      watch(dir)
+      clean_project(true)
     end
+  end
+
+  def clean_project(show_report = false)
+    dir = @watching_dir
+    stop_watch
+    App.try do 
+      actual = App.get_stdout do
+        Compass::Commands::CleanProject.new(dir, {}).perform
+      end
+      App.report( actual ) if show_report
+    end
+    watch(dir)
   end
 
   def update_config(need_clean_attr, value)
@@ -306,8 +309,7 @@ class Tray
     Swt::Widgets::Listener.impl do |method, evt|
       if evt.widget.getSelection 
         update_config( "output_style", ":#{evt.widget.text}" )
-        Compass::Commands::CleanProject.new(@watching_dir, {}).perform
-        watch(@watching_dir)
+        clean_project
       end
     end
   end
@@ -315,8 +317,7 @@ class Tray
   def linecomments_handler
     Swt::Widgets::Listener.impl do |method, evt|
       update_config( "line_comments", evt.widget.getSelection.to_s )
-      Compass::Commands::CleanProject.new(@watching_dir, {}).perform
-      watch(@watching_dir)
+      clean_project
     end
   end
   
@@ -334,7 +335,7 @@ class Tray
       update_config( "sass_options", sass_options.inspect )
 
       Compass::Commands::CleanProject.new(@watching_dir, {}).perform
-      watch(@watching_dir)
+      clean_project
     end
   end 
 
