@@ -73,9 +73,9 @@ class Tray
   def add_menu_separator(menu=nil, index=nil)
     menu = @menu unless menu
     if index
-    Swt::Widgets::MenuItem.new(menu, Swt::SWT::SEPARATOR, index)
+      Swt::Widgets::MenuItem.new(menu, Swt::SWT::SEPARATOR, index)
     else
-    Swt::Widgets::MenuItem.new(menu, Swt::SWT::SEPARATOR)
+      Swt::Widgets::MenuItem.new(menu, Swt::SWT::SEPARATOR)
     end
   end
 
@@ -147,17 +147,16 @@ class Tray
       submenu = Swt::Widgets::Menu.new( @menu )
       @outputstyle_item.menu = submenu
       outputstyle = eval('output_style',bind) rescue 'expanded'
-      
       item = add_menu_item( "nested",     outputstyle_handler, Swt::SWT::RADIO, submenu )
       item.setSelection(true) if outputstyle.to_s == "nested" 
 
       item = add_menu_item( "expanded",   outputstyle_handler, Swt::SWT::RADIO, submenu )
       item.setSelection(true) if outputstyle.to_s == "expanded"
 
-      add_menu_item( "compact",    outputstyle_handler, Swt::SWT::RADIO, submenu )
+      item = add_menu_item( "compact",    outputstyle_handler, Swt::SWT::RADIO, submenu )
       item.setSelection(true) if outputstyle.to_s == "compact"
 
-      add_menu_item( "compressed", outputstyle_handler, Swt::SWT::RADIO, submenu )
+      item = add_menu_item( "compressed", outputstyle_handler, Swt::SWT::RADIO, submenu )
       item.setSelection(true) if outputstyle.to_s == "compressed"
 
       @options_item = add_menu_item( "Options", empty_handler , Swt::SWT::CASCADE, @menu, @menu.indexOf(@outputstyle_item)+1 )

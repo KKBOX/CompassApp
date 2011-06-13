@@ -60,7 +60,7 @@ module FSSM::Support
 
     def rb_fsevent?
       begin
-        #require 'rb-fsevent' # we require it in app.rb
+        require 'rb-fsevent' 
         if defined?(FSEvent) && defined?(FSEvent::VERSION) 
          FSEvent::VERSION.to_f >= 0.4 
         else
