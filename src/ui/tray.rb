@@ -284,6 +284,7 @@ class Tray
     App.try do 
       actual = App.get_stdout do
         Compass::Commands::CleanProject.new(dir, {}).perform
+        Compass::Commands::UpdateProject.new( dir, {}).perform
       end
       App.report( actual ) if show_report
     end
