@@ -109,6 +109,12 @@ class Tray
     end
   end
 
+  def empty_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      
+    end
+  end
+
   def compass_switch_handler
     Swt::Widgets::Listener.impl do |method, evt|
       if @compass_thread
@@ -128,6 +134,44 @@ class Tray
         watch(dir) if dir 
       end
     end
+  end
+
+  def build_change_options_menuitem( index )
+
+      file_name = Compass.detect_configuration_file
+      file = File.new(file_name, 'r')
+      bind = binding
+      eval(file.read, bind)
+
+      @outputstyle_item = add_menu_item( "Output Style:", empty_handler , Swt::SWT::CASCADE, @menu, index)
+      submenu = Swt::Widgets::Menu.new( @menu )
+      @outputstyle_item.menu = submenu
+      outputstyle = eval('output_style',bind) rescue 'expanded'
+      
+      item = add_menu_item( "nested",     outputstyle_handler, Swt::SWT::RADIO, submenu )
+      item.setSelection(true) if outputstyle.to_s == "nested" 
+
+      item = add_menu_item( "expanded",   outputstyle_handler, Swt::SWT::RADIO, submenu )
+      item.setSelection(true) if outputstyle.to_s == "expanded"
+
+      add_menu_item( "compact",    outputstyle_handler, Swt::SWT::RADIO, submenu )
+      item.setSelection(true) if outputstyle.to_s == "compact"
+
+      add_menu_item( "compressed", outputstyle_handler, Swt::SWT::RADIO, submenu )
+      item.setSelection(true) if outputstyle.to_s == "compressed"
+
+      @options_item = add_menu_item( "Options:", empty_handler , Swt::SWT::CASCADE, @menu, @menu.indexOf(@outputstyle_item)+1 )
+      submenu = Swt::Widgets::Menu.new( @menu )
+      @options_item.menu = submenu
+
+      @linecomment_item  = add_menu_item( "Line Comment", linecomment_handler, Swt::SWT::CHECK, submenu )
+      linecomment = eval('line_comment',bind) rescue false
+      @linecomment_item.setSelection(true) if linecomment
+
+      @debuginfo_item    = add_menu_item( "Debug Info",   debuginfo_handler,   Swt::SWT::CHECK, submenu )
+      debuginfo = eval('sass_options[:debug_info]',bind) rescue false
+      @debuginfo_item.setSelection(true) if debuginfo
+      
   end
 
   def build_compass_framework_menuitem( submenu, handler )
@@ -190,7 +234,7 @@ class Tray
 
       end
   end
-
+  
   def preference_handler 
     Swt::Widgets::Listener.impl do |method, evt|
       PreferencePanel.instance.open
@@ -234,11 +278,63 @@ class Tray
       dir = @watching_dir
       stop_watch
       App.try do 
-        Compass::Commands::CleanProject.new(dir, {}).perform
+          actual = App.get_stdout do
+            Compass::Commands::CleanProject.new(dir, {}).perform
+          end
+          App.report( actual)
       end
       watch(dir)
     end
   end
+
+  def update_config(need_clean_attr, value)
+      file_name = Compass.detect_configuration_file
+      new_config = ''
+      last_is_blank = false
+      config_file = File.new(file_name,'r').each do | x | 
+        next if last_is_blank && x.strip.empty?
+        new_config += x unless x =~ /by Compass.app/ && x =~ Regexp.new(need_clean_attr)
+        last_is_blank = x.strip.empty?
+      end
+      config_file.close
+      new_config += "\n#{need_clean_attr} = #{value} # by Compass.app "
+      File.open(file_name, 'w'){ |f| f.write(new_config) }
+  end
+
+  def outputstyle_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      update_config( "output_style", ":#{evt.widget.text}" )
+    
+      Compass::Commands::CleanProject.new(@watching_dir, {}).perform
+      watch(@watching_dir)
+    end
+  end
+
+  def linecomment_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      update_config( "line_comment", evt.widget.getSelection.to_s )
+      Compass::Commands::CleanProject.new(@watching_dir, {}).perform
+      watch(@watching_dir)
+    end
+  end
+  
+  def debuginfo_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      file_name = Compass.detect_configuration_file
+      file = File.new(file_name, 'r')
+      bind = binding
+      eval(file.read, bind)
+      file.close
+      sass_options = eval('sass_option', bind) rescue {}
+      sass_options = {} if !sass_options.is_a? Hash
+      sass_options[:debug_info] = evt.widget.getSelection
+
+      update_config( "sass_options", sass_options.inspect )
+
+      Compass::Commands::CleanProject.new(@watching_dir, {}).perform
+      watch(@watching_dir)
+    end
+  end 
 
   def watch(dir)
     dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
@@ -280,12 +376,12 @@ class Tray
 
         @install_item.menu = Swt::Widgets::Menu.new( @menu )
         build_compass_framework_menuitem( @install_item.menu, install_project_handler )
-
+        build_change_options_menuitem( @menu.indexOf(@install_item) +1 )
         @clean_item =  add_menu_item( "Force Recomplie", 
                                         clean_project_handler, 
                                         Swt::SWT::PUSH,
                                         @menu, 
-                                        @menu.indexOf(@install_item) +1 )
+                                        @menu.indexOf(@options_item) +1 )
 
         if @menu.items[ @menu.indexOf(@clean_item)+1 ].getStyle != Swt::SWT::SEPARATOR
           add_menu_separator(@menu, @menu.indexOf(@clean_item) + 1 )
@@ -309,6 +405,8 @@ class Tray
     @watch_item.text="Watch a Folder..."
     @install_item.dispose() if @install_item && !@install_item.isDisposed
     @clean_item.dispose()   if @clean_item && !@clean_item.isDisposed
+    @outputstyle_item.dispose()   if @outputstyle_item && !@outputstyle_item.isDisposed
+    @options_item.dispose()   if @options_item && !@options_item.isDisposed
     @watching_dir = nil
     @tray_item.image = @standby_icon
     SimpleLivereload.instance.unwatch
