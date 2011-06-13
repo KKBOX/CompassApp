@@ -138,12 +138,13 @@ class Tray
 
   def build_change_options_menuitem( index )
 
-      file_name = Compass.detect_configuration_file
+      file_name = Compass.detect_configuration_file(@watching_dir)
+      puts file_name
       file = File.new(file_name, 'r')
       bind = binding
       eval(file.read, bind)
 
-      @outputstyle_item = add_menu_item( "Output Style:", empty_handler , Swt::SWT::CASCADE, @menu, index)
+      @outputstyle_item = add_menu_item( "Output Style", empty_handler , Swt::SWT::CASCADE, @menu, index)
       submenu = Swt::Widgets::Menu.new( @menu )
       @outputstyle_item.menu = submenu
       outputstyle = eval('output_style',bind) rescue 'expanded'
@@ -160,13 +161,13 @@ class Tray
       add_menu_item( "compressed", outputstyle_handler, Swt::SWT::RADIO, submenu )
       item.setSelection(true) if outputstyle.to_s == "compressed"
 
-      @options_item = add_menu_item( "Options:", empty_handler , Swt::SWT::CASCADE, @menu, @menu.indexOf(@outputstyle_item)+1 )
+      @options_item = add_menu_item( "Options", empty_handler , Swt::SWT::CASCADE, @menu, @menu.indexOf(@outputstyle_item)+1 )
       submenu = Swt::Widgets::Menu.new( @menu )
       @options_item.menu = submenu
 
-      @linecomment_item  = add_menu_item( "Line Comment", linecomment_handler, Swt::SWT::CHECK, submenu )
-      linecomment = eval('line_comment',bind) rescue false
-      @linecomment_item.setSelection(true) if linecomment
+      @linecomments_item  = add_menu_item( "Line Comments", linecomments_handler, Swt::SWT::CHECK, submenu )
+      linecomments = eval('line_comments',bind) rescue true
+      @linecomments_item.setSelection(true) if linecomments
 
       @debuginfo_item    = add_menu_item( "Debug Info",   debuginfo_handler,   Swt::SWT::CHECK, submenu )
       debuginfo = eval('sass_options[:debug_info]',bind) rescue false
@@ -293,7 +294,7 @@ class Tray
       last_is_blank = false
       config_file = File.new(file_name,'r').each do | x | 
         next if last_is_blank && x.strip.empty?
-        new_config += x unless x =~ /by Compass.app/ && x =~ Regexp.new(need_clean_attr)
+        new_config += x unless x =~ /by Compass\.app/ && x =~ Regexp.new(need_clean_attr)
         last_is_blank = x.strip.empty?
       end
       config_file.close
@@ -303,16 +304,17 @@ class Tray
 
   def outputstyle_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      update_config( "output_style", ":#{evt.widget.text}" )
-    
-      Compass::Commands::CleanProject.new(@watching_dir, {}).perform
-      watch(@watching_dir)
+      if evt.widget.getSelection 
+        update_config( "output_style", ":#{evt.widget.text}" )
+        Compass::Commands::CleanProject.new(@watching_dir, {}).perform
+        watch(@watching_dir)
+      end
     end
   end
 
-  def linecomment_handler
+  def linecomments_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      update_config( "line_comment", evt.widget.getSelection.to_s )
+      update_config( "line_comments", evt.widget.getSelection.to_s )
       Compass::Commands::CleanProject.new(@watching_dir, {}).perform
       watch(@watching_dir)
     end
