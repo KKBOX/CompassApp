@@ -24,8 +24,12 @@ class Tray
 
     add_menu_separator
 
-    @history_item = add_menu_item( "History:")
-    
+    @history_item = add_menu_item( "History:", empty_handler, Swt::SWT::CASCADE)
+
+    submenu = Swt::Widgets::Menu.new( @menu )
+    @history_item.menu = submenu
+    add_menu_item( "Clear History", clearhistory_handler,  Swt::SWT::PUSH, submenu )
+
     @history_dirs.reverse.each do | dir |
       add_compass_item(dir)
     end
@@ -115,6 +119,18 @@ class Tray
     end
   end
 
+  def clearhistory_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      @history_dirs.each do | dir |
+        @menu.items.each do |item|
+          item.dispose if item.text == dir 
+        end
+      end
+      @history_dirs = []
+      App.clear_histoy
+    end
+  end
+
   def compass_switch_handler
     Swt::Widgets::Listener.impl do |method, evt|
       if @compass_thread
@@ -138,50 +154,50 @@ class Tray
 
   def build_change_options_menuitem( index )
 
-      file_name = Compass.detect_configuration_file(@watching_dir)
-      file = File.new(file_name, 'r')
-      bind = binding
-      eval(file.read, bind)
+    file_name = Compass.detect_configuration_file(@watching_dir)
+    file = File.new(file_name, 'r')
+    bind = binding
+    eval(file.read, bind)
 
-      @outputstyle_item = add_menu_item( "Output Style", empty_handler , Swt::SWT::CASCADE, @menu, index)
-      submenu = Swt::Widgets::Menu.new( @menu )
-      @outputstyle_item.menu = submenu
-      outputstyle = eval('output_style',bind) rescue 'expanded'
-      item = add_menu_item( "nested",     outputstyle_handler, Swt::SWT::RADIO, submenu )
-      item.setSelection(true) if outputstyle.to_s == "nested" 
+    @outputstyle_item = add_menu_item( "Output Style", empty_handler , Swt::SWT::CASCADE, @menu, index)
+    submenu = Swt::Widgets::Menu.new( @menu )
+    @outputstyle_item.menu = submenu
+    outputstyle = eval('output_style',bind) rescue 'expanded'
+    item = add_menu_item( "nested",     outputstyle_handler, Swt::SWT::RADIO, submenu )
+    item.setSelection(true) if outputstyle.to_s == "nested" 
 
-      item = add_menu_item( "expanded",   outputstyle_handler, Swt::SWT::RADIO, submenu )
-      item.setSelection(true) if outputstyle.to_s == "expanded"
+    item = add_menu_item( "expanded",   outputstyle_handler, Swt::SWT::RADIO, submenu )
+    item.setSelection(true) if outputstyle.to_s == "expanded"
 
-      item = add_menu_item( "compact",    outputstyle_handler, Swt::SWT::RADIO, submenu )
-      item.setSelection(true) if outputstyle.to_s == "compact"
+    item = add_menu_item( "compact",    outputstyle_handler, Swt::SWT::RADIO, submenu )
+    item.setSelection(true) if outputstyle.to_s == "compact"
 
-      item = add_menu_item( "compressed", outputstyle_handler, Swt::SWT::RADIO, submenu )
-      item.setSelection(true) if outputstyle.to_s == "compressed"
+    item = add_menu_item( "compressed", outputstyle_handler, Swt::SWT::RADIO, submenu )
+    item.setSelection(true) if outputstyle.to_s == "compressed"
 
-      @options_item = add_menu_item( "Options", empty_handler , Swt::SWT::CASCADE, @menu, @menu.indexOf(@outputstyle_item)+1 )
-      submenu = Swt::Widgets::Menu.new( @menu )
-      @options_item.menu = submenu
+    @options_item = add_menu_item( "Options", empty_handler , Swt::SWT::CASCADE, @menu, @menu.indexOf(@outputstyle_item)+1 )
+    submenu = Swt::Widgets::Menu.new( @menu )
+    @options_item.menu = submenu
 
-      @linecomments_item  = add_menu_item( "Line Comments", linecomments_handler, Swt::SWT::CHECK, submenu )
-      linecomments = eval('line_comments',bind) rescue true
-      @linecomments_item.setSelection(true) if linecomments
+    @linecomments_item  = add_menu_item( "Line Comments", linecomments_handler, Swt::SWT::CHECK, submenu )
+    linecomments = eval('line_comments',bind) rescue true
+    @linecomments_item.setSelection(true) if linecomments
 
-      @debuginfo_item    = add_menu_item( "Debug Info",   debuginfo_handler,   Swt::SWT::CHECK, submenu )
-      debuginfo = eval('sass_options[:debug_info]',bind) rescue false
-      @debuginfo_item.setSelection(true) if debuginfo
-      
+    @debuginfo_item    = add_menu_item( "Debug Info",   debuginfo_handler,   Swt::SWT::CHECK, submenu )
+    debuginfo = eval('sass_options[:debug_info]',bind) rescue false
+    @debuginfo_item.setSelection(true) if debuginfo
+
   end
 
   def build_compass_framework_menuitem( submenu, handler )
     Compass::Frameworks::ALL.each do | framework |
       next if framework.name =~ /^_/
       item = add_menu_item( framework.name, handler, Swt::SWT::CASCADE, submenu)
-      framework_submenu = Swt::Widgets::Menu.new( submenu )
-      item.menu = framework_submenu
-      framework.template_directories.each do | dir |
-        add_menu_item( dir, handler, Swt::SWT::PUSH, framework_submenu)
-      end
+    framework_submenu = Swt::Widgets::Menu.new( submenu )
+    item.menu = framework_submenu
+    framework.template_directories.each do | dir |
+      add_menu_item( dir, handler, Swt::SWT::PUSH, framework_submenu)
+    end
     end
   end
 
@@ -191,7 +207,7 @@ class Tray
       dir = dia.open
       dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
       if dir
-        
+
         # if select a pattern
         if Compass::Frameworks::ALL.any?{ | f| f.name == evt.widget.getParent.getParentItem.text }
           framework = evt.widget.getParent.getParentItem.text
@@ -200,7 +216,7 @@ class Tray
           framework = evt.widget.txt
           pattern = 'project'
         end
-        
+
         App.try do 
           actual = App.get_stdout do
             Compass::Commands::CreateProject.new( dir, {:framework => framework, :pattern => pattern } ).execute

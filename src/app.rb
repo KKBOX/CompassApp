@@ -4,7 +4,7 @@ module App
   extend self
 
   include CompileVersion
-  VERSION = "1.4"
+  VERSION = "1.5rc1"
   OS = org.jruby.platform.Platform::OS 
   OS_VERSION = java.lang.System.getProperty("os.version")
 
@@ -104,6 +104,10 @@ module App
       f.write YAML.dump(CONFIG)
     end
 
+  end
+
+  def clear_histoy
+    set_histoy([])
   end
 
   def set_histoy(dirs)
