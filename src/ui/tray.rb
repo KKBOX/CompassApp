@@ -24,16 +24,10 @@ class Tray
 
     add_menu_separator
 
-    @history_item = add_menu_item( "History:", empty_handler, Swt::SWT::CASCADE)
+    @history_item = add_menu_item( "History:")
 
-    submenu = Swt::Widgets::Menu.new( @menu )
-    @history_item.menu = submenu
-    add_menu_item( "Clear History", clearhistory_handler,  Swt::SWT::PUSH, submenu )
-
-    @history_dirs.reverse.each do | dir |
-      add_compass_item(dir)
-    end
-
+    build_history_menuitem
+  
     add_menu_separator
 
     item =  add_menu_item( "Create Compass Project", create_project_handler, Swt::SWT::CASCADE)
@@ -102,11 +96,7 @@ class Tray
 
   def add_compass_item(dir)
     if File.exists?(dir)
-      index =0
-      @menu.items.each_with_index do | item, index |
-	break if item.text =~ /History/
-      end
-      menuitem = Swt::Widgets::MenuItem.new(@menu , Swt::SWT::PUSH, index+1)
+      menuitem = Swt::Widgets::MenuItem.new(@menu , Swt::SWT::PUSH, @menu.indexOf(@history_item) + 1 )
       menuitem.text = "#{dir}"
       menuitem.addListener(Swt::SWT::Selection, compass_switch_handler)
       menuitem
@@ -121,13 +111,12 @@ class Tray
 
   def clearhistory_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      @history_dirs.each do | dir |
-        @menu.items.each do |item|
-          item.dispose if item.text == dir 
-        end
+      @menu.items.each do |item|
+        item.dispose if @history_dirs.include?(item.text)
       end
       @history_dirs = []
       App.clear_histoy
+      build_history_menuitem
     end
   end
 
@@ -198,6 +187,22 @@ class Tray
     framework.template_directories.each do | dir |
       add_menu_item( dir, handler, Swt::SWT::PUSH, framework_submenu)
     end
+    end
+  end
+
+  def build_history_menuitem
+    @clearhistory_item ||= nil
+
+    if @history_dirs.empty?
+      @clearhistory_item.dispose if @clearhistory_item && !@clearhistory_item.isDisposed
+    else
+      if !@clearhistory_item || @clearhistory_item.isDisposed
+        @clearhistory_item = add_menu_item( "Clear History", clearhistory_handler, Swt::SWT::PUSH, @menu, @menu.indexOf(@history_item)+1)
+      end
+    end
+
+    @history_dirs.reverse.each do | dir |
+      add_compass_item(dir)
     end
   end
 
@@ -300,7 +305,9 @@ class Tray
     App.try do 
       actual = App.get_stdout do
         Compass::Commands::CleanProject.new(dir, {}).perform
+        Compass.reset_configuration!
         Compass::Commands::UpdateProject.new( dir, {}).perform
+        Compass.reset_configuration!
       end
       App.report( actual ) if show_report
     end
@@ -358,6 +365,7 @@ class Tray
   def watch(dir)
     dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
     App.try do 
+      Compass.reset_configuration!
       x = Compass::Commands::UpdateProject.new( dir, {})
       if !x.new_compiler_instance.sass_files.empty? # make sure we watch a compass project
         stop_watch
@@ -374,17 +382,19 @@ class Tray
 
         Thread.abort_on_exception = true
         @compass_thread = Thread.new do
+          Compass.reset_configuration!
           Compass::Commands::WatchProject.new( dir, { :logger => Compass::Logger.new({ :display => current_display,
                                                                                      :log_dir => dir}) }).execute
         end
 
         @watching_dir = dir
+        @menu.items.each do |item|
+          item.dispose if @history_dirs.include?(item.text)
+        end
         @history_dirs.delete_if { |x| x == dir }
         @history_dirs.unshift(dir)
-        @menu.items.each do |item|
-          item.dispose if item.text == dir 
-        end
-        menuitem = add_compass_item(dir)
+        build_history_menuitem
+
 
         @watch_item.text="Watching " + dir
         @install_item =  add_menu_item( "Install...", 
