@@ -109,15 +109,13 @@ class Tray
     end
   end
 
-  def clearhistory_handler
-    Swt::Widgets::Listener.impl do |method, evt|
+  def clear_history
       @menu.items.each do |item|
         item.dispose if @history_dirs.include?(item.text)
       end
       @history_dirs = []
       App.clear_histoy
       build_history_menuitem
-    end
   end
 
   def compass_switch_handler
@@ -148,9 +146,11 @@ class Tray
     bind = binding
     eval(file.read, bind)
 
-    @outputstyle_item = add_menu_item( "Output Style", empty_handler , Swt::SWT::CASCADE, @menu, index)
+    @changeoptions_item = add_menu_item( "Change Options...", empty_handler , Swt::SWT::CASCADE, @menu, index)
     submenu = Swt::Widgets::Menu.new( @menu )
-    @outputstyle_item.menu = submenu
+    @changeoptions_item.menu = submenu
+
+    outputstyle_item = add_menu_item( "Output Style", nil, Swt::SWT::PUSH, submenu)
     outputstyle = eval('output_style',bind) rescue 'expanded'
     item = add_menu_item( "nested",     outputstyle_handler, Swt::SWT::RADIO, submenu )
     item.setSelection(true) if outputstyle.to_s == "nested" 
@@ -163,18 +163,18 @@ class Tray
 
     item = add_menu_item( "compressed", outputstyle_handler, Swt::SWT::RADIO, submenu )
     item.setSelection(true) if outputstyle.to_s == "compressed"
+    
+    add_menu_separator(submenu)
 
-    @options_item = add_menu_item( "Options", empty_handler , Swt::SWT::CASCADE, @menu, @menu.indexOf(@outputstyle_item)+1 )
-    submenu = Swt::Widgets::Menu.new( @menu )
-    @options_item.menu = submenu
+    options_item = add_menu_item( "Options", nil, Swt::SWT::PUSH, submenu)
 
-    @linecomments_item  = add_menu_item( "Line Comments", linecomments_handler, Swt::SWT::CHECK, submenu )
+    linecomments_item  = add_menu_item( "Line Comments", linecomments_handler, Swt::SWT::CHECK, submenu )
     linecomments = eval('line_comments',bind) rescue true
-    @linecomments_item.setSelection(true) if linecomments
+    linecomments_item.setSelection(true) if linecomments
 
-    @debuginfo_item    = add_menu_item( "Debug Info",   debuginfo_handler,   Swt::SWT::CHECK, submenu )
+    debuginfo_item    = add_menu_item( "Debug Info",   debuginfo_handler,   Swt::SWT::CHECK, submenu )
     debuginfo = eval('sass_options[:debug_info]',bind) rescue false
-    @debuginfo_item.setSelection(true) if debuginfo
+    debuginfo_item.setSelection(true) if debuginfo
 
   end
 
@@ -191,16 +191,6 @@ class Tray
   end
 
   def build_history_menuitem
-    @clearhistory_item ||= nil
-
-    if @history_dirs.empty?
-      @clearhistory_item.dispose if @clearhistory_item && !@clearhistory_item.isDisposed
-    else
-      if !@clearhistory_item || @clearhistory_item.isDisposed
-        @clearhistory_item = add_menu_item( "Clear History", clearhistory_handler, Swt::SWT::PUSH, @menu, @menu.indexOf(@history_item)+1)
-      end
-    end
-
     @history_dirs.reverse.each do | dir |
       add_compass_item(dir)
     end
@@ -406,11 +396,11 @@ class Tray
         @install_item.menu = Swt::Widgets::Menu.new( @menu )
         build_compass_framework_menuitem( @install_item.menu, install_project_handler )
         build_change_options_menuitem( @menu.indexOf(@install_item) +1 )
-        @clean_item =  add_menu_item( "Force Recomplie", 
+        @clean_item =  add_menu_item( "Clean && Complie", 
                                         clean_project_handler, 
                                         Swt::SWT::PUSH,
                                         @menu, 
-                                        @menu.indexOf(@options_item) +1 )
+                                        @menu.indexOf(@changeoptions_item) +1 )
 
         if @menu.items[ @menu.indexOf(@clean_item)+1 ].getStyle != Swt::SWT::SEPARATOR
           add_menu_separator(@menu, @menu.indexOf(@clean_item) + 1 )
@@ -434,8 +424,7 @@ class Tray
     @watch_item.text="Watch a Folder..."
     @install_item.dispose() if @install_item && !@install_item.isDisposed
     @clean_item.dispose()   if @clean_item && !@clean_item.isDisposed
-    @outputstyle_item.dispose()   if @outputstyle_item && !@outputstyle_item.isDisposed
-    @options_item.dispose()   if @options_item && !@options_item.isDisposed
+    @changeoptions_item.dispose()   if @changeoptions_item && !@changeoptions_item.isDisposed
     @watching_dir = nil
     @tray_item.image = @standby_icon
     SimpleLivereload.instance.unwatch

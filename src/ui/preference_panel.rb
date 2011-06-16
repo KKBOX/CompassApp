@@ -37,7 +37,28 @@ class PreferencePanel
     http_server_tab.setControl( self.services_composite );
     http_server_tab.setText('Services')
 
+    history_tab = Swt::Widgets::TabItem.new( @tabFolder, Swt::SWT::NONE)
+    history_tab.setControl( self.history_composite );
+    history_tab.setText('History')
+
     @shell.pack
+  end
+
+  def history_composite
+    composite =Swt::Widgets::Composite.new(@tabFolder, Swt::SWT::NO_MERGE_PAINTS );
+    layout = Swt::Layout::GridLayout.new(1,true);
+    layout.marginLeft = 200;
+    layout.marginTop  = 80;
+    composite.layout = layout
+    
+    clear_history_button = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH )
+    clear_history_button.setLayoutData( Swt::Layout::GridData.new(Swt::Layout::GridData::HORIZONTAL_ALIGN_CENTER , Swt::Layout::GridData::VERTICAL_ALIGN_CENTER , false, false, 0, 0) )
+    clear_history_button.text = "Clear History!"
+    clear_history_button.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt| 
+      Tray.instance.clear_history
+      App.alert('done')
+    end)
+    composite
   end
 
   def services_composite
