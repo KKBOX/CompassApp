@@ -47,13 +47,15 @@ class PreferencePanel
   def history_composite
     composite =Swt::Widgets::Composite.new(@tabFolder, Swt::SWT::NO_MERGE_PAINTS );
     layout = Swt::Layout::GridLayout.new(1,true);
-    layout.marginLeft = 200;
-    layout.marginTop  = 80;
     composite.layout = layout
     
+    label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    label.setText("We will list the last 10 folders in the history.\nIf you want to clean it, please click the button below.")
+
     clear_history_button = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH )
-    clear_history_button.setLayoutData( Swt::Layout::GridData.new(Swt::Layout::GridData::HORIZONTAL_ALIGN_CENTER , Swt::Layout::GridData::VERTICAL_ALIGN_CENTER , false, false, 0, 0) )
-    clear_history_button.text = "Clear History!"
+    clear_history_button.setLayoutData( Swt::Layout::GridData.new(Swt::SWT::TOP, Swt::SWT::LEFT , false, false, 0, 0) )
+    
+    clear_history_button.text = "Clear History"
     clear_history_button.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt| 
       Tray.instance.clear_history
       App.alert('done')
