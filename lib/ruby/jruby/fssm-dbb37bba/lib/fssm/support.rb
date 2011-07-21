@@ -37,7 +37,7 @@ module FSSM::Support
     end
 
     def mac?
-      Config::CONFIG['target_os'] =~ /darwin/i && App::OS_VERSION =~ /^10.6/
+      Config::CONFIG['target_os'] =~ /darwin/i && App::OS_VERSION.to_f >= 10.6
     end
 
     def lion?

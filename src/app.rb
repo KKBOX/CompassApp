@@ -68,7 +68,7 @@ module App
       # make sure use java version library, ex json-java, eventmachine-java
       jruby_gems_path = File.join(LIB_PATH, "ruby", "jruby" )
       scan_library( jruby_gems_path )
-      require "fssm" if (OS == 'darwin' && OS_VERSION =~ /^10.6/) || OS == 'linux' || OS == 'windows'
+      require "fssm" if (OS == 'darwin' && OS_VERSION.to_f >= 10.6 ) || OS == 'linux' || OS == 'windows'
       
       require "compass"
       require "compass/exec"
