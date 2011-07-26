@@ -4,65 +4,79 @@ SHELL = /bin/sh
 #### Start of system configuration section. ####
 
 srcdir = .
-topdir = /Users/tka/.rvm/rubies/jruby-1.6.0/lib/native/include
-hdrdir = /Users/tka/.rvm/rubies/jruby-1.6.0/lib/native/include/ruby
+topdir = /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin11.0
+hdrdir = $(topdir)
 VPATH = $(srcdir):$(topdir):$(hdrdir)
-prefix = $(DESTDIR) 
-exec_prefix = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0
-libdir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/lib
-rubylibdir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/lib/ruby/1.8
-sitedir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/lib/ruby/site_ruby
-sitelibdir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/lib/ruby/site_ruby/1.8
-sitearchdir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/lib/ruby/site_ruby/1.8/java
-archdir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/lib/native/include
-datadir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/share
-mandir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/man
-sysconfdir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/etc
-localstatedir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/var
-includedir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/lib/native/include
-rubyhdrdir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/lib/native/include
-bindir = $(DESTDIR)/Users/tka/.rvm/rubies/jruby-1.6.0/bin
+exec_prefix = $(prefix)
+prefix = $(DESTDIR)/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr
+sharedstatedir = $(prefix)/com
+mandir = $(DESTDIR)/usr/share/man
+psdir = $(docdir)
+oldincludedir = $(DESTDIR)/usr/include
+localedir = $(datarootdir)/locale
+bindir = $(exec_prefix)/bin
+libexecdir = $(exec_prefix)/libexec
+sitedir = $(DESTDIR)/Library/Ruby/Site
+htmldir = $(docdir)
+vendorarchdir = $(vendorlibdir)/$(sitearch)
+includedir = $(prefix)/include
+infodir = $(DESTDIR)/usr/share/info
+vendorlibdir = $(vendordir)/$(ruby_version)
+sysconfdir = $(prefix)/etc
+libdir = $(exec_prefix)/lib
+sbindir = $(exec_prefix)/sbin
+rubylibdir = $(libdir)/ruby/$(ruby_version)
+docdir = $(datarootdir)/doc/$(PACKAGE)
+dvidir = $(docdir)
+vendordir = $(libdir)/ruby/vendor_ruby
+datarootdir = $(prefix)/share
+pdfdir = $(docdir)
+archdir = $(rubylibdir)/$(arch)
+sitearchdir = $(sitelibdir)/$(sitearch)
+datadir = $(datarootdir)
+localstatedir = $(prefix)/var
+sitelibdir = $(sitedir)/$(ruby_version)
 
-CC = cc
-LIBRUBY = 
-LIBRUBY_A = 
-LIBRUBYARG_SHARED = 
-LIBRUBYARG_STATIC = 
+CC = gcc
+LIBRUBY = $(LIBRUBY_SO)
+LIBRUBY_A = lib$(RUBY_SO_NAME)-static.a
+LIBRUBYARG_SHARED = -l$(RUBY_SO_NAME)
+LIBRUBYARG_STATIC = -l$(RUBY_SO_NAME)
 
 RUBY_EXTCONF_H = 
-CFLAGS   =   -fPIC -DTARGET_RT_MAC_CFM=0  -fno-omit-frame-pointer -fno-strict-aliasing  -fexceptions $(cflags) $(cflags)  -arch x86_64
+CFLAGS   =  -fno-common -arch i386 -arch x86_64 -g -Os -pipe -fno-common -DENABLE_DTRACE  -fno-common  -pipe -fno-common $(cflags) 
 INCFLAGS = -I. -I$(topdir) -I$(hdrdir) -I$(srcdir)
 DEFS     = 
-CPPFLAGS =   -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE  $(DEFS) $(cppflags) $(DEFS) $(cppflags)
-CXXFLAGS = $(CFLAGS)  -fno-omit-frame-pointer -fno-strict-aliasing  -fexceptions $(cflags) $(cxxflags) $(cflags) $(cxxflags)
-ldflags  =  -bundle -framework JavaVM -Wl,-syslibroot,$(SDKROOT) -mmacosx-version-min=10.4 
+CPPFLAGS =   -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE $(DEFS) $(cppflags)
+CXXFLAGS = $(CFLAGS) 
+ldflags  = -L. -arch i386 -arch x86_64 
 dldflags = 
-archflag =  -arch x86_64
+archflag = 
 DLDFLAGS = $(ldflags) $(dldflags) $(archflag)
-LDSHARED = cc -dynamic -bundle -undefined dynamic_lookup 
-AR = 
+LDSHARED = cc -arch i386 -arch x86_64 -pipe -bundle -undefined dynamic_lookup
+AR = ar
 EXEEXT = 
 
-RUBY_INSTALL_NAME = jruby
-RUBY_SO_NAME = 
-arch = java
-sitearch = java
+RUBY_INSTALL_NAME = ruby
+RUBY_SO_NAME = ruby
+arch = universal-darwin11.0
+sitearch = universal-darwin11.0
 ruby_version = 1.8
-ruby = /Users/tka/.rvm/rubies/jruby-1.6.0/bin/jruby
+ruby = /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
 RUBY = $(ruby)
 RM = rm -f
-MAKEDIRS = mkdir -p 
-INSTALL = install -c 
+MAKEDIRS = mkdir -p
+INSTALL = /usr/bin/install -c
 INSTALL_PROG = $(INSTALL) -m 0755
-INSTALL_DATA = $(INSTALL) -m 0644
-COPY = cp 
+INSTALL_DATA = $(INSTALL) -m 644
+COPY = cp
 
 #### End of system configuration section. ####
 
 preload = 
 
 libpath = . $(libdir)
-LIBPATH =  -L"." -L"$(libdir)"
+LIBPATH =  -L. -L$(libdir)
 DEFFILE = 
 
 CLEANFILES = mkmf.log
@@ -72,7 +86,7 @@ extout =
 extout_prefix = 
 target_prefix = 
 LOCAL_LIBS = 
-LIBS =    
+LIBS = $(LIBRUBYARG_SHARED)  -lpthread -ldl  
 SRCS = 
 OBJS = 
 TARGET = 
@@ -82,17 +96,15 @@ STATIC_LIB =
 
 BINDIR        = $(bindir)
 RUBYCOMMONDIR = $(sitedir)$(target_prefix)
-RUBYLIBDIR = /Users/tka/Project/CompassApp/lib/ruby/gem/gems/rb-fsevent-0.4.0/lib$(target_prefix)
-RUBYARCHDIR = /Users/tka/Project/CompassApp/lib/ruby/gem/gems/rb-fsevent-0.4.0/lib$(target_prefix)
+RUBYLIBDIR    = $(sitelibdir)$(target_prefix)
+RUBYARCHDIR   = $(sitearchdir)$(target_prefix)
 
 TARGET_SO     = $(DLLIB)
 CLEANLIBS     = $(TARGET).bundle $(TARGET).il? $(TARGET).tds $(TARGET).map
 CLEANOBJS     = *.o *.a *.s[ol] *.pdb *.exp *.bak
 
-all:    Makefile
-static: $(STATIC_LIB)
-.PHONY: all install static install-so install-rb
-.PHONY: clean clean-so clean-rb
+all:		Makefile
+static:		$(STATIC_LIB)
 
 clean:
 		@-$(RM) $(CLEANLIBS) $(CLEANOBJS) $(CLEANFILES)

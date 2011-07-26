@@ -2,12 +2,16 @@ class FSEvent
   class << self
     class_eval <<-END
       def root_path
-        "#{File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))}"
+        "#{File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))}".gsub(' ', '\ ')
       end
     END
     class_eval <<-END
       def watcher_path
-        "#{File.join(FSEvent.root_path, 'bin', 'fsevent_watch_for_compass_app')}"
+      if App::OS_VERSION.to_f >= 10.7
+      "#{File.join(FSEvent.root_path, 'bin', 'fsevent_watch_for_compass_app_lion')}"
+      else
+      "#{File.join(FSEvent.root_path, 'bin', 'fsevent_watch_for_compass_app')}"
+      end
       end
     END
   end
