@@ -45,6 +45,7 @@
          <string>true</string>
         <key>VMOptions</key>
           <array>
+           <string>-Dfile.encoding=utf8</string>
             <string>-Xverify:none</string>
             <string>-Xbootclasspath/p:$APP_PACKAGE/Contents/Resources/Java/lib/java/jruby-complete.jar</string>
           </array>
