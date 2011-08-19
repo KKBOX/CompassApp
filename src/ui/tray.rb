@@ -212,7 +212,11 @@ class Tray
 
         App.try do 
           actual = App.get_stdout do
-            Compass::Commands::CreateProject.new( dir, {:framework => framework, :pattern => pattern } ).execute
+            Compass::Commands::CreateProject.new( dir, 
+                                                 { :framework        => framework, 
+                                                   :pattern          => pattern, 
+                                                   :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
+                                                 }).execute
           end
           App.report( actual)
         end
@@ -235,7 +239,11 @@ class Tray
 
       App.try do 
         actual = App.get_stdout do
-          Compass::Commands::StampPattern.new( @watching_dir, {:framework => framework, :pattern => pattern } ).execute
+          Compass::Commands::StampPattern.new( @watching_dir, 
+                                              { :framework => framework, 
+                                                :pattern => pattern,
+                                                :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
+                                              } ).execute
         end
         App.report( actual)
       end

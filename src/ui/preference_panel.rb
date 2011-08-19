@@ -254,8 +254,42 @@ class PreferencePanel
     layout.marginWidth = layout.marginHeight = 10
     layout.spacing = 0
     composite.layout = layout
+ 
+    # ===== Preferred Syntax =====
+    preferred_syntax_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    preferred_syntax_label.setText("Preferred Syntax")
 
     button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
+    button_group.setLayoutData( simple_formdata(preferred_syntax_label) )
+
+    rowlayout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
+    rowlayout.marginBottom = 0;
+    rowlayout.spacing = 0;
+    button_group.setLayout( rowlayout );
+
+    @button_preffered_scss = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    @button_preffered_scss.setText("SCSS")
+    @button_preffered_scss.setSelection( App::CONFIG['preferred_syntax'] == "scss" )
+    @button_preffered_scss.addListener(Swt::SWT::Selection, preferred_syntax_button_handler)
+    @button_preffered_sass = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    @button_preffered_sass.setText("Sass (indented syntax)")
+    @button_preffered_sass.setSelection( App::CONFIG['preferred_syntax'] == "sass" )
+    @button_preffered_sass.addListener(Swt::SWT::Selection, preferred_syntax_button_handler)
+
+
+    # horizontal line
+    hr_label = Swt::Widgets::Label.new(composite, Swt::SWT::SEPARATOR | Swt::SWT::HORIZONTAL)
+    hr_label.setLayoutData( simple_formdata(button_group, 0, 5) )
+
+    # ===== Compass Version =====
+    
+    compass_version_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    compass_version_label.setText("Compass Version")
+    compass_version_label.setLayoutData( simple_formdata(hr_label, 0, 5) )
+   
+    button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
+    button_group.setLayoutData( simple_formdata(compass_version_label) )
+
     rowlayout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
     rowlayout.marginBottom = 0;
     rowlayout.spacing = 0;
@@ -272,28 +306,19 @@ class PreferencePanel
     @use_specify_gem_path_btn.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
 
-    data = Swt::Layout::FormData.new(480,Swt::SWT::DEFAULT)
-    data.left = Swt::Layout::FormAttachment.new( button_group, 22, Swt::SWT::LEFT)
-    data.top = Swt::Layout::FormAttachment.new( button_group, 0, Swt::SWT::BOTTOM)
     special_gem_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
     special_gem_label.setText("If you want use RubyGems to manage extensions, you can specify your own gem path.")
-    special_gem_label.setLayoutData(data)
+    special_gem_label.setLayoutData( simple_formdata(button_group, 22) )
 
-    data = Swt::Layout::FormData.new(480,Swt::SWT::DEFAULT)
-    data.left = Swt::Layout::FormAttachment.new( special_gem_label, 1, Swt::SWT::LEFT)
-    data.top = Swt::Layout::FormAttachment.new( special_gem_label, 4, Swt::SWT::BOTTOM)
     special_gem_label_ex = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
     special_gem_label_ex.setText("ex, /usr/local/lib/ruby/gems/1.8:/Users/foo/.gems")
-    special_gem_label_ex.setLayoutData(data)
+    special_gem_label_ex.setLayoutData( simple_formdata(special_gem_label, 1, 4) )
 
 
-    layoutdata = Swt::Layout::FormData.new(480, Swt::SWT::DEFAULT)
-    layoutdata.left = Swt::Layout::FormAttachment.new( special_gem_label_ex, -1, Swt::SWT::LEFT)
-    layoutdata.top = Swt::Layout::FormAttachment.new( special_gem_label_ex, 2, Swt::SWT::BOTTOM)
     gem_path_text = Swt::Widgets::Text.new(composite, Swt::SWT::BORDER)
     gem_path_text.setText(App::CONFIG['gem_path'] || '')
     gem_path_text.setEnabled(@use_specify_gem_path_btn.getSelection)
-    gem_path_text.setLayoutData( layoutdata )
+    gem_path_text.setLayoutData( simple_formdata( special_gem_label_ex, -1, 2) )
     gem_path_text.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @use_specify_gem_path_btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
@@ -335,6 +360,17 @@ class PreferencePanel
     return composite;
   end
 
+  def preferred_syntax_button_handler
+   Swt::Widgets::Listener.impl do |method, evt|   
+      if @button_preffered_scss.getSelection
+        App::CONFIG['preferred_syntax'] = "scss"
+      else
+        App::CONFIG['preferred_syntax'] = "sass"
+      end 
+      App.save_config
+    end
+  end
+
   def compass_version_button_handler 
     Swt::Widgets::Listener.impl do |method, evt|   
       if ( @button_v11.getSelection && App::CONFIG['use_version'] == 0.11 ) || 
@@ -344,5 +380,12 @@ class PreferencePanel
         @apply_group.setVisible(true)
       end 
     end
+  end
+
+  def simple_formdata( element, left=0, bottom=0, width=480)
+    data = Swt::Layout::FormData.new(width,Swt::SWT::DEFAULT)
+    data.left = Swt::Layout::FormAttachment.new( element, left, Swt::SWT::LEFT)
+    data.top = Swt::Layout::FormAttachment.new( element, bottom, Swt::SWT::BOTTOM)
+    data
   end
 end

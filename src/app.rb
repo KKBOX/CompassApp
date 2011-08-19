@@ -42,8 +42,7 @@ module App
     x.delete("services_http_port") unless x["services_http_port"].to_i > 0
     x.delete("services_livereload_port") unless x["services_livereload_port"].to_i > 0
                                 
-
-    {
+    config={
       "use_version" => 0.11,
       "use_specify_gem_path" => false,
       "gem_path" => App.get_system_default_gem_path,
@@ -51,8 +50,10 @@ module App
       "save_notification_to_file" => true,
       "services" => [ ],
       "services_http_port" => 24680,
-      "services_livereload_port" => 35729
+      "services_livereload_port" => 35729,
+      "preferred_syntax" => "scss"
     }.merge!(x)
+
   end
  
   CONFIG = get_config
