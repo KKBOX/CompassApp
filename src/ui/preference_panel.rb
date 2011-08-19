@@ -254,9 +254,8 @@ class PreferencePanel
     layout.marginWidth = layout.marginHeight = 10
     layout.spacing = 0
     composite.layout = layout
- 
+  
     # ===== Preferred Syntax =====
-    left_sidebar_width = 150
     preferred_syntax_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
     data = Swt::Layout::FormData.new( )
     preferred_syntax_label.setLayoutData(data)
@@ -290,7 +289,7 @@ class PreferencePanel
     compass_version_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
     compass_version_label.setText("Compass Version:")
     data = Swt::Layout::FormData.new()
-    data.left = Swt::Layout::FormAttachment.new( preferred_syntax_label, 0, Swt::SWT::LEFT)
+    data.right = Swt::Layout::FormAttachment.new( preferred_syntax_label, 0, Swt::SWT::RIGHT)
     data.top = Swt::Layout::FormAttachment.new(  button_group, 10, Swt::SWT::BOTTOM)
     compass_version_label.setLayoutData( data )
    
