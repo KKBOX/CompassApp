@@ -270,7 +270,7 @@ class PreferencePanel
     rowlayout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
     rowlayout.marginBottom = 0;
     rowlayout.marginTop = 0;
-    rowlayout.spacing = 3;
+    rowlayout.spacing = 10;
     button_group.setLayout( rowlayout );
 
     @button_preffered_scss = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
@@ -302,7 +302,7 @@ class PreferencePanel
     rowlayout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
     rowlayout.marginBottom = 0;
     rowlayout.marginTop = 0;
-    rowlayout.spacing = 3;
+    rowlayout.spacing = 10;
     button_group.setLayout( rowlayout );
 
     @button_v11 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
@@ -317,18 +317,18 @@ class PreferencePanel
 
 
     special_gem_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    special_gem_label.setText("You can use RubyGem to manager compass and its extensions. Use gem env command to find your Gem paths.")
-    special_gem_label.setLayoutData( simple_formdata(button_group, 22, 5, 450) )
+    special_gem_label.setText('You can use RubyGem to manager compass and its extensions. Use "gem env" command to find your Gem paths.')
+    special_gem_label.setLayoutData( simple_formdata(button_group, 22, 5, 350) )
 
     special_gem_label_ex = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
     special_gem_label_ex.setText("ex, /usr/local/lib/ruby/gems/1.8:/Users/foo/.gems")
-    special_gem_label_ex.setLayoutData( simple_formdata(special_gem_label, 1, 8) )
+    special_gem_label_ex.setLayoutData( simple_formdata(special_gem_label, 1, 8, 350) )
 
 
     gem_path_text = Swt::Widgets::Text.new(composite, Swt::SWT::BORDER)
     gem_path_text.setText(App::CONFIG['gem_path'] || '')
     gem_path_text.setEnabled(@use_specify_gem_path_btn.getSelection)
-    gem_path_text.setLayoutData( simple_formdata( special_gem_label_ex, -1, 5) )
+    gem_path_text.setLayoutData( simple_formdata( special_gem_label_ex, -1, 5, 350) )
     gem_path_text.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @use_specify_gem_path_btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
