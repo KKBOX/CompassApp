@@ -252,6 +252,7 @@ class PreferencePanel
     composite =Swt::Widgets::Composite.new(@tabFolder, Swt::SWT::NO_MERGE_PAINTS );
     layout = Swt::Layout::FormLayout.new
     layout.marginWidth = layout.marginHeight = 10
+    layout.marginLeft = 19
     layout.spacing = 0
     composite.layout = layout
   
@@ -263,14 +264,14 @@ class PreferencePanel
 
     button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
     data = Swt::Layout::FormData.new(350,Swt::SWT::DEFAULT)
-    data.left = Swt::Layout::FormAttachment.new( preferred_syntax_label, 0, Swt::SWT::RIGHT)
+    data.left = Swt::Layout::FormAttachment.new( preferred_syntax_label, 5, Swt::SWT::RIGHT)
     data.top = Swt::Layout::FormAttachment.new(  preferred_syntax_label, 0, Swt::SWT::TOP)
     button_group.setLayoutData( data )
 
     rowlayout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
     rowlayout.marginBottom = 0;
     rowlayout.marginTop = 0;
-    rowlayout.spacing = 10;
+    rowlayout.spacing = 6;
     button_group.setLayout( rowlayout );
 
     @button_preffered_scss = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
@@ -290,19 +291,19 @@ class PreferencePanel
     compass_version_label.setText("Compass Version:")
     data = Swt::Layout::FormData.new()
     data.right = Swt::Layout::FormAttachment.new( preferred_syntax_label, 0, Swt::SWT::RIGHT)
-    data.top = Swt::Layout::FormAttachment.new(  button_group, 10, Swt::SWT::BOTTOM)
+    data.top = Swt::Layout::FormAttachment.new(  button_group, 18, Swt::SWT::BOTTOM)
     compass_version_label.setLayoutData( data )
    
     button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
     data = Swt::Layout::FormData.new(350,Swt::SWT::DEFAULT)
-    data.left = Swt::Layout::FormAttachment.new( compass_version_label, 0, Swt::SWT::RIGHT)
+    data.left = Swt::Layout::FormAttachment.new( compass_version_label, 5, Swt::SWT::RIGHT)
     data.top = Swt::Layout::FormAttachment.new(  compass_version_label, 0, Swt::SWT::TOP)
     button_group.setLayoutData( data )
 
     rowlayout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
     rowlayout.marginBottom = 0;
     rowlayout.marginTop = 0;
-    rowlayout.spacing = 10;
+    rowlayout.spacing = 6;
     button_group.setLayout( rowlayout );
 
     @button_v11 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
@@ -311,24 +312,25 @@ class PreferencePanel
     @button_v11.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @use_specify_gem_path_btn = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @use_specify_gem_path_btn.setText("Custom (Advanced Users)")
+    @use_specify_gem_path_btn.setText("Custom (advanced users only)")
     @use_specify_gem_path_btn.setSelection(App::CONFIG['use_specify_gem_path'])
     @use_specify_gem_path_btn.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
 
     special_gem_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    special_gem_label.setText('You can use RubyGem to manager compass and its extensions. Use "gem env" command to find your Gem paths.')
-    special_gem_label.setLayoutData( simple_formdata(button_group, 22, 5, 350) )
+    special_gem_label.setText('You can use RubyGem to manager compass and its extensions. Use "gem env" command to find your gem paths.')
+    special_gem_label.setLayoutData( simple_formdata(button_group, 22, 5, 320) )
 
     special_gem_label_ex = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    special_gem_label_ex.setFont( Swt::Graphics::Font.new(@display, "Courier", 12, Swt::SWT::NORMAL))
     special_gem_label_ex.setText("ex, /usr/local/lib/ruby/gems/1.8:/Users/foo/.gems")
-    special_gem_label_ex.setLayoutData( simple_formdata(special_gem_label, 1, 8, 350) )
+    special_gem_label_ex.setLayoutData( simple_formdata(special_gem_label, 1, 8, 320) )
 
 
     gem_path_text = Swt::Widgets::Text.new(composite, Swt::SWT::BORDER)
     gem_path_text.setText(App::CONFIG['gem_path'] || '')
     gem_path_text.setEnabled(@use_specify_gem_path_btn.getSelection)
-    gem_path_text.setLayoutData( simple_formdata( special_gem_label_ex, -1, 5, 350) )
+    gem_path_text.setLayoutData( simple_formdata( special_gem_label_ex, 0, 7, 320) )
     gem_path_text.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @use_specify_gem_path_btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
@@ -336,24 +338,21 @@ class PreferencePanel
 
     end)
     
-    layoutdata = Swt::Layout::FormData.new()
-    layoutdata.left = Swt::Layout::FormAttachment.new(button_group, 0, Swt::SWT::LEFT)
-    layoutdata.top = Swt::Layout::FormAttachment.new(gem_path_text, 10, Swt::SWT::BOTTOM)
     @apply_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
     rowlayout = Swt::Layout::RowLayout.new(Swt::SWT::VERTICAL) 
     rowlayout.marginBottom = 0;
-    rowlayout.spacing = 10;
+    rowlayout.spacing = 3;
     @apply_group.setLayout( rowlayout );
-    @apply_group.setLayoutData( layoutdata )
+    @apply_group.setLayoutData( simple_formdata(gem_path_text, -8, 6, 340) )
     @apply_group.setVisible(false)
 
     special_gem_label_ex = Swt::Widgets::Label.new( @apply_group, Swt::SWT::LEFT | Swt::SWT::WRAP)
     red = Swt::Graphics::Color.new(@display, 255, 0, 0);
     special_gem_label_ex.setForeground(red);
-    special_gem_label_ex.setText("You have to restart Commpass.app to apply this change")
+    special_gem_label_ex.setText(" You have to restart Commpass.app to apply this change")
 
     compass_version_apply_button = Swt::Widgets::Button.new(@apply_group, Swt::SWT::PUSH )
-    compass_version_apply_button.setText("Apply && Quit")
+    compass_version_apply_button.setText("Apply Change")
     compass_version_apply_button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
       if @button_v11.getSelection
         App::CONFIG['use_version'] = 0.11
