@@ -279,6 +279,7 @@ class Tray
     Swt::Widgets::Listener.impl do |method, evt|
       stop_watch
       App.set_histoy(@history_dirs[0,5])
+      App.kill_all_process
       @shell.close
     end
   end
@@ -412,7 +413,13 @@ class Tray
           add_menu_separator(@menu, @menu.indexOf(@clean_item) + 1 )
         end
         @tray_item.image = @watching_icon
+        
+        if App::CONFIG["compassapprc"] && File.exists?(File.join(dir, ".compassapprc"))
 
+          Thread.new do
+            %x{#{App::CONFIG["compassapprc"]} #{File.join(dir, ".compassapprc")}}
+          end
+        end
 
         return true
 
@@ -436,6 +443,7 @@ class Tray
     SimpleLivereload.instance.unwatch
     SimpleHTTPServer.instance.stop
     FSEvent.stop_all_instances if Object.const_defined?("FSEvent") && FSEvent.methods.include?("stop_all_instances")
+    App.kill_child_process
   end
 
 end

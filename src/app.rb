@@ -53,7 +53,12 @@ module App
       "services_livereload_port" => 35729,
       "preferred_syntax" => "scss"
     }.merge!(x)
+    
+    unless OS == 'darwin' || OS == 'linux'
+      config['compassapprc'] = nil
+    end
 
+    config
   end
  
   CONFIG = get_config
@@ -181,6 +186,55 @@ module App
     end
 
   end
+  
+  def save_pid
+    File.open( File.join( CONFIG_DIR, 'pid'), 'w') do |f|
+      f.write( Process.pid )
+    end
+    Process.setpgid(Process.pid, Process.pid)
+  end
 
+  def get_pid_from_file
+    begin
+      File.open( File.join( CONFIG_DIR, 'pid'), 'r') do |f|
+        f.read
+      end
+    rescue
+      nil
+    end
+  end
+
+  def kill_all_process
+    if get_pid_from_file
+      kill_child_process
+      %x{rm #{File.join( CONFIG_DIR, 'pid')}}
+    end
+  end
+
+  def kill_child_process
+    child_pids = []
+    %x{ps o pid,pgid,cmd}.split("\n")[1..-1].each do |x|
+      pid, pgid, cmd = x.split(/ /)
+      pid = pid.to_i
+      pgid = pgid.to_i 
+      #puts "=", Process.pid, pid, pgid, cmd
+      if pgid == Process.pid && pid != Process.pid && cmd != 'ps'
+        puts "=", Process.pid, pid, pgid, cmd
+        child_pids << pid
+      end
+    end
+    
+    #puts child_pids.inspect
+
+    child_pids.each do |pid|
+      puts "kill -TERM #{pid}"
+      %x{kill -TERM #{pid}} 
+    end
+    sleep 0.5
+    child_pids.each do |pid|
+      puts "kill -KILL #{pid}"
+      %x{kill -KILL #{pid}} 
+    end
+  end
 end
 

@@ -23,7 +23,8 @@ end
 require "app.rb"
 
 App.require_compass
-
+App.kill_all_process
+App.save_pid
 begin
   require "ninesixty"
   require "html5-boilerplate"
