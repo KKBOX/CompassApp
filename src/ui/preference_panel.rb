@@ -257,7 +257,7 @@ class PreferencePanel
  
     # ===== Preferred Syntax =====
     preferred_syntax_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    preferred_syntax_label.setText("Preferred Syntax")
+    preferred_syntax_label.setText("Preferred Syntax:")
 
     button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
     button_group.setLayoutData( simple_formdata(preferred_syntax_label) )
@@ -279,13 +279,13 @@ class PreferencePanel
 
     # horizontal line
     hr_label = Swt::Widgets::Label.new(composite, Swt::SWT::SEPARATOR | Swt::SWT::HORIZONTAL)
-    hr_label.setLayoutData( simple_formdata(button_group, 0, 5) )
+    hr_label.setLayoutData( simple_formdata(button_group, 0, 15) )
 
     # ===== Compass Version =====
     
     compass_version_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    compass_version_label.setText("Compass Version")
-    compass_version_label.setLayoutData( simple_formdata(hr_label, 0, 5) )
+    compass_version_label.setText("Compass Version:")
+    compass_version_label.setLayoutData( simple_formdata(hr_label, 0, 10) )
    
     button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
     button_group.setLayoutData( simple_formdata(compass_version_label) )
