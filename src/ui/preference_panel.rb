@@ -322,7 +322,6 @@ class PreferencePanel
     special_gem_label.setLayoutData( simple_formdata(button_group, 22, 5, 320) )
 
     special_gem_label_ex = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    special_gem_label_ex.setFont( Swt::Graphics::Font.new(@display, "Courier", 12, Swt::SWT::NORMAL))
     special_gem_label_ex.setText("ex, /usr/local/lib/ruby/gems/1.8:/Users/foo/.gems")
     special_gem_label_ex.setLayoutData( simple_formdata(special_gem_label, 1, 8, 320) )
 
