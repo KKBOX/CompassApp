@@ -402,7 +402,7 @@ class Tray
         @install_item.menu = Swt::Widgets::Menu.new( @menu )
         build_compass_framework_menuitem( @install_item.menu, install_project_handler )
         build_change_options_menuitem( @menu.indexOf(@install_item) +1 )
-        @clean_item =  add_menu_item( "Clean && Complie", 
+        @clean_item =  add_menu_item( "Clean && Compile", 
                                      clean_project_handler, 
                                      Swt::SWT::PUSH,
                                      @menu, 
