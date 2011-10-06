@@ -152,7 +152,7 @@ module App
 
   def notify(msg, target_display = nil )
     if org.jruby.platform.Platform::IS_MAC
-      system('/usr/bin/osascript', "#{LIB_PATH}/applescript/growl.applescript", msg )
+      system('/usr/bin/osascript', "#{LIB_PATH}/applescript/growl.scpt", msg )
     else
       Notification.new(msg, target_display)
     end
