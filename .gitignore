@@ -3,4 +3,6 @@ packages
 lib/java/swt*
 *.swp
 update_url
-src/compile_version.rb
+src/compile_version.rb 
+.rvmrc
+.rbenv-version
