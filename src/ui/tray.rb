@@ -380,7 +380,7 @@ class Tray
         build_history_menuitem
 
 
-        @watch_item.text="Watching " + dir
+        @watch_item.text="Stop watching " + dir
         @install_item =  add_menu_item( "Install...", 
                                        install_project_handler, 
                                        Swt::SWT::CASCADE,
