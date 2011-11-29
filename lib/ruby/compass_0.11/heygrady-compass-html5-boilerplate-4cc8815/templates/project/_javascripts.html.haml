@@ -1,0 +1,37 @@
+-# Grab Google CDN's jQuery, with a protocol relative URL
+-# Looks for google_api_key first in ENV['GOOGLE_API_KEY'] then in config/google.yml
+-# remote_jquery and local_jquery helpers use minified jquery unless Rails.env is development
+- if !google_api_key.blank?
+  = javascript_include_tag "//www.google.com/jsapi?key=#{google_api_key}"
+  %script
+    google.load(#{ remote_jquery("1.6.2") });
+- else
+  = javascript_include_tag "//ajax.googleapis.com/ajax/libs/jquery/#{ local_jquery("1.6.2") }"
+
+-# fall back to local jQuery if necessary
+%script
+  window.jQuery || document.write("<script src='/javascripts/jquery.min.js'>\x3C/script>")
+  
+= javascript_include_tag 'rails', 'plugins', 'application'
+    
+-#  Append your own using content_for :javascripts
+= yield :javascripts
+
+-# asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet
+-# Looks for google_account_id first in ENV['GOOGLE_ACCOUNT_ID'] then in config/google.yml
+- if !google_account_id.blank?
+  %script
+    var _gaq=[["_setAccount","#{google_account_id}"],["_trackPageview"],["_trackPageLoadTime"]];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+    g.src=("https:"==location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js";
+    s.parentNode.insertBefore(g,s)}(document,"script"));
+
+-# 
+  Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+  chromium.org/developers/how-tos/chrome-frame-getting-started
+
+<!--[if lt IE 7]>
+%script{ :src => "//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js" }
+%script
+  window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})
+<![endif]-->
