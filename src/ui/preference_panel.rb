@@ -263,7 +263,7 @@ class PreferencePanel
     preferred_syntax_label.setText("Preferred Syntax:")
 
     button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
-    data = Swt::Layout::FormData.new(350,Swt::SWT::DEFAULT)
+    data = Swt::Layout::FormData.new(370,Swt::SWT::DEFAULT)
     data.left = Swt::Layout::FormAttachment.new( preferred_syntax_label, 5, Swt::SWT::RIGHT)
     data.top = Swt::Layout::FormAttachment.new(  preferred_syntax_label, 0, Swt::SWT::TOP)
     button_group.setLayoutData( data )
@@ -295,7 +295,7 @@ class PreferencePanel
     compass_version_label.setLayoutData( data )
    
     button_group =Swt::Widgets::Composite.new(composite, Swt::SWT::NO_MERGE_PAINTS );
-    data = Swt::Layout::FormData.new(350,Swt::SWT::DEFAULT)
+    data = Swt::Layout::FormData.new(380,Swt::SWT::DEFAULT)
     data.left = Swt::Layout::FormAttachment.new( compass_version_label, 5, Swt::SWT::RIGHT)
     data.top = Swt::Layout::FormAttachment.new(  compass_version_label, 0, Swt::SWT::TOP)
     button_group.setLayoutData( data )
@@ -307,9 +307,15 @@ class PreferencePanel
     button_group.setLayout( rowlayout );
 
     @button_v11 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_v11.setText("Default (Sass 3.1.7 + Compass 0.11.5)")
+    @button_v11.setText("Default (Sass 3.1.1 + Compass 0.11.5)")
     @button_v11.setSelection( App::CONFIG['use_version'] == 0.11 || !(App::CONFIG['use_specify_gem_path'] || App::CONFIG['use_version']) )
     @button_v11.addListener(Swt::SWT::Selection, compass_version_button_handler)
+
+    @button_v12 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    @button_v12.setText("Default (Sass 3.1.1 + Compass 0.12.alpha.2)")
+    @button_v12.setSelection( App::CONFIG['use_version'] == 0.12  )
+    @button_v11.addListener(Swt::SWT::Selection, compass_version_button_handler)
+
 
     @use_specify_gem_path_btn = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
     @use_specify_gem_path_btn.setText("Custom (advanced users only)")
@@ -355,6 +361,8 @@ class PreferencePanel
     compass_version_apply_button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
       if @button_v11.getSelection
         App::CONFIG['use_version'] = 0.11
+      elsif @button_v12.getSelection
+        App::CONFIG['use_version'] = 0.12
       else
         App::CONFIG['use_version'] = false
       end

@@ -80,11 +80,18 @@ module App
       end
  
 
+      common_lib_path = File.join(LIB_PATH, "ruby", "compass_common" )
+      scan_library( common_lib_path )
+
       if App::CONFIG['use_version'] == 0.10 
         alert("Compass.app v#{VERSION} not support Compass v0.10, use Default Compass v0.11 library")
       end
       
+      if App::CONFIG['use_version'] == 0.12
+      compass_gems_path = File.join(LIB_PATH, "ruby", "compass_0.12")
+      else
       compass_gems_path = File.join(LIB_PATH, "ruby", "compass_0.11")
+      end
 
       scan_library(compass_gems_path)
 
