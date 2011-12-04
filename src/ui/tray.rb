@@ -184,6 +184,7 @@ class Tray
     @history_dirs.reverse.each do | dir |
       add_compass_item(dir)
     end
+    App.set_histoy(@history_dirs[0,5])
   end
 
   def create_project_handler
