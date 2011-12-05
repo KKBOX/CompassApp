@@ -19,4 +19,4 @@ We sell prebuild software in our offical site. If you know how to build it, free
 
 # Build Your Own
 
-If you want to build your own copy, you will need [JRuby 1.6.3](http://jruby.org/) and [rawr](http://rawr.rubyforge.org/).
+If you want to build your own copy, you will need [JRuby 1.6.5](http://jruby.org/) and [rawr](http://rawr.rubyforge.org/).

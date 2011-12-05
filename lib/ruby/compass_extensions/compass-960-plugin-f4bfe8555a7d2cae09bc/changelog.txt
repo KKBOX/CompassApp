@@ -1,0 +1,26 @@
+0.10.4 06/15/2011
+=================
+
+add grid-system-complete mixin which includes relevant .container_X class
+add info about installing in existing compass project
+remove unneeded max .push and .pull classes, thank ShPakvel
+
+0.10.3 04/25/2011
+=================
+
+add missing gutter-width when using =grids, thanks ShPakvel
+don't create max-length .push and .pull classes, thanks ShPakvel
+doc improvements
+
+0.10.2 04/08/2011
+=================
+
+add $ninesixty-class-separator variable, thanks mattyoung
+add changelog
+
+0.10.1 03/14/2011
+=================
+
+documentation improvements, thanks Matthew Schulkind
+fix positioning bug in grid-push and grid-pull, thanks Matthew Schulkind
+grid-push and grid-pull default to specified column count correctly

@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <script src='js/swfobject.js'></script>
+    <script src='js/FABridge.js'></script>
+    <script src='js/web_socket.js'></script>
+    <script>
+      function init() {
+        function debug(string) {
+          var element = document.getElementById("debug");
+          var p = document.createElement("p");
+          p.appendChild(document.createTextNode(string));
+          element.appendChild(p);
+        }
+
+        var Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
+        var ws = new Socket("ws://localhost:8080/");
+        ws.onmessage = function(evt) { debug("Message: " + evt.data); };
+        ws.onclose = function() { debug("socket closed"); };
+        ws.onopen = function() {
+          debug("connected...");
+          ws.send("hello server");
+          ws.send("hello again");
+        };
+      };
+    </script>
+  </head>
+  <body onload="init();">
+    <div id="debug"></div>
+  </body>
+</html>

@@ -4,7 +4,7 @@ module App
   extend self
 
   include CompileVersion
-  VERSION = "1.7"
+  VERSION = "1.9"
   OS = org.jruby.platform.Platform::OS 
   OS_VERSION = java.lang.System.getProperty("os.version")
 
@@ -85,11 +85,18 @@ module App
       end
  
 
+      common_lib_path = File.join(LIB_PATH, "ruby", "compass_common" )
+      scan_library( common_lib_path )
+
       if App::CONFIG['use_version'] == 0.10 
         alert("Compass.app v#{VERSION} not support Compass v0.10, use Default Compass v0.11 library")
       end
       
+      if App::CONFIG['use_version'] == 0.12
+      compass_gems_path = File.join(LIB_PATH, "ruby", "compass_0.12")
+      else
       compass_gems_path = File.join(LIB_PATH, "ruby", "compass_0.11")
+      end
 
       scan_library(compass_gems_path)
 
@@ -157,7 +164,7 @@ module App
 
   def notify(msg, target_display = nil )
     if org.jruby.platform.Platform::IS_MAC
-      system('/usr/bin/osascript', "#{LIB_PATH}/applescript/growl.applescript", msg )
+      system('/usr/bin/osascript', "#{LIB_PATH}/applescript/growl.scpt", msg )
     else
       Notification.new(msg, target_display)
     end

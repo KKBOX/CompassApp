@@ -1,0 +1,82 @@
+// ==|== non-semantic helper classes ========================================
+// Please define your styles before this section.
+// ==========================================================================
+
+@mixin html5-boilerplate-helpers($list: false) {
+  @if not($list) or in-list($list, ir) { .ir { @include image-replacement; } }
+  @if not($list) or in-list($list, hidden) { .hidden { @include hidden; } }
+  @if not($list) or in-list($list, visuallyhidden) { .visuallyhidden { @include visuallyhidden; } }
+  @if not($list) or in-list($list, invisible) { .invisible { @include invisible; } }
+  @if not($list) or in-list($list, clearfix) { .clearfix { @include h5bp-clearfix; } }
+}
+
+//For image replacement
+@mixin image-replacement($img: none, $x: 50%, $y: 50%) {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: 0;
+  direction: ltr;
+  display: block;
+  overflow: hidden;
+  text-align: left;
+  text-indent: -999em;
+  br {
+    display: none;
+  }
+  
+  @if $img != none {
+    background-image: image-url($img);
+    background-position: $x $y;
+  }
+}
+
+@mixin sized-image-replacement($img, $x: 50%, $y: 50%) {
+  @include image-replacement($img, $x, $y);
+  width: image-width($img);
+  height: image-height($img);
+}
+
+// Hide from both screenreaders and browsers: h5bp.com/u
+@mixin hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+// Hide only visually, but have it available for screenreaders: h5bp.com/v 
+@mixin visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+
+  // Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: h5bp.com/p
+  &.focusable:active, &.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+  }
+}
+
+// Hide visually and from screenreaders, but maintain layout
+@mixin invisible {
+  visibility: hidden;
+}
+
+// Contain floats: h5bp.com/q 
+@mixin h5bp-clearfix {
+  &:before, &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+  zoom: 1;
+}

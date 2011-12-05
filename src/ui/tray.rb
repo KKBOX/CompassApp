@@ -138,42 +138,34 @@ class Tray
       end
     end
   end
+  
+  def compass_project_config
+    file_name = Compass.detect_configuration_file(@watching_dir)
+    Compass.add_project_configuration(file_name)
+  end
 
   def build_change_options_menuitem( index )
-    file_name = Compass.detect_configuration_file(@watching_dir)
-    file = File.new(file_name, 'r')
-    bind = binding
-    eval(file.read, bind, file_name)
 
     @changeoptions_item = add_menu_item( "Change Options...", empty_handler , Swt::SWT::CASCADE, @menu, index)
     submenu = Swt::Widgets::Menu.new( @menu )
     @changeoptions_item.menu = submenu
 
     outputstyle_item = add_menu_item( "Output Style", nil, Swt::SWT::PUSH, submenu)
-    outputstyle = eval('output_style',bind) rescue 'expanded'
-    item = add_menu_item( "nested",     outputstyle_handler, Swt::SWT::RADIO, submenu )
-    item.setSelection(true) if outputstyle.to_s == "nested" 
 
-    item = add_menu_item( "expanded",   outputstyle_handler, Swt::SWT::RADIO, submenu )
-    item.setSelection(true) if outputstyle.to_s == "expanded"
-
-    item = add_menu_item( "compact",    outputstyle_handler, Swt::SWT::RADIO, submenu )
-    item.setSelection(true) if outputstyle.to_s == "compact"
-
-    item = add_menu_item( "compressed", outputstyle_handler, Swt::SWT::RADIO, submenu )
-    item.setSelection(true) if outputstyle.to_s == "compressed"
+    %W{nested expanded compact compressed}.each do |output_style|
+      item = add_menu_item( output_style,     outputstyle_handler, Swt::SWT::RADIO, submenu )
+      item.setSelection(true) if compass_project_config.output_style.to_s == output_style
+    end
 
     add_menu_separator(submenu)
 
     options_item = add_menu_item( "Options", nil, Swt::SWT::PUSH, submenu)
 
     linecomments_item  = add_menu_item( "Line Comments", linecomments_handler, Swt::SWT::CHECK, submenu )
-    linecomments = eval('line_comments',bind) rescue true
-    linecomments_item.setSelection(true) if linecomments
+    linecomments_item.setSelection(true) if compass_project_config.line_comments
 
     debuginfo_item    = add_menu_item( "Debug Info",   debuginfo_handler,   Swt::SWT::CHECK, submenu )
-    debuginfo = eval('sass_options[:debug_info]',bind) rescue false
-    debuginfo_item.setSelection(true) if debuginfo 
+    debuginfo_item.setSelection(true) if compass_project_config.sass_options && compass_project_config.sass_options[:debug_info] 
   end
 
   def build_compass_framework_menuitem( submenu, handler )
@@ -192,6 +184,7 @@ class Tray
     @history_dirs.reverse.each do | dir |
       add_compass_item(dir)
     end
+    App.set_histoy(@history_dirs[0,5])
   end
 
   def create_project_handler
@@ -216,7 +209,7 @@ class Tray
                                                  { :framework        => framework, 
                                                    :pattern          => pattern, 
                                                    :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
-                                                 }).execute
+            }).execute
           end
           App.report( actual)
         end
@@ -243,7 +236,7 @@ class Tray
                                               { :framework => framework, 
                                                 :pattern => pattern,
                                                 :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
-                                              } ).execute
+          } ).execute
         end
         App.report( actual)
       end
@@ -343,12 +336,8 @@ class Tray
 
   def debuginfo_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      file_name = Compass.detect_configuration_file
-      file = File.new(file_name, 'r')
-      bind = binding
-      eval(file.read, bind)
-      file.close
-      sass_options = eval('sass_option', bind) rescue {}
+
+      sass_options = compass_project_config.sass_options
       sass_options = {} if !sass_options.is_a? Hash
       sass_options[:debug_info] = evt.widget.getSelection
 
@@ -393,7 +382,7 @@ class Tray
         build_history_menuitem
 
 
-        @watch_item.text="Watching " + dir
+        @watch_item.text="Stop watching " + dir
         @install_item =  add_menu_item( "Install...", 
                                        install_project_handler, 
                                        Swt::SWT::CASCADE,
@@ -403,7 +392,7 @@ class Tray
         @install_item.menu = Swt::Widgets::Menu.new( @menu )
         build_compass_framework_menuitem( @install_item.menu, install_project_handler )
         build_change_options_menuitem( @menu.indexOf(@install_item) +1 )
-        @clean_item =  add_menu_item( "Clean && Complie", 
+        @clean_item =  add_menu_item( "Clean && Compile", 
                                      clean_project_handler, 
                                      Swt::SWT::PUSH,
                                      @menu, 
