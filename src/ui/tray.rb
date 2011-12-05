@@ -191,8 +191,8 @@ class Tray
     Swt::Widgets::Listener.impl do |method, evt|
       dia = Swt::Widgets::FileDialog.new(@shell,Swt::SWT::SAVE)
       dir = dia.open
-      dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
       if dir
+        dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
 
         # if select a pattern
         if Compass::Frameworks::ALL.any?{ | f| f.name == evt.widget.getParent.getParentItem.text }
