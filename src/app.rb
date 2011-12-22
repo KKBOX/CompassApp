@@ -18,8 +18,10 @@ module App
 
   
   CONFIG_DIR = File.join( java.lang.System.getProperty("user.home") , '.compass-ui' )
+  AUTOCOMPLTETE_CACHE_DIR = File.join( java.lang.System.getProperty("user.home") , '.compass-ui', 'autocomplete_cache' )
 
   Dir.mkdir( CONFIG_DIR ) unless File.exists?( CONFIG_DIR )
+  Dir.mkdir( AUTOCOMPLTETE_CACHE_DIR ) unless File.exists?( AUTOCOMPLTETE_CACHE_DIR )
 
   HISTORY_FILE =  File.join( CONFIG_DIR, 'history')
   CONFIG_FILE  =  File.join( CONFIG_DIR, 'config')
@@ -105,6 +107,7 @@ module App
     $LOAD_PATH.unshift('.')
     require "fsevent_patch" if OS == 'darwin'
     require "compass_patch.rb"
+    require "sass_patch.rb"
   end
 
   def save_config
