@@ -1,25 +1,33 @@
 func! CompassCompl(st,base)
-  if a:st
-    let line = getline('.')
-    let start = col('.') - 1 
-    while start > 0 && line[start - 1] =~ '\a'
-      let start -= 1
-    endwhile
-    return start
-  else
-    echo "base=" . a:base
-    let wordfile='~/.compass-ui/autocomplete_cache/'. substitute( expand('%:p'), '[^a-z0-9]', '_','g'). "_mixin"
-    let get_word_cmd='test -f '. wordfile .' && cat '. wordfile .'|tr "\n" ,'
-    echo get_word_cmd
-    exe 'let wordlist=['. system(get_word_cmd) . ']' 
-    let res = []
-    for m in wordlist
-      if m =~ '^' . a:base
-        call add(res, m)
-      endif
-    endfor
-    return res 
-  endif
+    if a:st
+        let line = getline('.')
+        let start = col('.') - 1
+        while start > 0 && line[start - 1] =~ '[a-z0-9\$@]'
+            let start -= 1
+        endwhile
+        return start
+
+    else
+        echom "base=" . a:base
+
+        if a:base[0] == "$"
+            let wordfile='~/.compass-ui/autocomplete_cache/'. substitute( expand('%:p'), '[^a-z0-9]', '_','g'). "_variable"
+        else
+            let wordfile='~/.compass-ui/autocomplete_cache/'. substitute( expand('%:p'), '[^a-z0-9]', '_','g'). "_mixin"
+        endif
+
+        let get_word_cmd='test -f '. wordfile .' && cat '. wordfile .'|tr "\n" ,'
+        exe 'let wordlist=['. system(get_word_cmd) . ']'
+
+        let res = []
+        for m in wordlist
+            if m =~ '^' . a:base
+                call add(res, m)
+            endif
+        endfor
+
+        return res
+    endif
 endfunc
 
 autocmd BufNewFile,BufRead *.scss  set ft=scss.css iskeyword+=- ofu=CompassCompl

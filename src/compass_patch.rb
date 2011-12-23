@@ -151,6 +151,11 @@ module Compass
           f.puts "\"#{name}\""
         end
       end
+      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename.gsub(/[^a-z0-9]/i, '_')+"_variable"), 'w' ) do |f|
+        ::Sass::Tree::VariableNode.variables.uniq.sort.each do |name|
+          f.puts "\"$#{name}\""
+        end
+      end
     end 
   end
 end

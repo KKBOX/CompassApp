@@ -33,3 +33,41 @@ module Sass
   end 
 end
 
+module Sass
+  module Tree
+    # A dynamic node representing a variable definition.
+    #   
+    # @see Sass::Tree
+    class VariableNode < Node
+      class << self
+          attr_accessor :variables
+      end 
+      
+      # The name of the variable.
+      # @return [String]
+      attr_reader :name
+
+      # The parse tree for the variable value.
+      # @return [Script::Node]
+      attr_accessor :expr
+
+      # Whether this is a guarded variable assignment (`!default`).
+      # @return [Boolean]
+      attr_reader :guarded
+
+      # @param name [String] The name of the variable
+      # @param expr [Script::Node] See \{#expr}
+      # @param guarded [Boolean] See \{#guarded}
+      def initialize(name, expr, guarded)
+        self.class.variables ||= []  
+        self.class.variables << name
+
+        @name = name
+        @expr = expr
+        @guarded = guarded
+        super()
+      end 
+    end 
+  end 
+end
+
