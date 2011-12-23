@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rspec'
+require 'em-spec/rspec'
 require 'pp'
 require 'em-http'
 
@@ -68,6 +69,32 @@ class Draft03FakeWebSocketClient < FakeWebSocketClient
   end
 end
 
+class Draft07FakeWebSocketClient < FakeWebSocketClient
+  def send(application_data)
+    frame = ''
+    opcode = 1 # fake only supports text frames
+    byte1 = opcode | 0b10000000 # since more, rsv1-3 are 0
+    frame << byte1
+
+    length = application_data.size
+    if length <= 125
+      byte2 = length # since rsv4 is 0
+      frame << byte2
+    elsif length < 65536 # write 2 byte length
+      frame << 126
+      frame << [length].pack('n')
+    else # write 8 byte length
+      frame << 127
+      frame << [length >> 32, length & 0xFFFFFFFF].pack("NN")
+    end
+
+    frame << application_data
+
+    send_data(frame)
+  end
+end
+
+
 # Wrap EM:HttpRequest in a websocket like interface so that it can be used in the specs with the same interface as FakeWebSocketClient
 class Draft75WebSocketClient
   def onopen(&blk);     @onopen = blk;    end
@@ -89,11 +116,6 @@ class Draft75WebSocketClient
   def close_connection
     @ws.close_connection
   end
-end
-
-def failed
-  EventMachine.stop
-  fail
 end
 
 def format_request(r)
