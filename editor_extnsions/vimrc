@@ -1,23 +1,37 @@
 func! CompassCompl(st,base)
     if a:st
         let line = getline('.')
-        let start = col('.') - 1
-        while start > 0 && line[start - 1] =~ '[a-z0-9\$@]'
+        let start = col('.') - 1 
+        while start > 0 && line[start - 1] =~ '[a-z0-9\$@]' 
             let start -= 1
         endwhile
         return start
-
     else
         echom "base=" . a:base
 
-        if a:base[0] == "$"
-            let wordfile='~/.compass-ui/autocomplete_cache/'. substitute( expand('%:p'), '[^a-z0-9]', '_','g'). "_variable"
-        else
-            let wordfile='~/.compass-ui/autocomplete_cache/'. substitute( expand('%:p'), '[^a-z0-9]', '_','g'). "_mixin"
-        endif
+        let basefilename='~/.compass-ui/autocomplete_cache/'. substitute( expand('%:p'), '[^a-z0-9]', '_','g')   
+        if a:base[0] == "$" 
+            let wordfile=basefilename. "_variable"
+            let get_word_cmd='test -f '. wordfile .' && cat '. wordfile .'|tr "\n" ,'
+            exe 'let wordlist=['. system(get_word_cmd) . ']' 
 
-        let get_word_cmd='test -f '. wordfile .' && cat '. wordfile .'|tr "\n" ,'
-        exe 'let wordlist=['. system(get_word_cmd) . ']'
+            " add variable in current file
+            let file = getline(1, '$') 
+            let jfile = join(file, ' ') 
+            let int_vals = split(jfile, '\ze\$')
+            let int_vars = {}  
+            for i in int_vals
+                let val = matchstr(i, '^\$[a-zA-Z_\x7f-\xff][a-zA-Z_0-9\x7f-\xff]*')
+                if val != ''
+                    call add(wordlist, val)
+                endif
+            endfor
+
+        else
+            let wordfile=basefilename. "_mixin"
+            let get_word_cmd='test -f '. wordfile .' && cat '. wordfile .'|tr "\n" ,'
+            exe 'let wordlist=['. system(get_word_cmd) . ']' 
+        endif
 
         let res = []
         for m in wordlist
@@ -27,6 +41,7 @@ func! CompassCompl(st,base)
         endfor
 
         return res
+
     endif
 endfunc
 
