@@ -29,28 +29,28 @@ func! CompassCompl(st,base)
         else
             let line = getline('.')
             if line =~ '@include'
-                let wordfile=basefilename. "_mixin"
-                let get_word_cmd='test -f '. wordfile .' && cat '. wordfile .'|tr "\n" ,'
-                exe 'let wordlist=['. system(get_word_cmd) . ']'
-            endif
- 
-             " if you need complete mixin args, comment below 5 lines
-            let clean_wordlist = []
-            for i in wordlist
-              call add(clean_wordlist, matchstr(i, "^[a-z0-9\-_]*"))
-            endfor
-            let wordlist = clean_wordlist
+              let wordfile=basefilename. "_mixin"
+              let get_word_cmd='test -f '. wordfile .' && cat '. wordfile .'|tr "\n" ,'
+              exe 'let wordlist=['. system(get_word_cmd) . ']'
 
-            " add mixin in current file
-            let int_vals = getline(1, '$')
-            let int_vars = {} 
-            for i in int_vals
+              " add mixin in current file
+              let int_vals = getline(1, '$')
+              let int_vars = {} 
+              for i in int_vals
                 let val = matchlist(i, '^@mixin \([a-z0-9\_]*[^{]*\)')
                 if len(val) > 0 && val[1] != ''
-                    call add(wordlist, val[1])
+                  call add(wordlist, val[1])
                 endif
-            endfor
+              endfor
 
+              " if you need complete mixin args, comment below 5 lines
+              let clean_wordlist = []
+              for i in wordlist
+                call add(clean_wordlist, matchstr(i, "^[a-z0-9\-_]*"))
+              endfor
+              let wordlist = clean_wordlist
+
+            endif
         endif
 
         " if we got scss words
@@ -69,6 +69,5 @@ func! CompassCompl(st,base)
         return csscomplete#CompleteCSS(0, a:base)
     endif
 endfunc
-
 autocmd BufNewFile,BufRead *.scss  set ft=scss.css iskeyword+=- ofu=CompassCompl
 
