@@ -161,24 +161,34 @@ class PreferencePanel
     Swt::Widgets::Listener.impl do |method, evt|   
       has_change = false
       port = @http_port_text.getText.to_i
-      port = port.to_i > 0 ? port.to_i : App::CONFIG['services_http_port']
-      if App::CONFIG['services_http_port'] != port
-        App::CONFIG['services_http_port'] = port
-        @http_port_text.setText(App::CONFIG['services_http_port'].to_s)
-        has_change = true 
-      end
-      
-      port = @livereload_port_text.getText.to_i
-      port = port.to_i > 0 ? port.to_i : App::CONFIG['services_livereload_port']
-      if App::CONFIG['services_livereload_port'] != port
-        App::CONFIG['services_livereload_port'] = port
-        @livereload_port_text.setText(App::CONFIG['services_livereload_port'].to_s)
-        has_change = true 
+      port = port.to_i
+      if port < 0 || port > 65535 
+        App.alert("http port number should be intergers between 0 and 65535")
+      else
+       
+        if App::CONFIG['services_http_port'] != port
+          App::CONFIG['services_http_port'] = port
+          @http_port_text.setText(App::CONFIG['services_http_port'].to_s)
+          has_change = true 
+        end
       end
 
-      if has_change
-        App.save_config
-        Tray.instance.rewatch
+      port = @livereload_port_text.getText.to_i
+      port = port.to_i
+      if port < 0 || port > 65535 
+        App.alert("livereload port number should be intergers between 0 and 65535")
+      else
+
+        if App::CONFIG['services_livereload_port'] != port
+          App::CONFIG['services_livereload_port'] = port
+          @livereload_port_text.setText(App::CONFIG['services_livereload_port'].to_s)
+          has_change = true 
+        end
+
+        if has_change
+          App.save_config
+          Tray.instance.rewatch
+        end
       end
     end
   end
