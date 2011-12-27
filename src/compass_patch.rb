@@ -145,13 +145,19 @@ module Compass
       write_file(css_filename, css_content, options.merge(:force => true, :extra => duration))
       Compass.configuration.run_callback(:stylesheet_saved, css_filename ) 
 
-      # PATCH: write wordlist file
-      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename.gsub(/[^a-z0-9]/i, '_')+"_mixin"), 'w' ) do |f|
+      # PATCH: write wordlist File
+      sass_filename_str = sass_filename.gsub(/[^a-z0-9]/i, '_')
+      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_project" ), 'w' ) do |f|
+        f.write Compass.configuration.project_path
+      end
+
+      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_mixin" ), 'w' ) do |f|
         ::Sass::Tree::MixinDefNode.mixins.uniq.sort.each do |name|
           f.puts "\"#{name}\""
         end
       end
-      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename.gsub(/[^a-z0-9]/i, '_')+"_variable"), 'w' ) do |f|
+
+      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_variable" ), 'w' ) do |f|
         ::Sass::Tree::VariableNode.variables.uniq.sort.each do |name|
           f.puts "\"$#{name}\""
         end

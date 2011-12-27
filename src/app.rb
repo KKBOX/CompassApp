@@ -194,17 +194,21 @@ module App
   end
   
   def clear_autocomplete_cache
-      history_dir_strings=App.get_history.map{|d| d.gsub(/[^a-z0-9]/i, '_')+"_"}
-
-      Dir.glob(File.join(App::AUTOCOMPLTETE_CACHE_DIR, '*')).each do |f|
+    history_dirs=App.get_history
+      Dir.glob(File.join(App::AUTOCOMPLTETE_CACHE_DIR, '*project')).each do |f|
         need_delete=true
-        history_dir_strings.each do |history_string|
-          if f.index(history_string)
+        f_project = IO.read(f)
+        history_dirs.each do |history_string|
+          if f_project == history_string
             need_delete = false 
             break
           end
         end
-        File.delete(f) if need_delete
+        if need_delete
+          File.delete(f) 
+          File.delete(f.gsub(/project$/, 'mixin')) 
+          File.delete(f.gsub(/project$/, 'variable')) 
+        end
       end
   end
 end
