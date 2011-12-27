@@ -43,6 +43,7 @@ module App
     x.delete("services_livereload_port") unless x["services_livereload_port"].to_i > 0
                                 
     config={
+      "show_welcome" => true,
       "use_version" => 0.11,
       "use_specify_gem_path" => false,
       "gem_path" => App.get_system_default_gem_path,

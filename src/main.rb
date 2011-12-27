@@ -16,7 +16,7 @@ require 'stringio'
 require 'thread'
 require "open-uri"
 require "yaml"
-%w{alert notification quit_window tray preference_panel report}.each do | f |
+%w{alert notification quit_window tray preference_panel report welcome_window}.each do | f |
   require "ui/#{f}"
 end
 
@@ -32,6 +32,7 @@ end
 
 require "livereload"
 require "simplehttpserver"
-
+if App::CONFIG['show_welcome']
+  WelcomeWindow.new
+end
 Tray.instance.run
-
