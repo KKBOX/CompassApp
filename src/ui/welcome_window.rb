@@ -15,12 +15,19 @@ class WelcomeWindow
       layout.wrap    = true
       shell.layout   = layout
 
+      font_data=shell.getFont().getFontData()
+      font_data.each do |fd|
+        fd.setHeight(12)
+      end
+      new_font=Swt::Graphics::Font.new(target_display, font_data)
       label = Swt::Widgets::Label.new(shell, Swt::SWT::LEFT)
       label.setText('Compass.app is a menu bar only application.')
+      label.setFont(new_font);
 
       label = Swt::Widgets::Label.new(shell, Swt::SWT::LEFT|Swt::SWT::WRAP)
       label.setText('We helps designers compile stylesheets easily without resorting to command line interface.')
       label.setLayoutData( Swt::Layout::RowData.new( 400, Swt::SWT::DEFAULT ))
+      label.setFont(new_font);
 
       label = Swt::Widgets::Label.new(shell, Swt::SWT::LEFT)
       label.setImage( App.create_image('where_am_i.png') )
@@ -36,6 +43,7 @@ class WelcomeWindow
         App::CONFIG['show_welcome'] = !@button.getSelection
         App.save_config
       end)
+      @button.setFont(new_font);
 
       @start_button = Swt::Widgets::Button.new(composite, Swt::SWT::PUSH )
       layoutdata = Swt::Layout::FormData.new()
@@ -45,6 +53,7 @@ class WelcomeWindow
       @start_button.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|
         evt.widget.shell.dispose();
       end)
+      @start_button.setFont(new_font);
 
       shell.pack
       m=target_display.getPrimaryMonitor().getBounds();
