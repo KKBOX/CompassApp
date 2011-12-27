@@ -38,7 +38,7 @@ class WelcomeWindow
       composite.setLayoutData( Swt::Layout::RowData.new( 400, Swt::SWT::DEFAULT ))
 
       @button = Swt::Widgets::Button.new(composite, Swt::SWT::CHECK )
-      @button.setText( 'Never Show again' )
+      @button.setText( 'Never show again' )
       @button.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt|
         App::CONFIG['show_welcome'] = !@button.getSelection
         App.save_config
