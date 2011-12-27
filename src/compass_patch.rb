@@ -1,3 +1,4 @@
+
 module Compass
   module Commands
     class UpdateProject
@@ -128,6 +129,34 @@ module Compass
         @logfile = nil
       end
     end
+  end
+
+  class Compiler
+
+    # Compile one Sass file
+    def compile(sass_filename, css_filename)
+      start_time = end_time = nil 
+      css_content = logger.red do
+        timed do
+          engine(sass_filename, css_filename).render
+        end 
+      end 
+      duration = options[:time] ? "(#{(css_content.__duration * 1000).round / 1000.0}s)" : ""
+      write_file(css_filename, css_content, options.merge(:force => true, :extra => duration))
+      Compass.configuration.run_callback(:stylesheet_saved, css_filename ) 
+
+      # PATCH: write wordlist file
+      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename.gsub(/[^a-z0-9]/i, '_')+"_mixin"), 'w' ) do |f|
+        ::Sass::Tree::MixinDefNode.mixins.uniq.sort.each do |name|
+          f.puts "\"#{name}\""
+        end
+      end
+      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename.gsub(/[^a-z0-9]/i, '_')+"_variable"), 'w' ) do |f|
+        ::Sass::Tree::VariableNode.variables.uniq.sort.each do |name|
+          f.puts "\"$#{name}\""
+        end
+      end
+    end 
   end
 end
 

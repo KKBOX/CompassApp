@@ -6,3 +6,4 @@ update_url
 src/compile_version.rb 
 .rvmrc
 .rbenv-version
+src/compile_version.rb
