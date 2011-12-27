@@ -35,4 +35,6 @@ require "simplehttpserver"
 if App::CONFIG['show_welcome']
   WelcomeWindow.new
 end
+App.clear_autocomplete_cache
+
 Tray.instance.run
