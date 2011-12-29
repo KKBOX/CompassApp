@@ -25,7 +25,7 @@ class WelcomeWindow
       label.setFont(new_font);
 
       label = Swt::Widgets::Label.new(shell, Swt::SWT::LEFT|Swt::SWT::WRAP)
-      label.setText('We helps designers compile stylesheets easily without resorting to command line interface.')
+      label.setText('We help designers compile stylesheets easily without resorting to command line interface.')
       label.setLayoutData( Swt::Layout::RowData.new( 400, Swt::SWT::DEFAULT ))
       label.setFont(new_font);
 
