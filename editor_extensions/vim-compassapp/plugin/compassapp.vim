@@ -70,4 +70,5 @@ func! CompassCompl(st,base)
     endif
 endfunc
 autocmd BufNewFile,BufRead *.scss  set ft=scss.css iskeyword+=- ofu=CompassCompl
+autocmd BufNewFile,BufRead *.sass  set ft=sass.css iskeyword+=- ofu=CompassCompl
 
