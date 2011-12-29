@@ -151,15 +151,20 @@ module Compass
         f.write Compass.configuration.project_path
       end
 
-      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_mixin" ), 'w' ) do |f|
-        ::Sass::Tree::MixinDefNode.mixins.uniq.sort.each do |name|
-          f.puts "\"#{name}\""
+      if ::Sass::Tree::MixinDefNode.mixins
+        File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_mixin" ), 'w' ) do |f|
+
+          ::Sass::Tree::MixinDefNode.mixins.uniq.sort.each do |name|
+            f.puts "\"#{name}\""
+          end
         end
       end
 
-      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_variable" ), 'w' ) do |f|
-        ::Sass::Tree::VariableNode.variables.uniq.sort.each do |name|
-          f.puts "\"$#{name}\""
+      if  ::Sass::Tree::VariableNode.variables
+        File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_variable" ), 'w' ) do |f|
+          ::Sass::Tree::VariableNode.variables.uniq.sort.each do |name|
+            f.puts "\"$#{name}\""
+          end
         end
       end
     end 
