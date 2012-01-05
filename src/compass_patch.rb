@@ -143,7 +143,12 @@ module Compass
       end 
       duration = options[:time] ? "(#{(css_content.__duration * 1000).round / 1000.0}s)" : ""
       write_file(css_filename, css_content, options.merge(:force => true, :extra => duration))
-      Compass.configuration.run_callback(:stylesheet_saved, css_filename ) 
+     
+      if Compass::VERSION.to_f >= 0.12
+        Compass.configuration.run_stylesheet_saved(css_filename)
+      else
+        Compass.configuration.run_callback(:stylesheet_saved, css_filename ) 
+      end
 
       # PATCH: write wordlist File
       sass_filename_str = sass_filename.gsub(/[^a-z0-9]/i, '_')
