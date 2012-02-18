@@ -305,16 +305,32 @@ class Tray
 
   def update_config(need_clean_attr, value)
     file_name = Compass.detect_configuration_file
-    new_config = ''
-    last_is_blank = false
-    config_file = File.new(file_name,'r').each do | x | 
-      next if last_is_blank && x.strip.empty?
-    new_config += x unless x =~ /by Compass\.app/ && x =~ Regexp.new(need_clean_attr)
-    last_is_blank = x.strip.empty?
+    if file_name
+      new_config = ''
+      last_is_blank = false
+      config_file = File.new(file_name,'r').each do | x | 
+        next if last_is_blank && x.strip.empty?
+        new_config += x unless x =~ /by Compass\.app/ && x =~ Regexp.new(need_clean_attr)
+        last_is_blank = x.strip.empty?
+      end
+      config_file.close
+      new_config += "\n#{need_clean_attr} = #{value} # by Compass.app "
+      File.open(file_name, 'w'){ |f| f.write(new_config) }
+    else
+      
+      config_dir = File.join(Compass.configuration.project_path, 'config')
+
+      if !File.directory?(config_dir) 
+        if File.exists?(config_dir) #file "config" exists!
+          App.alert("can't create folder #{config_dir}")
+          return
+        end
+
+        Dir.mkdir( File.join(Compass.configuration.project_path, 'config') )
+      end
+
+      File.open( File.join(Compass.configuration.project_path, 'config', 'compass.rb'), 'w'){ |f| f.write(new_config) }
     end
-    config_file.close
-    new_config += "\n#{need_clean_attr} = #{value} # by Compass.app "
-    File.open(file_name, 'w'){ |f| f.write(new_config) }
   end
 
   def outputstyle_handler
