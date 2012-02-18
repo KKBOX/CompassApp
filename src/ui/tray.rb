@@ -321,18 +321,14 @@ class Tray
       File.open(file_name, 'w'){ |f| f.write(new_config) }
     else
       
-      config_dir = File.join(Compass.configuration.project_path, 'config')
+      config_filename = File.join(Compass.configuration.project_path, 'config.rb')
 
-      if !File.directory?(config_dir) 
-        if File.exists?(config_dir) #file "config" exists!
-          App.alert("can't create folder #{config_dir}")
-          return
-        end
-
-        Dir.mkdir( File.join(Compass.configuration.project_path, 'config') )
+      if File.exists?(config_filename) #file "config.rb" exists!
+        App.alert("can't create #{config_filename}")
+        return
       end
 
-      File.open( File.join(Compass.configuration.project_path, 'config', 'compass.rb'), 'w'){ |f| f.write(new_config_str) }
+      File.open( config_filename, 'w'){ |f| f.write(new_config_str) }
     end
   end
 
