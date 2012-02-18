@@ -304,7 +304,10 @@ class Tray
   end
 
   def update_config(need_clean_attr, value)
+    new_config_str = "\n#{need_clean_attr} = #{value} # by Compass.app "
+
     file_name = Compass.detect_configuration_file
+
     if file_name
       new_config = ''
       last_is_blank = false
@@ -314,7 +317,7 @@ class Tray
         last_is_blank = x.strip.empty?
       end
       config_file.close
-      new_config += "\n#{need_clean_attr} = #{value} # by Compass.app "
+      new_config += new_config_str
       File.open(file_name, 'w'){ |f| f.write(new_config) }
     else
       
@@ -329,7 +332,7 @@ class Tray
         Dir.mkdir( File.join(Compass.configuration.project_path, 'config') )
       end
 
-      File.open( File.join(Compass.configuration.project_path, 'config', 'compass.rb'), 'w'){ |f| f.write(new_config) }
+      File.open( File.join(Compass.configuration.project_path, 'config', 'compass.rb'), 'w'){ |f| f.write(new_config_str) }
     end
   end
 
