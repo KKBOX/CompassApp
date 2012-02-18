@@ -1,9 +1,11 @@
 require "singleton"
 require "webrick";
 require "erb"
-require "hamlhandler.rb"
+require "webrick/httpservlet/hamlhandler"
+require "webrick/httpservlet/erubishandler"
 
 WEBrick::HTTPServlet::FileHandler.add_handler("haml", WEBrick::HTTPServlet::HamlHandler)
+WEBrick::HTTPServlet::FileHandler.add_handler("erb",  WEBrick::HTTPServlet::ErubisHandler)
 
 class SimpleHTTPServer
   include Singleton
