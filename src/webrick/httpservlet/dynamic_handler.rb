@@ -3,7 +3,6 @@
 require 'tilt'
 require 'active_support/all'
 require 'webrick/httpservlet/view_helpers'
-require 'erubis'
 require 'haml'
 
 module WEBrick
