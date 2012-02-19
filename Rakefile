@@ -42,9 +42,9 @@ INFO_ENDL
       %x{mkdir -p  #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/swt}
       %x{cp -R lib/swt/swt_osx* #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/swt}
 
-      %x{cp -R lib/ruby #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/ruby}
-      %x{cp -R lib/images #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/images}
-      %x{cp -R lib/applescript #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/applescript}    
+      %w{ruby images applescript javascripts}.each do | copy_dir |
+        %x{cp -R lib/#{copy_dir} #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources }
+      end
       Dir.chdir CONFIG.osx_output_dir
       %x{mv #{CONFIG.project_name}.app compass.app;}
       @osx_bundle_file="compass.app.osx.#{@compile_time}-#{@revision}.zip"
@@ -61,8 +61,11 @@ INFO_ENDL
 
       %x{mkdir -p  #{CONFIG.windows_output_dir}/lib/swt}
       %x{cp -R lib/swt/swt_win* #{CONFIG.windows_output_dir}/lib/swt}
-      %x{cp -R lib/ruby #{CONFIG.windows_output_dir}/lib}
-      %x{cp -R lib/images #{CONFIG.windows_output_dir}/lib}
+
+      %w{ruby images javascripts}.each do | copy_dir |
+        %x{cp -R lib/#{copy_dir} #{CONFIG.windows_output_dir}/lib }
+      end
+      
       %x{mv package/windows/package/windows/*.exe package/windows}
       %x{rm -rf package/windows/package}
       Dir.chdir 'package'
@@ -77,8 +80,11 @@ INFO_ENDL
       Dir.chdir File.dirname(__FILE__)
       %x{mkdir -p  package/jar/lib/swt}
       %x{cp -R lib/swt/swt_linux* package/jar/lib/swt}
-      %x{cp -R lib/ruby package/jar/lib}
-      %x{cp -R lib/images package/jar/lib}
+
+      %w{ruby images javascripts}.each do | copy_dir |
+        %x{cp -R lib/#{copy_dir} package/jar/lib }
+      end
+      
       %x{mv package/jar package/compass.app}
       File.open('package/compass.app/run.sh','w') do |f|
         f.write("#!/usr/bin/env bash\ncd $(dirname $0)\njava -client -jar compass-app.jar")
