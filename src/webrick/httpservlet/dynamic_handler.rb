@@ -4,6 +4,9 @@ require 'tilt'
 require 'active_support/all'
 require 'webrick/httpservlet/view_helpers'
 require 'haml'
+WEBrick::HTTPRequest.class_eval do
+  attr_accessor :path
+end
 
 module WEBrick
   module HTTPServlet

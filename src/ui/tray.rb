@@ -285,12 +285,6 @@ class Tray
   def clean_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
       clean_project(true)
-      puts File.join(Compass.configuration.project_path, '**', '[^_].html.*') 
-      Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.html.{erb,haml}') ) do |file|
-        puts file
-        puts WEBrick::HTTPServlet::DynamicHandler.new(nil, file).send(:parse,nil, nil)
-        puts "="*100
-      end
     end
   end
 
@@ -309,7 +303,10 @@ class Tray
 
         Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.html.{erb,haml}') ) do |file|
           next if file =~ /build_\d{14}/
-            content = WEBrick::HTTPServlet::DynamicHandler.new(nil, file).send(:parse,nil, nil)
+          request = WEBrick::HTTPRequest.new({})
+          request.path = file[project_path.size..-1].gsub(/\.(erb|haml)$/,'')
+          content = WEBrick::HTTPServlet::DynamicHandler.new(nil, file).send(:parse, request, nil)
+
           new_file = File.join(release_dir, file[project_path.size..-1].gsub(/\.(erb|haml)$/,''))
           FileUtils.mkdir_p( File.dirname(  new_file ))
           File.open(new_file, 'w') {|f| f.write(content) }
