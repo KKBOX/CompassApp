@@ -173,8 +173,8 @@ module App
     Report.new(msg, target_display)
   end
   
-  def alert(msg, target_display = nil)
-    Alert.new(msg, target_display)
+  def alert(msg, target_display = nil, &block)
+    Alert.new(msg, target_display, &block)
   end
 
   def try

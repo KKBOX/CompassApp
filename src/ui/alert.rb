@@ -1,6 +1,6 @@
 class Alert
 
-  def initialize(msg, target_display = nil)
+  def initialize(msg, target_display = nil, &block)
     target_display = Swt::Widgets::Display.get_current unless target_display
       shell = Swt::Widgets::Shell.new(target_display, Swt::SWT::DIALOG_TRIM)
       shell.setText("Compass.app")
@@ -34,6 +34,7 @@ class Alert
       btn.setText('OK')
       btn.setLayoutData(gridData)
       btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
+        block.call if block_given?
         evt.widget.shell.dispose();
       end)
       shell.pack

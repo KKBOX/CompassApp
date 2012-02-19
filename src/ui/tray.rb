@@ -138,7 +138,7 @@ class Tray
       end
     end
   end
-  
+
   def compass_project_config
     file_name = Compass.detect_configuration_file(@watching_dir)
     Compass.add_project_configuration(file_name)
@@ -285,7 +285,53 @@ class Tray
   def clean_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
       clean_project(true)
+      puts File.join(Compass.configuration.project_path, '**', '[^_].html.*') 
+      Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.html.{erb,haml}') ) do |file|
+        puts file
+        puts WEBrick::HTTPServlet::DynamicHandler.new(nil, file).send(:parse,nil, nil)
+        puts "="*100
+      end
     end
+  end
+
+  def clean_project_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      clean_project(true)
+    end
+  end
+
+  def build_project_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      App.try do 
+        project_path = Compass.configuration.project_path
+        release_dir = File.join(project_path, "build_#{Time.now.strftime('%Y%m%d%H%M%S')}")
+        FileUtils.mkdir_p( release_dir)
+
+        Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.html.{erb,haml}') ) do |file|
+          next if file =~ /build_\d{14}/
+            content = WEBrick::HTTPServlet::DynamicHandler.new(nil, file).send(:parse,nil, nil)
+          new_file = File.join(release_dir, file[project_path.size..-1].gsub(/\.(erb|haml)$/,''))
+          FileUtils.mkdir_p( File.dirname(  new_file ))
+          File.open(new_file, 'w') {|f| f.write(content) }
+        end
+
+        Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.{html,swf,txt,ico,png}') ) do |file|
+          next if file =~ /build_\d{14}/
+            new_file = File.join(release_dir, file[project_path.size..-1])
+          FileUtils.mkdir_p( File.dirname(  new_file ))
+          FileUtils.cp( file, new_file )
+        end
+
+        %w{images css javascripts}.each do |asset|
+          asset_path = Compass.configuration.send("#{asset}_path")
+          FileUtils.cp_r(asset_path, release_dir) if File.exists?(asset_path)
+        end
+        App.alert("Build project completed") do
+          Swt::Program.launch(release_dir)
+        end
+      end
+    end
+
   end
 
   def clean_project(show_report = false)
@@ -313,14 +359,14 @@ class Tray
       last_is_blank = false
       config_file = File.new(file_name,'r').each do | x | 
         next if last_is_blank && x.strip.empty?
-        new_config += x unless x =~ /by Compass\.app/ && x =~ Regexp.new(need_clean_attr)
-        last_is_blank = x.strip.empty?
+      new_config += x unless x =~ /by Compass\.app/ && x =~ Regexp.new(need_clean_attr)
+      last_is_blank = x.strip.empty?
       end
       config_file.close
       new_config += new_config_str
       File.open(file_name, 'w'){ |f| f.write(new_config) }
     else
-      
+
       config_filename = File.join(Compass.configuration.project_path, 'config.rb')
 
       if File.exists?(config_filename) #file "config.rb" exists!
@@ -412,8 +458,14 @@ class Tray
                                      @menu, 
                                      @menu.indexOf(@changeoptions_item) +1 )
 
-        if @menu.items[ @menu.indexOf(@clean_item)+1 ].getStyle != Swt::SWT::SEPARATOR
-          add_menu_separator(@menu, @menu.indexOf(@clean_item) + 1 )
+        @build_project_item =  add_menu_item( "Build Project", 
+                                             build_project_handler, 
+                                             Swt::SWT::PUSH,
+                                             @menu, 
+                                             @menu.indexOf(@clean_item) +1 )
+
+        if @menu.items[ @menu.indexOf(@build_project_item)+1 ].getStyle != Swt::SWT::SEPARATOR
+          add_menu_separator(@menu, @menu.indexOf(@build_project_item) + 1 )
         end
         @tray_item.image = @watching_icon
 
@@ -434,6 +486,7 @@ class Tray
     @watch_item.text="Watch a Folder..."
     @install_item.dispose() if @install_item && !@install_item.isDisposed
     @clean_item.dispose()   if @clean_item && !@clean_item.isDisposed
+    @build_project_item.dispose()   if @build_project_item && !@build_project_item.isDisposed
     @changeoptions_item.dispose()   if @changeoptions_item && !@changeoptions_item.isDisposed
     @watching_dir = nil
     @tray_item.image = @standby_icon

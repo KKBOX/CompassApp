@@ -10,7 +10,7 @@ module WEBrick
     class DynamicHandler < AbstractServlet
 
       def initialize(server, name)
-        super(server, name)
+        super(server, name) if( server )
         @root_path = Compass.configuration.project_path
         @script_filename = name
       end
