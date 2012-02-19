@@ -12,8 +12,6 @@ module WEBrick
 
       def initialize(server, name)
         super(server, name)
-        puts server.inspect
-        puts name.inspect
         @root_path = Compass.configuration.project_path
         @script_filename = name
       end
