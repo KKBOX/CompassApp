@@ -69,7 +69,9 @@ module WEBrick
         layout = nil
         until layout or path == "/"
           path = File.dirname(path)
-          possible_layouts = extensions.map do |ext|
+          
+          full_extensions = extensions + extensions.map{|x| "html."+ x}
+          possible_layouts = full_extensions.map do |ext|
             l = "_layout.#{ext}"
             possible_layout = File.join(root, path, l)
             File.file?(possible_layout) ? possible_layout : false
