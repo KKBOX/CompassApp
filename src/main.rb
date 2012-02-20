@@ -22,19 +22,29 @@ end
 
 require "app.rb"
 
-App.require_compass
-
 begin
-  require "ninesixty"
-  require "html5-boilerplate"
-rescue LoadError
-end
+  App.require_compass
 
-require "livereload"
-require "simplehttpserver"
-if App::CONFIG['show_welcome']
-  WelcomeWindow.new
-end
-App.clear_autocomplete_cache
+  begin
+    require "ninesixty"
+    require "html5-boilerplate"
+  rescue LoadError
+  end
 
-Tray.instance.run
+  require "livereload"
+  require "simplehttpserver"
+
+  if App::CONFIG['show_welcome']
+    WelcomeWindow.new
+  end
+  App.clear_autocomplete_cache
+
+  Tray.instance.run
+
+rescue Exception => e
+  puts e.message
+  puts e.backtrace
+  App.report( e.message + e.backtrace.join("\n") )
+  App.display.dispose
+
+end

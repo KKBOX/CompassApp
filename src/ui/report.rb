@@ -2,8 +2,8 @@ class Report
 
   def initialize(msg, target_display = nil)
     target_display = Swt::Widgets::Display.get_current unless target_display
-    target_display.asyncExec(
-      Swt::RRunnable.new do | runnable |
+#    target_display.asyncExec(
+#      Swt::RRunnable.new do | runnable |
       shell = Swt::Widgets::Shell.new(target_display, Swt::SWT::DIALOG_TRIM)
       shell.setText("Compass Report")
       shell.setBackgroundMode(Swt::SWT::INHERIT_DEFAULT)
@@ -54,12 +54,18 @@ class Report
         evt.widget.shell.dispose();
       end)
 
-      m=target_display.getPrimaryMonitor().getBounds();
-      rect = shell.getClientArea();
-      shell.setLocation((m.width-rect.width) /2, (m.height-rect.height) /2) 
+      if target_display
+        m=target_display.getPrimaryMonitor().getBounds() 
+        rect = shell.getClientArea();
+        shell.setLocation((m.width-rect.width) /2, (m.height-rect.height) /2) 
+      end
       shell.open
       shell.forceActive
-      end)
+
+      while(!shell.is_disposed) do
+        App.display.sleep if(!App.display.read_and_dispatch)
+      end
+
 
   end
 end
