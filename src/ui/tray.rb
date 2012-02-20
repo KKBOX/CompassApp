@@ -300,14 +300,18 @@ class Tray
         project_path = Compass.configuration.project_path
         release_dir = File.join(project_path, "build_#{Time.now.strftime('%Y%m%d%H%M%S')}")
         FileUtils.mkdir_p( release_dir)
-
-        Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.html.{erb,haml}') ) do |file|
+        file_extensions = WEBrick::HTTPServlet::FileHandler::HandlerTable.keys.join(',')
+        Dir.glob( File.join(Compass.configuration.project_path, '**', "[^_]*.html.{#{file_extensions}}") ) do |file|
           next if file =~ /build_\d{14}/
-          request = WEBrick::HTTPRequest.new({})
-          request.path = file[project_path.size..-1].gsub(/\.(erb|haml)$/,'')
-          content = WEBrick::HTTPServlet::DynamicHandler.new(nil, file).send(:parse, request, nil)
+          extname=File.extname(file[project_path.size..-1])# get .erb, .html, .php
 
-          new_file = File.join(release_dir, file[project_path.size..-1].gsub(/\.(erb|haml)$/,''))
+          request = WEBrick::HTTPRequest.new({})
+          request.path = file[project_path.size ... (extname.size*-1)]
+
+          handler = (WEBrick::HTTPServlet::FileHandler::HandlerTable[extname[1..-1]])
+          content = handler.new(nil, file).send(:parse, request, nil)
+
+          new_file = File.join(release_dir, request.path)
           FileUtils.mkdir_p( File.dirname(  new_file ))
           File.open(new_file, 'w') {|f| f.write(content) }
         end
