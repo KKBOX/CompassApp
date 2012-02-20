@@ -60,6 +60,12 @@ module WEBrick
       def find_layout_for(filename)
         root = @root_path
         path = filename[root.size..-1]
+        
+        special_layout_file = filename[0...(-1*File.extname(filename).size)] + ".layout"
+        if File.exists?(special_layout_file)
+          return File.join(root, File.new(special_layout_file).gets.strip)
+        end
+        
         layout = nil
         until layout or path == "/"
           path = File.dirname(path)
