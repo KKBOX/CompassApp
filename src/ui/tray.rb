@@ -312,9 +312,9 @@ class Tray
           File.open(new_file, 'w') {|f| f.write(content) }
         end
 
-        Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.{html,swf,txt,ico,png}') ) do |file|
+        Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.{html,swf,txt,ico,png,json,xml}') ) do |file|
           next if file =~ /build_\d{14}/
-            new_file = File.join(release_dir, file[project_path.size..-1])
+          new_file = File.join(release_dir, file[project_path.size..-1])
           FileUtils.mkdir_p( File.dirname(  new_file ))
           FileUtils.cp( file, new_file )
         end
