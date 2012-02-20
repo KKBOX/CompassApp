@@ -322,7 +322,7 @@ class PreferencePanel
     @button_v11.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @button_v12 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_v12.setText("Default (Sass 3.1.15 + Compass 0.12.rc.1)")
+    @button_v12.setText("Beta (Sass 3.1.15 + Compass 0.12.rc.1)")
     @button_v12.setSelection( App::CONFIG['use_version'] == 0.12  )
     @button_v11.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
@@ -342,14 +342,14 @@ class PreferencePanel
     special_gem_label_ex.setLayoutData( simple_formdata(special_gem_label, 1, 8, 320) )
 
 
-    gem_path_text = Swt::Widgets::Text.new(composite, Swt::SWT::BORDER)
-    gem_path_text.setText(App::CONFIG['gem_path'] || '')
-    gem_path_text.setEnabled(@use_specify_gem_path_btn.getSelection)
-    gem_path_text.setLayoutData( simple_formdata( special_gem_label_ex, 0, 7, 320) )
-    gem_path_text.addListener(Swt::SWT::Selection, compass_version_button_handler)
+    @gem_path_text = Swt::Widgets::Text.new(composite, Swt::SWT::BORDER)
+    @gem_path_text.setText(App::CONFIG['gem_path'] || '')
+    @gem_path_text.setEnabled(@use_specify_gem_path_btn.getSelection)
+    @gem_path_text.setLayoutData( simple_formdata( special_gem_label_ex, 0, 7, 320) )
+    @gem_path_text.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @use_specify_gem_path_btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
-      gem_path_text.setEnabled(evt.widget.getSelection)
+      @gem_path_text.setEnabled(evt.widget.getSelection)
 
     end)
     
@@ -358,7 +358,7 @@ class PreferencePanel
     rowlayout.marginBottom = 0;
     rowlayout.spacing = 3;
     @apply_group.setLayout( rowlayout );
-    @apply_group.setLayoutData( simple_formdata(gem_path_text, -8, 6, 340) )
+    @apply_group.setLayoutData( simple_formdata(@gem_path_text, -8, 6, 340) )
     @apply_group.setVisible(false)
 
     special_gem_label_ex = Swt::Widgets::Label.new( @apply_group, Swt::SWT::LEFT | Swt::SWT::WRAP)
@@ -377,7 +377,7 @@ class PreferencePanel
         App::CONFIG['use_version'] = false
       end
       App::CONFIG['use_specify_gem_path']=@use_specify_gem_path_btn.getSelection
-      App::CONFIG['gem_path']=gem_path_text.getText
+      App::CONFIG['gem_path']=@gem_path_text.getText
       App.save_config
       evt.widget.shell.dispose();
       Tray.instance.stop_watch
@@ -401,8 +401,10 @@ class PreferencePanel
 
   def compass_version_button_handler 
     Swt::Widgets::Listener.impl do |method, evt|   
-      if ( @button_v11.getSelection && App::CONFIG['use_version'] == 0.11 ) || 
-         ( @use_specify_gem_path_btn.getSelection && App::CONFIG['use_version'] == false )
+      if  ( @button_v11.getSelection && App::CONFIG['use_version'] == 0.11 ) || 
+          ( @button_v12.getSelection && App::CONFIG['use_version'] == 0.12 ) || 
+          ( @use_specify_gem_path_btn.getSelection && App::CONFIG['use_version'] == false &&
+             App::CONFIG['gem_path'] == @gem_path_text.getText )
         @apply_group.setVisible(false)
       else
         @apply_group.setVisible(true)

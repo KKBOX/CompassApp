@@ -25,10 +25,15 @@ class Report
       font_data=label.getFont().getFontData()
       font_data.each do |fd|
         fd.setStyle(Swt::SWT::BOLD)
+        fd.setHeight(14)
       end
       font=Swt::Graphics::Font.new(target_display, font_data)
       label.setFont(font)
-      label.setText('Compass Report:')
+      if options[:show_reset_button]
+        label.setText('There is something wrong in your gem paths or plugins:')
+      else
+        label.setText('Compass Report:')
+      end
       label.setLayoutData(gridData)
 
 
@@ -48,11 +53,24 @@ class Report
       gridData.grabExcessHorizontalSpace = false;
       gridData.grabExcessVerticalSpace = false;
       gridData.horizontalSpan=2
-      btn = Swt::Widgets::Button.new(shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
 
       if options[:show_reset_button]
-        btn.setText('Quit && Reset Compass Version')
-        btn.setLayoutData(gridData)
+        button_group =Swt::Widgets::Composite.new( shell, Swt::SWT::NO_MERGE_PAINTS );
+        button_group.setLayoutData(gridData)
+        rowlayout = Swt::Layout::RowLayout.new() 
+        rowlayout.marginBottom = 0;
+        rowlayout.marginTop = 0;
+        rowlayout.spacing = 10;
+        button_group.setLayout( rowlayout );
+
+        btn = Swt::Widgets::Button.new(button_group, Swt::SWT::PUSH | Swt::SWT::CENTER)
+        btn.setText('Quit')
+        btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
+          evt.widget.shell.dispose();
+        end)
+
+        btn = Swt::Widgets::Button.new(button_group, Swt::SWT::PUSH | Swt::SWT::CENTER)
+        btn.setText('Quit && Reset my preferences')
         btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
           App::CONFIG['use_version'] = 0.11
           App::CONFIG['use_specify_gem_path']=false
@@ -60,7 +78,9 @@ class Report
 
           evt.widget.shell.dispose();
         end)
+
       else
+        btn = Swt::Widgets::Button.new(shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
         btn.setText('OK')
         btn.setLayoutData(gridData)
         btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
