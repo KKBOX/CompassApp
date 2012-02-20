@@ -169,8 +169,8 @@ module App
     end
   end
 
-  def report(msg, target_display = nil)
-    Report.new(msg, target_display)
+  def report(msg, target_display = nil, options={})
+    Report.new(msg, target_display, options)
   end
   
   def alert(msg, target_display = nil, &block)
@@ -205,9 +205,9 @@ module App
           end
         end
         if need_delete
-          File.delete(f) 
-          File.delete(f.gsub(/project$/, 'mixin')) 
-          File.delete(f.gsub(/project$/, 'variable')) 
+          [f, f.gsub(/project$/, 'mixin'), f.gsub(/project$/, 'variable')].each do |fn|
+            File.delete(fn)  if File.exists?(fn)
+          end
         end
       end
   end

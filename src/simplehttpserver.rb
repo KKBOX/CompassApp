@@ -10,6 +10,9 @@ class SimpleHTTPServer
   include Singleton
   include WEBrick
   def start(dir, options)
+    if File.exists?( File.join(Compass.configuration.project_path, 'http_servlet_handler.rb'))
+      require File.join(Compass.configuration.project_path, 'http_servlet_handler.rb')
+    end
 
     options={
       :Port => 24680

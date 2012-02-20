@@ -1,6 +1,6 @@
 class Report
 
-  def initialize(msg, target_display = nil)
+  def initialize(msg, target_display = nil, options={})
     target_display = Swt::Widgets::Display.get_current unless target_display
 #    target_display.asyncExec(
 #      Swt::RRunnable.new do | runnable |
@@ -40,6 +40,7 @@ class Report
       text = Swt::Widgets::Text.new(shell, Swt::SWT::MULTI | Swt::SWT::READ_ONLY | Swt::SWT::V_SCROLL | Swt::SWT::H_SCROLL)
       text.setText(msg)
       text.setLayoutData(gridData)
+      
 
       gridData = Swt::Layout::GridData.new
       gridData.horizontalAlignment = Swt::SWT::RIGHT;
@@ -48,11 +49,24 @@ class Report
       gridData.grabExcessVerticalSpace = false;
       gridData.horizontalSpan=2
       btn = Swt::Widgets::Button.new(shell, Swt::SWT::PUSH | Swt::SWT::CENTER)
-      btn.setText('OK')
-      btn.setLayoutData(gridData)
-      btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
-        evt.widget.shell.dispose();
-      end)
+
+      if options[:show_reset_button]
+        btn.setText('Quit && Reset Compass Version')
+        btn.setLayoutData(gridData)
+        btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
+          App::CONFIG['use_version'] = 0.11
+          App::CONFIG['use_specify_gem_path']=false
+          App.save_config
+
+          evt.widget.shell.dispose();
+        end)
+      else
+        btn.setText('OK')
+        btn.setLayoutData(gridData)
+        btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
+          evt.widget.shell.dispose();
+        end)
+      end
 
       if target_display
         m=target_display.getPrimaryMonitor().getBounds() 
