@@ -271,7 +271,7 @@ class Tray
   
   def open_livereloadjs_link_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      Swt::Program.launch('http://github.com/livereload/livereload-js')
+      Swt::Program.launch('https://github.com/livereload/livereload-js')
     end
   end
 
