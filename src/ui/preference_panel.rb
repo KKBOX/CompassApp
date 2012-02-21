@@ -125,9 +125,25 @@ class PreferencePanel
     @livereload_port_text.setLayoutData( layoutdata )
     @livereload_port_text.addListener(Swt::SWT::Modify, services_port_handler)
     
-    layoutdata = Swt::Layout::FormData.new(480, Swt::SWT::DEFAULT)
+    layoutdata = Swt::Layout::FormData.new()
     layoutdata.left = Swt::Layout::FormAttachment.new( livereload_port_label, 0, Swt::SWT::LEFT )
     layoutdata.top  = Swt::Layout::FormAttachment.new( livereload_port_label, 10, Swt::SWT::BOTTOM)
+    livereload_extensions_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
+    livereload_extensions_label.setText("File extensions to monitor")
+    livereload_extensions_label.setLayoutData(layoutdata)
+
+
+    layoutdata = Swt::Layout::FormData.new(250, Swt::SWT::DEFAULT)
+    layoutdata.left = Swt::Layout::FormAttachment.new( livereload_extensions_label, 3, Swt::SWT::RIGHT)
+    layoutdata.top = Swt::Layout::FormAttachment.new(  livereload_extensions_label, 0, Swt::SWT::CENTER)
+    @livereload_extensions_text = Swt::Widgets::Text.new(composite, Swt::SWT::BORDER)
+    @livereload_extensions_text.setText( App::CONFIG["services_livereload_extensions"].to_s )
+    @livereload_extensions_text.setLayoutData( layoutdata )
+    @livereload_extensions_text.addListener(Swt::SWT::Modify, services_extensions_handler)
+
+    layoutdata = Swt::Layout::FormData.new(480, Swt::SWT::DEFAULT)
+    layoutdata.left = Swt::Layout::FormAttachment.new( livereload_extensions_label, 0, Swt::SWT::LEFT )
+    layoutdata.top  = Swt::Layout::FormAttachment.new( livereload_extensions_label, 10, Swt::SWT::BOTTOM)
     livereload_service_info = Swt::Widgets::Link.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
     livereload_service_info.setText("<a href=\"https://github.com/mockko/livereload\">livereload</a> applies CSS/JS Changes to browsers without reloading the page, and auto reloads the page when HTML changes")
     livereload_service_info.setLayoutData(layoutdata)
@@ -189,6 +205,18 @@ class PreferencePanel
           App.save_config
           Tray.instance.rewatch
         end
+      end
+    end
+  end
+
+  def services_extensions_handler
+    Swt::Widgets::Listener.impl do |method, evt|  
+      
+      extensions = @livereload_extensions_text.getText.split(/,/).map!{|x| x.strip }.join(',')
+      if extensions != App::CONFIG["services_livereload_extensions"]
+        App::CONFIG["services_livereload_extensions"] = extensions
+        App.save_config
+        Tray.instance.rewatch
       end
     end
   end

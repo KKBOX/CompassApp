@@ -54,6 +54,7 @@ module App
       "services" => [ ],
       "services_http_port" => 24680,
       "services_livereload_port" => 35729,
+      "services_livereload_extensions" => "css,png,jpg,gif,html,erb,haml",
       "preferred_syntax" => "scss"
     }.merge!(x)
 

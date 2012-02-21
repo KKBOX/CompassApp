@@ -103,7 +103,7 @@ class SimpleLivereload
 
   def send_livereload_msg( base, relative )
     data = JSON.dump( ['refresh', { :path => File.join(base, relative),
-                     :apply_js_live  => false,
+                     :apply_js_live  => true,
                      :apply_css_live => true,
                      :apply_images_live => true }] )
     @clients.each do |ws|
@@ -117,7 +117,15 @@ class SimpleLivereload
     @watch_project_thread = Thread.new do
       FSSM.monitor do |monitor|
         monitor.path dir do |path|
-          path.glob '**/*.{css,png,jpg,gif,js,html,erb,haml}'
+
+          if defined?(::App) 
+            extensions = ::App::CONFIG["services_livereload_extensions"]
+          else
+            extensions = "css,png,jpg,gif,html,erb,haml"
+          end
+
+          path.glob "**/*.{#{extensions}}"
+
           path.update do |base, relative|
             puts ">>> Change detected to: #{relative}"
             SimpleLivereload.instance.send_livereload_msg( base, relative )
