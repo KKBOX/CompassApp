@@ -42,6 +42,7 @@ class Tray
     add_menu_item( 'Homepage',                      open_about_link_handler,   Swt::SWT::PUSH, item.menu)
     add_menu_item( 'Compass ' + Compass::VERSION, open_compass_link_handler, Swt::SWT::PUSH, item.menu)
     add_menu_item( 'Sass ' + Sass::VERSION,       open_sass_link_handler,    Swt::SWT::PUSH, item.menu)
+    add_menu_item( 'LiveReload.js',       open_livereloadjs_link_handler,    Swt::SWT::PUSH, item.menu)
     add_menu_separator( item.menu )
 
     add_menu_item( "App Version: #{App.version}",                          nil, Swt::SWT::PUSH, item.menu)
@@ -265,6 +266,12 @@ class Tray
   def open_sass_link_handler
     Swt::Widgets::Listener.impl do |method, evt|
       Swt::Program.launch('http://sass-lang.com/')
+    end
+  end
+  
+  def open_livereloadjs_link_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      Swt::Program.launch('http://github.com/livereload/livereload-js')
     end
   end
 
