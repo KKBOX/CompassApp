@@ -301,47 +301,6 @@ class Tray
     end
   end
 
-  def build_project_handler
-    Swt::Widgets::Listener.impl do |method, evt|
-      App.try do 
-        project_path = Compass.configuration.project_path
-        release_dir = File.join(project_path, "build_#{Time.now.strftime('%Y%m%d%H%M%S')}")
-        FileUtils.mkdir_p( release_dir)
-        file_extensions = WEBrick::HTTPServlet::FileHandler::HandlerTable.keys.join(',')
-        Dir.glob( File.join(Compass.configuration.project_path, '**', "[^_]*.html.{#{file_extensions}}") ) do |file|
-          next if file =~ /build_\d{14}/
-          extname=File.extname(file[project_path.size..-1])# get .erb, .html, .php
-
-          request = WEBrick::HTTPRequest.new({})
-          request.path = file[project_path.size ... (extname.size*-1)]
-
-          handler = (WEBrick::HTTPServlet::FileHandler::HandlerTable[extname[1..-1]])
-          content = handler.new(nil, file).send(:parse, request, nil)
-
-          new_file = File.join(release_dir, request.path)
-          FileUtils.mkdir_p( File.dirname(  new_file ))
-          File.open(new_file, 'w') {|f| f.write(content) }
-        end
-
-        Dir.glob( File.join(Compass.configuration.project_path, '**', '[^_]*.{html,swf,txt,ico,png,json,xml}') ) do |file|
-          next if file =~ /build_\d{14}/
-          new_file = File.join(release_dir, file[project_path.size..-1])
-          FileUtils.mkdir_p( File.dirname(  new_file ))
-          FileUtils.cp( file, new_file )
-        end
-
-        %w{images css javascripts}.each do |asset|
-          asset_path = Compass.configuration.send("#{asset}_path")
-          FileUtils.cp_r(asset_path, release_dir) if File.exists?(asset_path)
-        end
-        App.alert("Build project completed") do
-          Swt::Program.launch(release_dir)
-        end
-      end
-    end
-
-  end
-
   def clean_project(show_report = false)
     dir = @watching_dir
     stop_watch
@@ -466,14 +425,9 @@ class Tray
                                      @menu, 
                                      @menu.indexOf(@changeoptions_item) +1 )
 
-        @build_project_item =  add_menu_item( "Build Project", 
-                                             build_project_handler, 
-                                             Swt::SWT::PUSH,
-                                             @menu, 
-                                             @menu.indexOf(@clean_item) +1 )
 
-        if @menu.items[ @menu.indexOf(@build_project_item)+1 ].getStyle != Swt::SWT::SEPARATOR
-          add_menu_separator(@menu, @menu.indexOf(@build_project_item) + 1 )
+        if @menu.items[ @menu.indexOf(@clean_item)+1 ].getStyle != Swt::SWT::SEPARATOR
+          add_menu_separator(@menu, @menu.indexOf(@clean_item) + 1 )
         end
         @tray_item.image = @watching_icon
 
@@ -494,7 +448,6 @@ class Tray
     @watch_item.text="Watch a Folder..."
     @install_item.dispose() if @install_item && !@install_item.isDisposed
     @clean_item.dispose()   if @clean_item && !@clean_item.isDisposed
-    @build_project_item.dispose()   if @build_project_item && !@build_project_item.isDisposed
     @changeoptions_item.dispose()   if @changeoptions_item && !@changeoptions_item.isDisposed
     @watching_dir = nil
     @tray_item.image = @standby_icon
