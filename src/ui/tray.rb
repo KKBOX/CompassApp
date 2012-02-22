@@ -1,11 +1,12 @@
 require "singleton"
 class Tray
   include Singleton
-
+  
   def initialize()
     @http_server = nil
     @compass_thread = nil
     @watching_dir = nil
+    @need_watching_dir = nil
     @history_dirs  = App.get_history
     @shell    = App.create_shell(Swt::SWT::ON_TOP | Swt::SWT::MODELESS)
 
@@ -49,16 +50,29 @@ class Tray
     add_menu_item( App.compile_version, nil, Swt::SWT::PUSH, item.menu)
 
     add_menu_item( "Quit",      exit_handler)
+    
+   
+  end
+  
+  def need_watch_dir(dir)
+    @need_watch_dir=dir
+    @shell.display.wake
   end
 
   def run
     puts 'tray OK, spend '+(Time.now.to_f - INITAT.to_f).to_s
+    
+    @autoswitch_thread = start_autoswitch_thread
+
     while(!@shell.is_disposed) do
+      if @need_watch_dir != @watch_dir
+        @watch_dir = @need_watch_dir
+        watch(@need_watch_dir)
+      end
+
       App.display.sleep if(!App.display.read_and_dispatch) 
     end
-
     App.display.dispose
-
   end
 
   def rewatch
@@ -476,7 +490,9 @@ class Tray
           add_menu_separator(@menu, @menu.indexOf(@build_project_item) + 1 )
         end
         @tray_item.image = @watching_icon
+        start_autoswitch_thread
 
+        App.notify("Start Watching: #{dir}"  )
 
         return true
 
@@ -491,6 +507,10 @@ class Tray
   def stop_watch
     @compass_thread.kill if @compass_thread && @compass_thread.alive?
     @compass_thread = nil
+
+    @autoswitch_thread.kill if @autoswitch_thread && @autoswitch_thread.alive?
+    @autoswitch_thread = nil
+
     @watch_item.text="Watch a Folder..."
     @install_item.dispose() if @install_item && !@install_item.isDisposed
     @clean_item.dispose()   if @clean_item && !@clean_item.isDisposed
@@ -501,6 +521,25 @@ class Tray
     SimpleLivereload.instance.unwatch
     SimpleHTTPServer.instance.stop
     FSEvent.stop_all_instances if Object.const_defined?("FSEvent") && FSEvent.methods.include?("stop_all_instances")
+  end
+  
+  def start_autoswitch_thread
+    tray = self
+    Thread.abort_on_exception = true
+    Thread.new do 
+      FSSM.monitor do |monitor| 
+        App::get_history.each do  |x|
+          if File.exists?(x)
+            monitor.path x do |path|
+              path.glob '**/*'
+              path.update {|base, relative| tray.need_watch_dir(base)}
+              path.delete {|base, relative| tray.need_watch_dir(base)}
+              path.create {|base, relative| tray.need_watch_dir(base)}
+            end
+          end
+        end
+      end
+    end
   end
 
 end
