@@ -28,6 +28,7 @@ begin
   begin
     require "ninesixty"
     require "html5-boilerplate"
+    require "compass-h5bp"
   rescue LoadError
   end
 
