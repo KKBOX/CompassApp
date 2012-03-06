@@ -6,9 +6,12 @@ class SimpleHTTPServer
   include Singleton
   include WEBrick
   def start(dir, options)
+    mime_types = WEBrick::HTTPUtils::DefaultMimeTypes
+    mime_types.store 'js', 'application/javascript'
 
     options={
-      :Port => 24680
+      :Port => 24680,
+      :MimeTypes => mime_types
     }.merge(options)
     stop
     @http_server = HTTPServer.new(options) unless @http_server
