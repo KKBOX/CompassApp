@@ -18,11 +18,12 @@ Compass.app is written in **Java (JRuby)**, so you must install JRE(Java Runtime
 
 You can buy Compass.app from [our official site][compassapp]. Once you bought it, We will send an email with download links to your PayPal's email address. You will also get 1.x updates for free.
 
-Our [source code][compassapp-github] is also available on Github and under GPL v2 license. It means you can build your own, or even modify it based on your needs.
+Compass.app is **GPLv2 licensed** because we love open source so much. The source code is [available on GitHub][compassapp-github]. You can build it your own, or even modify it based on your needs.
+
 
 ## Install
 
-There is no need to **install** Compass.app. You can just unzip files and put it anywhere you want. You can even put it in your Dropbox folder and sync it.
+There is no need to **install** Compass.app. You can just unzip and put it anywhere. You can even use Dropbox to sync between computers.
 
 ## Build Your Own
 
@@ -30,12 +31,10 @@ If you want to build your own copy, you will need [JRuby](http://jruby.org/) and
 
 ## License
 
-Copyright (c) 2010 Handlino Inc.
+Copyright (c) 2012 Handlino Inc.
 Licensed under GPL v2.
 
 [compassapp]: http://compass.handlino.com/
 [compassapp-github]: http://github.com/handlino/compassapp
 [sass]: http://sass-lang.com/
 [compass]: http://compass-style.org/
-
-
