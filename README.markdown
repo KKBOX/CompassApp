@@ -9,7 +9,7 @@ Compass.app is written in **Java (JRuby)**, and works in mac, linux and pc. You 
 Compass.app has been tested in:
 
 * Windows: Windows 7/Vista/XP
-* OS X: 10.5, 10.6 32/64bit
+* OS X: 10.5, 10.6 32/64bit, 10.7 32/64bit
 * Linux: Arch Linux 32/64bit
 
 Compass.app is written in **Java (JRuby)**, so you must install JRE(Java Runtime Environment) first. If you do not have JRE installed, Compass.app will guide you to install it first.
