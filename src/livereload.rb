@@ -53,7 +53,7 @@ class SimpleLivereload
 
   def start_websocket_server(options)
     options={
-      :host => '127.0.0.1', 
+      :host => '0.0.0.0', 
       :port => 35729,
       :debug => false
     }.merge(options)
