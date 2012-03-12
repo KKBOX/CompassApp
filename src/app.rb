@@ -46,7 +46,7 @@ module App
                                 
     config={
       "show_welcome" => true,
-      "use_version" => 0.11,
+      "use_version" => 0.12,
       "use_specify_gem_path" => false,
       "gem_path" => App.get_system_default_gem_path,
       "notifications" => [ :error, :warning ],
