@@ -1,22 +1,41 @@
 # Compass.app
 
-http://compass.handlino.com/
+[Compass.app][compassapp] is a **menubar only app** for [Sass][sass] and [Compass][compass]. It helps designers compile stylesheets easily without resorting to command line interface.
 
-[Compass.app](http://compass.handlino.com/) helps designers compile stylesheets easily without resorting to command line interface. It is written in Java and works in Windows/Linux/Mac OS X.
+Compass.app is written in **Java (JRuby)**, and works in mac, linux and pc. You do not need to install Ruby environment to use it.
 
-[Compass](http://compass-style.org/) is a stylesheet authoring framework that makes your stylesheets and markup easier to build and maintain. With compass, you write your stylesheets in [Sass](http://sass-lang.com/) instead of CSS.
+## System Requirement
 
-# License
+Compass.app has been tested in:
+
+* Windows: Windows 7/Vista/XP
+* OS X: 10.5, 10.6 32/64bit
+* Linux: Arch Linux 32/64bit
+
+Compass.app is written in **Java (JRuby)**, so you must install JRE(Java Runtime Environment) first. If you do not have JRE installed, Compass.app will guide you to install it first.
+
+## Download
+
+You can buy Compass.app from [our official site][compassapp]. Once you bought it, We will send an email with download links to your PayPal's email address. You will also get 1.x updates for free.
+
+Our [source code][compassapp-github] is also available on Github and under GPL v2 license. It means you can build your own, or even modify it based on your needs.
+
+## Install
+
+There is no need to **install** Compass.app. You can just unzip files and put it anywhere you want. You can even put it in your Dropbox folder and sync it.
+
+## Build Your Own
+
+If you want to build your own copy, you will need [JRuby](http://jruby.org/) and [rawr](http://rawr.rubyforge.org/).
+
+## License
 
 Copyright (c) 2010 Handlino Inc.
 Licensed under GPL v2.
 
-We sell prebuild software in our offical site. If you know how to build it, feel free to download the source and build your own.
+[compassapp]: http://compass.handlino.com/
+[compassapp-github]: http://github.com/handlino/compassapp
+[sass]: http://sass-lang.com/
+[compass]: http://compass-style.org/
 
-# System Requirement
 
-* Java Runtime
-
-# Build Your Own
-
-If you want to build your own copy, you will need [JRuby 1.6.5](http://jruby.org/) and [rawr](http://rawr.rubyforge.org/).
