@@ -344,15 +344,17 @@ class PreferencePanel
     rowlayout.spacing = 6;
     button_group.setLayout( rowlayout );
 
-    @button_v11 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_v11.setText("Legacy (Sass 3.1.15 + Compass 0.11.7)")
-    @button_v11.setSelection( App::CONFIG['use_version'] == 0.11 || !(App::CONFIG['use_specify_gem_path'] || App::CONFIG['use_version']) )
-    @button_v11.addListener(Swt::SWT::Selection, compass_version_button_handler)
-
     @button_v12 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_v12.setText("Default (Sass 3.1.15 + Compass 0.12)")
+    @button_v12.setText("Default")
     @button_v12.setSelection( App::CONFIG['use_version'] == 0.12  )
-    @button_v11.addListener(Swt::SWT::Selection, compass_version_button_handler)
+    @button_v12.addListener(Swt::SWT::Selection, compass_version_button_handler)
+
+=begin
+    @button_v13 = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
+    @button_v13.setText("Legacy (Sass 3.1.15 + Compass 0.13)")
+    @button_v13.setSelection( App::CONFIG['use_version'] == 0.13 || !(App::CONFIG['use_specify_gem_path'] || App::CONFIG['use_version']) )
+    @button_v13.addListener(Swt::SWT::Selection, compass_version_button_handler)
+=end
 
 
     @use_specify_gem_path_btn = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
@@ -397,9 +399,7 @@ class PreferencePanel
     compass_version_apply_button = Swt::Widgets::Button.new(@apply_group, Swt::SWT::PUSH )
     compass_version_apply_button.setText("Apply Change")
     compass_version_apply_button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
-      if @button_v11.getSelection
-        App::CONFIG['use_version'] = 0.11
-      elsif @button_v12.getSelection
+      if @button_v12.getSelection
         App::CONFIG['use_version'] = 0.12
       else
         App::CONFIG['use_version'] = false

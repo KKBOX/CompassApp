@@ -72,7 +72,7 @@ class Report
         btn = Swt::Widgets::Button.new(button_group, Swt::SWT::PUSH | Swt::SWT::CENTER)
         btn.setText('Quit && Reset my preferences')
         btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
-          App::CONFIG['use_version'] = 0.11
+          App::CONFIG['use_version'] = 0.12
           App::CONFIG['use_specify_gem_path']=false
           App.save_config
 
