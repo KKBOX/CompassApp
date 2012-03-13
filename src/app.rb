@@ -88,7 +88,7 @@ module App
       scan_library( common_lib_path )
 
       if App::CONFIG['use_version'] < 0.12 
-        alert("Compass v#{App::CONFIG['use_version']} is no longer suppoted.\nCompass.app is using v0.12 library now.\nPlease check Compass offical site for more information.")
+        alert("Welcome to use Compass.app v1.13!\nCompass.app is using Compass 0.12 by default. Compass #{App::CONFIG['use_version']} is no longer supported.\nPlease check our site for more information.")
         App::CONFIG['use_version']=0.12
         App.save_config
       end
