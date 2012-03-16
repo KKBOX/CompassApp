@@ -364,7 +364,7 @@ class PreferencePanel
 
 
     special_gem_label = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    special_gem_label.setText('You can use RubyGem to manager compass and its extensions. Use "gem env" command to find your gem paths.')
+    special_gem_label.setText('You can use RubyGem to manage Compass and its extensions. Use "gem env path" command to find your gem paths.')
     special_gem_label.setLayoutData( simple_formdata(button_group, 22, 5, 320) )
 
     special_gem_label_ex = Swt::Widgets::Label.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
