@@ -1,3 +1,5 @@
+![Compass.app](http://compass.handlino.com/images/logo.png)
+
 # Compass.app
 
 [Compass.app][compassapp] is a **menubar only app** for [Sass][sass] and [Compass][compass]. It helps designers compile stylesheets easily without resorting to command line interface.
