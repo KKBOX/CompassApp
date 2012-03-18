@@ -48,7 +48,6 @@ module App
       "show_welcome" => true,
       "use_version" => 0.12,
       "use_specify_gem_path" => false,
-      "gem_path" => App.get_system_default_gem_path,
       "notifications" => [ :error, :warning ],
       "save_notification_to_file" => true,
       "services" => [ ],
@@ -58,6 +57,11 @@ module App
       "preferred_syntax" => "scss"
     }.merge!(x)
 
+    if !config["gem_path"]
+      config["gem_path"] = App.get_system_default_gem_path
+    end
+
+    config
   end
  
   CONFIG = get_config
