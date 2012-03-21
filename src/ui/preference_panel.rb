@@ -376,7 +376,7 @@ class PreferencePanel
     @gem_path_text.setText(App::CONFIG['gem_path'] || '')
     @gem_path_text.setEnabled(@use_specify_gem_path_btn.getSelection)
     @gem_path_text.setLayoutData( simple_formdata( special_gem_label_ex, 0, 7, 320) )
-    @gem_path_text.addListener(Swt::SWT::Selection, compass_version_button_handler)
+    @gem_path_text.addListener(Swt::SWT::Modify, compass_version_button_handler)
 
     @use_specify_gem_path_btn.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
       @gem_path_text.setEnabled(evt.widget.getSelection)
