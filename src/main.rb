@@ -29,6 +29,7 @@ begin
     require "ninesixty"
     require "html5-boilerplate"
     require "compass-h5bp"
+    require "bootstrap-sass"
   rescue LoadError
   end
 
