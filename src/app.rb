@@ -179,13 +179,15 @@ module App
     end
   end
 
-  def report(msg, target_display = nil, options={})
-    Report.new(msg, target_display, options)
-  end
-  
+  def report(msg, target_display = nil, options={}, &block)
+    Report.new(msg, target_display, options, &block)
+  end 
+
   def alert(msg, target_display = nil, &block)
     Alert.new(msg, target_display, &block)
-  end
+  end 
+
+
 
   def try
     begin
@@ -197,29 +199,29 @@ module App
 
   def scan_library( dir )
     Dir.new( dir ).entries.reject{|e| e =~ /^\./}.each do | subfolder|
-      lib_path = File.join(dir, subfolder,'lib')
-      $LOAD_PATH.unshift( File.join( dir, subfolder, 'lib') ) if File.exists?(lib_path)
+    lib_path = File.join(dir, subfolder,'lib')
+    $LOAD_PATH.unshift( File.join( dir, subfolder, 'lib') ) if File.exists?(lib_path)
     end
 
   end
-  
+
   def clear_autocomplete_cache
     history_dirs=App.get_history
-      Dir.glob(File.join(App::AUTOCOMPLTETE_CACHE_DIR, '*project')).each do |f|
-        need_delete=true
-        f_project = IO.read(f)
-        history_dirs.each do |history_string|
-          if f_project == history_string
-            need_delete = false 
-            break
-          end
-        end
-        if need_delete
-          [f, f.gsub(/project$/, 'mixin'), f.gsub(/project$/, 'variable')].each do |fn|
-            File.delete(fn)  if File.exists?(fn)
-          end
+    Dir.glob(File.join(App::AUTOCOMPLTETE_CACHE_DIR, '*project')).each do |f|
+      need_delete=true
+      f_project = IO.read(f)
+      history_dirs.each do |history_string|
+        if f_project == history_string
+          need_delete = false 
+          break
         end
       end
+      if need_delete
+        [f, f.gsub(/project$/, 'mixin'), f.gsub(/project$/, 'variable')].each do |fn|
+          File.delete(fn)  if File.exists?(fn)
+        end
+      end
+    end
   end
 end
 

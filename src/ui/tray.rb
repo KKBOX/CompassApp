@@ -139,6 +139,11 @@ class Tray
       end
     end
   end
+  def open_project_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+        Swt::Program.launch(@watching_dir)
+    end
+  end
 
   def compass_project_config
     file_name = Compass.detect_configuration_file(@watching_dir)
@@ -212,7 +217,10 @@ class Tray
                                                    :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
             }).execute
           end
-          App.report( actual)
+          App.report( actual) do
+            Swt::Program.launch(dir)
+          end
+
         end
 
         watch(dir)
@@ -410,11 +418,17 @@ class Tray
 
 
         @watch_item.text="Stop watching " + dir
+        @open_project_item =  add_menu_item( "Open Project Folder", 
+                                            open_project_handler, 
+                                            Swt::SWT::PUSH,
+                                            @menu, 
+                                            @menu.indexOf(@watch_item) +1 )
+
         @install_item =  add_menu_item( "Install...", 
                                        install_project_handler, 
                                        Swt::SWT::CASCADE,
                                        @menu, 
-                                       @menu.indexOf(@watch_item) +1 )
+                                       @menu.indexOf(@open_project_item) +1 )
 
         @install_item.menu = Swt::Widgets::Menu.new( @menu )
         build_compass_framework_menuitem( @install_item.menu, install_project_handler )
@@ -446,6 +460,7 @@ class Tray
     @compass_thread.kill if @compass_thread && @compass_thread.alive?
     @compass_thread = nil
     @watch_item.text="Watch a Folder..."
+    @open_project_item.dispose()   if @open_project_item && !@open_project_item.isDisposed
     @install_item.dispose() if @install_item && !@install_item.isDisposed
     @clean_item.dispose()   if @clean_item && !@clean_item.isDisposed
     @changeoptions_item.dispose()   if @changeoptions_item && !@changeoptions_item.isDisposed
