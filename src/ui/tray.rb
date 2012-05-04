@@ -195,13 +195,15 @@ class Tray
 
   def create_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      dia = Swt::Widgets::FileDialog.new(@shell,Swt::SWT::SAVE)
+      dia = Swt::Widgets::DirectoryDialog.new(@shell)
+      dia.setMessage "Select a directory to save your project."
       dir = dia.open
+
       if dir
         dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
 
         # if select a pattern
-        if Compass::Frameworks::ALL.any?{ | f| f.name == evt.widget.getParent.getParentItem.text }
+        if Compass::Frameworks::ALL.any?{ |f| f.name == evt.widget.getParent.getParentItem.text }
           framework = evt.widget.getParent.getParentItem.text
           pattern = evt.widget.text
         else
@@ -212,12 +214,12 @@ class Tray
         App.try do 
           actual = App.get_stdout do
             Compass::Commands::CreateProject.new( dir, 
-                                                 { :framework        => framework, 
-                                                   :pattern          => pattern, 
-                                                   :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
+              { :framework        => framework, 
+                :pattern          => pattern, 
+                :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
             }).execute
           end
-          App.report( actual) do
+          App.report(actual) do
             Swt::Program.launch(dir)
           end
 
