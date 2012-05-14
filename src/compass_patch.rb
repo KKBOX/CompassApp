@@ -134,7 +134,7 @@ module Compass
     def log(msg)
       puts msg
       if App::CONFIG["save_notification_to_file"] && @log_dir
-        @logfile = open(@log_dir + '/fire_app_log.txt','a+') unless @logfile
+        @logfile = open(@log_dir + '/compass_app_log.txt','a+') unless @logfile
         @logfile.puts Time.now.strftime("%Y-%m-%d %H:%M:%S") + " " + msg
         @logfile.flush
       else
