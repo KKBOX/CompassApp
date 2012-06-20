@@ -392,11 +392,11 @@ class Tray
         stop_watch
 
         if App::CONFIG['services'].include?( :http )
-          SimpleHTTPServer.instance.start(dir, :Port =>  App::CONFIG['services_http_port'])
+          SimpleHTTPServer.instance.start(Compass.configuration.project_path, :Port =>  App::CONFIG['services_http_port'])
         end
 
         if App::CONFIG['services'].include?( :livereload )
-          SimpleLivereload.instance.watch(dir, { :port => App::CONFIG["services_livereload_port"] }) 
+          SimpleLivereload.instance.watch(Compass.configuration.project_path, { :port => App::CONFIG["services_livereload_port"] }) 
         end
 
         current_display = App.display
