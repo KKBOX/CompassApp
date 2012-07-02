@@ -1,21 +1,35 @@
+# Temporary fix for https://github.com/handlino/CompassApp/issues/79
+# Ref.
+# https://github.com/nex3/sass/blob/stable/lib/sass/script/funcall.rb#L94
+# https://github.com/nex3/sass/issues/200
+module Sass::Script
+  class Funcall
+    def _perform(environment)
+      args = @args.map {|a| a.perform(environment)}
+      if fn = environment.function(@name)
+        keywords = Sass::Util.map_hash(@keywords) {|k, v| [k, v.perform(environment)]}
+        return perform_sass_fn(fn, args, keywords)
+      end 
+
+      ruby_name = @name.tr('-', '_')
+      args = construct_ruby_args(ruby_name, args, environment)
+
+      unless Functions.callable?(ruby_name)
+        opts(to_literal(args))
+      else
+        opts(Functions::EvaluationContext.new(environment.options).send(ruby_name, *args))
+      end 
+    rescue ArgumentError => e
+      # If this is a legitimate Ruby-raised argument error, re-raise it.
+      # Otherwise, it's an error in the user's stylesheet, so wrap it.
+
+      raise Sass::SyntaxError.new("#{e.message} for `#{name}'")
+    end
+  end
+end
 
 module Compass
   module Commands
-    class UpdateProject
-      def new_compiler_instance(additional_options = {})
-        compiler_opts = Compass.sass_engine_options
-        compiler_opts.merge!(:quiet => options[:quiet],
-                             :force => options[:force],
-                             :sass_files => explicit_sass_files,
-                             :dry_run => options[:dry_run],
-                             :logger => options[:logger])
-        compiler_opts.merge!(additional_options)
-        Compass::Compiler.new(working_path,
-                              Compass.configuration.sass_path,
-                              Compass.configuration.css_path,
-                              compiler_opts)
-      end
-    end
     class WatchProject 
 
       def perform # we remove  Signal.trap("INT"), add version check on configuration.watches
@@ -108,6 +122,7 @@ module Compass
       msg = "#{action_padding(action)}#{action} #{arguments.join(' ')}"
       if App::CONFIG["notifications"].include?(action)
         App.notify( msg.strip, @display )
+        @display.wake if @display
       end
       log( msg )
     end
@@ -143,7 +158,7 @@ module Compass
       write_file(css_filename, css_content, options.merge(:force => true, :extra => duration))
      
       Compass.configuration.run_stylesheet_saved(css_filename)
-
+      
       # PATCH: write wordlist File
       sass_filename_str = sass_filename.gsub(/[^a-z0-9]/i, '_')
       File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_project" ), 'w' ) do |f|
