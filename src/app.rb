@@ -97,15 +97,8 @@ module App
         App.save_config
       end
       
-      compass_gems_path = File.join(LIB_PATH, "ruby", "compass_0.12")
-=begin     
-# can reuse when compass 0.13.beta
-      if App::CONFIG['use_version'] == 0.13
-        compass_gems_path = File.join(LIB_PATH, "ruby", "compass_0.13")
-      else
-        compass_gems_path = File.join(LIB_PATH, "ruby", "compass_0.12")
-      end
-=end
+      compass_gems_path = File.join(LIB_PATH, "ruby", "compass_#{App::CONFIG['use_version']}")
+      
       scan_library(compass_gems_path)
 
       extensions_gems_path = File.join(LIB_PATH, "ruby", "compass_extensions" )

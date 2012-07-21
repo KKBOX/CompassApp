@@ -1,0 +1,71 @@
+@import "shared";
+
+// Specify the shorthand `columns` property.
+//
+// Example:
+//
+//     @include columns(20em 2)
+@mixin columns($width-and-count) {
+  @include experimental(columns, $width-and-count,
+    -moz, -webkit, not -o, -ms, not -khtml, official
+  );
+}
+
+// Specify the number of columns
+@mixin column-count($count) {
+  @include experimental(column-count, $count,
+    -moz, -webkit, not -o, -ms, not -khtml, official
+  );
+}
+
+// Specify the gap between columns e.g. `20px`
+@mixin column-gap($width) {
+  @include experimental(column-gap, $width,
+    -moz, -webkit, not -o, -ms, not -khtml, official
+  );
+}
+
+// Specify the width of columns e.g. `100px`
+@mixin column-width($width) {
+  @include experimental(column-width, $width,
+    -moz, -webkit, not -o, -ms, not -khtml, official
+  );
+}
+
+// Specify the width of the rule between columns e.g. `1px`
+@mixin column-rule-width($width) {
+  @include experimental(rule-width, $width,
+    -moz, -webkit, not -o, -ms, not -khtml, official
+  );
+}
+
+// Specify the style of the rule between columns e.g. `dotted`.
+// This works like border-style.
+@mixin column-rule-style($style) {
+  @include experimental(rule-style, unquote($style),
+    -moz, -webkit, not -o, -ms, not -khtml, official
+  );
+}
+
+// Specify the color of the rule between columns e.g. `blue`.
+// This works like border-color.
+@mixin column-rule-color($color) {
+  @include experimental(rule-color, $color,
+    -moz, -webkit, not -o, -ms, not -khtml, official
+  );
+}
+
+// Mixin encompassing all column rule properties
+// For example:
+//
+//     @include column-rule(1px, solid, #c00)
+//
+// Or the values can be space separated:
+//
+//     @include column-rule(1px solid #c00)
+@mixin column-rule($width, $style: false, $color: false) {
+  $full : -compass-space-list(compact($width, $style, $color));
+  @include experimental(column-rule, $full,
+    -moz, -webkit, not -o, -ms, not -khtml, official
+  );
+}
