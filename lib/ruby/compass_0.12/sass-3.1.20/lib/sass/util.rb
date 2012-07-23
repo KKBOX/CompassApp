@@ -439,9 +439,9 @@ module Sass
     # Like `Dir.glob`, but works with backslash-separated paths on Windows.
     #
     # @param path [String]
-    def glob(path)
+    def glob(path, &block)
       path = path.gsub('\\', '/') if windows?
-      Dir.glob(path)
+      Dir.glob(path, &block)
     end
 
     ## Cross-Ruby-Version Compatibility
@@ -464,6 +464,13 @@ module Sass
     # @return [Boolean]
     def ruby1_8_6?
       ruby1_8? && Sass::Util::RUBY_VERSION[2] < 7
+    end
+
+    # Whether or not this is running under MacRuby.
+    #
+    # @return [Boolean]
+    def macruby?
+      RUBY_ENGINE == 'macruby'
     end
 
     # Checks that the encoding of a string is valid in Ruby 1.9
@@ -568,7 +575,7 @@ MSG
             Regexp.new(/\A(?:#{_enc("\uFEFF", e)})?#{
               _enc('@charset "', e)}(.*?)#{_enc('"', e)}|\A(#{
               _enc("\uFEFF", e)})/)
-          rescue Encoding::ConverterNotFound => _
+          rescue Encoding::ConverterNotFoundError => _
             nil # JRuby on Java 5 doesn't support UTF-32
           rescue
             # /\A@charset "(.*?)"/
