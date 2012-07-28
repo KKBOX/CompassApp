@@ -37,10 +37,6 @@
             <key>apple.laf.useScreenMenuBar</key>
             <string>true</string>
         </dict>
-        <key>JVMArchs</key>
-        <array>
-        <string>i386</string>
-        </array>
         <key>StartOnMainThread</key> 
          <string>true</string>
         <key>VMOptions</key>
