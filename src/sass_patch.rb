@@ -21,12 +21,13 @@ module Sass
 
       # @param name [String] The mixin name
       # @param args [Array<(Script::Node, Script::Node)>] See \{#args}
-      def initialize(name, args)
+      def initialize(name, args, splat)
         self.class.mixins ||= []  
         self.class.mixins << "#{name}(#{args.map{|arg| "$"+arg[0].name}.join(", ")})" 
 
         @name = name
         @args = args
+        @splat = splat
         super()
       end 
     end 
