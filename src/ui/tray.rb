@@ -177,6 +177,7 @@ class Tray
   def build_compass_framework_menuitem( submenu, handler )
     Compass::Frameworks::ALL.each do | framework |
       next if framework.name =~ /^_/
+      next if framework.template_directories.empty?
       item = add_menu_item( framework.name, handler, Swt::SWT::CASCADE, submenu)
     framework_submenu = Swt::Widgets::Menu.new( submenu )
     item.menu = framework_submenu

@@ -30,6 +30,8 @@ begin
     require "html5-boilerplate"
     require "compass-h5bp"
     require "bootstrap-sass"
+    require "susy"
+    require "zurb-foundation"
   rescue LoadError
   end
 
