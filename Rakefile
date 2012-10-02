@@ -1,6 +1,6 @@
 require 'rawr'
-require 'app_bundler'
-require 'exe_bundler'
+require 'rawr/app_bundler'
+require 'rawr/exe_bundler'
 require 'yaml'
 module Rawr
   class AppBundler

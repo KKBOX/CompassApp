@@ -1,2 +1,2 @@
 #!/bin/sh
-rake rawr:bundle:all
+bundle exec rake rawr:bundle:all

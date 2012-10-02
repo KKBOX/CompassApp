@@ -1,8 +1,8 @@
 #!/bin/sh
 if [ "$1" = "full" ]; then
-  rake rawr:clean
+  bundle exec rake rawr:clean
 fi
-rake rawr:jar
+bundle exec rake rawr:jar
 #java -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Djruby.reify.classes=true -Djruby.compat.version="1.9" \
 #java -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Djruby.reify.classes=true  \
 java -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails  \

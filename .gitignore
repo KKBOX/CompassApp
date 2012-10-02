@@ -8,3 +8,5 @@ src/compile_version.rb
 .rvmrc
 .rbenv-version
 src/compile_version.rb
+tmp
+.bundle
