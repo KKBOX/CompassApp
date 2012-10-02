@@ -42,7 +42,7 @@ INFO_ENDL
       %x{mkdir -p  #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/swt}
       %x{cp -R lib/swt/swt_osx* #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/swt}
 
-      %w{ruby images applescript javascripts}.each do | copy_dir |
+      %w{ruby images applescript documents /javascripts}.each do | copy_dir |
         %x{cp -R lib/#{copy_dir} #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources }
       end
       Dir.chdir CONFIG.osx_output_dir
@@ -62,7 +62,7 @@ INFO_ENDL
       %x{mkdir -p  #{CONFIG.windows_output_dir}/lib/swt}
       %x{cp -R lib/swt/swt_win* #{CONFIG.windows_output_dir}/lib/swt}
 
-      %w{ruby images javascripts}.each do | copy_dir |
+      %w{ruby images documents javascripts}.each do | copy_dir |
         %x{cp -R lib/#{copy_dir} #{CONFIG.windows_output_dir}/lib }
       end
       
@@ -81,7 +81,7 @@ INFO_ENDL
       %x{mkdir -p  package/jar/lib/swt}
       %x{cp -R lib/swt/swt_linux* package/jar/lib/swt}
 
-      %w{ruby images javascripts}.each do | copy_dir |
+      %w{ruby images documents javascripts}.each do | copy_dir |
         %x{cp -R lib/#{copy_dir} package/jar/lib }
       end
       

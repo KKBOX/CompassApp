@@ -29,7 +29,7 @@ class Tray
     build_history_menuitem
 
     add_menu_separator
-
+    item =  add_menu_item( "Open Extensions Folder", open_extensions_folder_handler, Swt::SWT::PUSH)
     item =  add_menu_item( "Create Compass Project", create_project_handler, Swt::SWT::CASCADE)
 
     item.menu = Swt::Widgets::Menu.new( @menu )
@@ -139,6 +139,18 @@ class Tray
       end
     end
   end
+  
+  def open_extensions_folder_handler
+    Swt::Widgets::Listener.impl do |method, evt|
+      if !File.exists?(App.shared_extensions_path)
+        FileUtils.mkdir_p(App.shared_extensions_path)
+        FileUtils.cp(File.join(LIB_PATH, "documents", "extensions_readme.txt"), File.join(App.shared_extensions_path, "readme.txt") )
+      end
+
+      Swt::Program.launch(App.shared_extensions_path)
+    end 
+  end 
+
   def open_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
         Swt::Program.launch(@watching_dir)

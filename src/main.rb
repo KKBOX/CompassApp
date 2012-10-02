@@ -20,11 +20,30 @@ require "yaml"
   require "ui/#{f}"
 end
 
-require "app.rb"
+require 'optparse'
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+  
+  options[:config_dir] = File.join( java.lang.System.getProperty("user.home") , '.compass-ui' )
+  opts.on("-c PATH", "--config-dir PATH", "config dir path") do |v|
+    options[:config_dir] = v
+  end
+
+end.parse!
 
 begin
-  App.require_compass
+  # TODO: dirty, need refactor
+  if File.directory?(File.dirname(options[:config_dir])) && File.writable?(File.dirname(options[:config_dir])) 
+    CONFIG_DIR = options[:config_dir]
+  else
+    CONFIG_DIR = File.join(Dir.pwd, 'config')
+    Alert.new("Can't Create #{options[:config_dir]}, just put config folder to #{CONFIG_DIR}")
+  end
 
+  require "app.rb"
+  App.require_compass
+ 
   begin
     require "ninesixty"
     require "html5-boilerplate"

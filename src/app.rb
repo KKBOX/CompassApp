@@ -15,10 +15,8 @@ module App
   def compile_version
     "#{OS}.#{OS_VERSION}.#{org.jruby.platform.Platform::ARCH}.#{COMPILE_TIME}.#{REVISION}"
   end
-
   
-  CONFIG_DIR = File.join( java.lang.System.getProperty("user.home") , '.compass-ui' )
-  AUTOCOMPLTETE_CACHE_DIR = File.join( java.lang.System.getProperty("user.home") , '.compass-ui', 'autocomplete_cache' )
+  AUTOCOMPLTETE_CACHE_DIR = File.join( CONFIG_DIR , 'autocomplete_cache' )
 
   Dir.mkdir( CONFIG_DIR ) unless File.exists?( CONFIG_DIR )
   Dir.mkdir( AUTOCOMPLTETE_CACHE_DIR ) unless File.exists?( AUTOCOMPLTETE_CACHE_DIR )
@@ -216,6 +214,15 @@ module App
         end
       end
     end
+  end
+
+  def  shared_extensions_path
+    home_dir = java.lang.System.getProperty("user.home")
+    if File.directory?(home_dir) && File.writable?( home_dir ) 
+      folder_path = File.join( home_dir, '.compass','extensions' )
+    else
+      folder_path = File.join( File.dirname( CONFIG_DIR), 'extensions')
+    end 
   end
 end
 
