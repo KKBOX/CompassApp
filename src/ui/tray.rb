@@ -30,11 +30,11 @@ class Tray
 
     add_menu_separator
     item =  add_menu_item( "Create Compass Project", create_project_handler, Swt::SWT::CASCADE)
-    item =  add_menu_item( "Open Extensions Folder", open_extensions_folder_handler, Swt::SWT::PUSH)
 
     item.menu = Swt::Widgets::Menu.new( @menu )
     build_compass_framework_menuitem( item.menu, create_project_handler )
 
+    item =  add_menu_item( "Open Extensions Folder", open_extensions_folder_handler, Swt::SWT::PUSH)
     item =  add_menu_item( "Preference...", preference_handler, Swt::SWT::PUSH)
 
     item =  add_menu_item( "About", open_about_link_handler, Swt::SWT::CASCADE)
