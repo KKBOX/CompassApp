@@ -51,7 +51,7 @@ class  Notification
         height = height + s.getBounds().height
         alpha -= 30
         end
-        shell.open
+        shell.setVisible(true)
 
         target_display.timerExec(5000, Swt::RRunnable.new do
           shell.dispose
