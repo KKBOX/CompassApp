@@ -39,12 +39,13 @@ INFO_ENDL
     task :app => ["rawr:bundle:create_packages_dir", "rawr:bundle:write_version_info", "rawr:jar", CONFIG.osx_output_dir ] do
       Rawr::AppBundler.new.deploy CONFIG
       Dir.chdir File.dirname(__FILE__)
-      %x{mkdir -p  #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/swt}
-      %x{cp -R lib/swt/swt_osx* #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/swt}
+      %x{mkdir -p  #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/lib/swt}
+      %x{cp -R lib/swt/swt_osx* #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/lib/swt}
 
-      %w{ruby images applescript documents /javascripts}.each do | copy_dir |
-        %x{cp -R lib/#{copy_dir} #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources }
+      %w{ruby images applescript documents javascripts}.each do | copy_dir |
+        %x{cp -R lib/#{copy_dir} #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/lib }
       end
+
       Dir.chdir CONFIG.osx_output_dir
       %x{mv #{CONFIG.project_name}.app compass.app;}
       @osx_bundle_file="compass.app.osx.#{@compile_time}-#{@revision}.zip"
