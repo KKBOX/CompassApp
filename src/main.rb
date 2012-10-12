@@ -1,13 +1,14 @@
 INITAT=Time.now
 
 $LOAD_PATH << 'src'
-
-ruby_lib_path = File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__)))), "ruby").to_s()[5..-1] 
-if File.exists?( ruby_lib_path ) 
-  LIB_PATH = File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__))))).to_s()[5..-1] 
-else 
-  LIB_PATH = 'lib' 
+require 'pathname'
+resources_dir =  Pathname.new(__FILE__).dirname().dirname().dirname().to_s()[5..-1]
+if File.exists?( File.join(resources_dir, 'lib','ruby'))
+  LIB_PATH = File.join(resources_dir, 'lib')
+else
+  LIB_PATH = File.expand_path 'lib' 
 end
+
 
 require "swt_wrapper"
 

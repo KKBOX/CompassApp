@@ -25,7 +25,7 @@
     <key>Java</key>
     <dict>
         <key>MainClass</key>
-        <string>org.rubyforge.rawr.Main</string>
+        <string>com.handlino.compassapp.Main</string>
         <key>JVMVersion</key>
         <string>1.6*</string>
         <key>ClassPath</key>
