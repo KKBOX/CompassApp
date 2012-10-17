@@ -42,7 +42,7 @@ module FSSM::Support
     end
 
     def rb_fsevent?
-      if App::OS_VERSION.to_f >= 10.8 && !App::CONFIG["force_enable_fsevent"]
+      if !App::CONFIG["force_enable_fsevent"]
         return false
       end
       begin
