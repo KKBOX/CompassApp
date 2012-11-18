@@ -1,6 +1,6 @@
 configuration do |c|
 	# The name for your resulting application file (e.g., if the project_name is 'foo' then you'll get foo.jar, foo.exe, etc.)
-	# default value: "tka"
+	# default value: "FireApp"
 	#
 	c.project_name = "compass-app"
 
@@ -9,30 +9,40 @@ configuration do |c|
 	#
 	#c.output_dir = "package"
 
+	# The type of executable to create (console or gui)
+	# default value: "gui"
+	#
+	#c.executable_type = "gui"
+
 	# The main ruby file to invoke, minus the .rb extension
 	# default value: "main"
 	#
-	c.main_ruby_file = "src/main"
+	#c.main_ruby_file = "main"
 
 	# The fully-qualified name of the main Java file used to initiate the application.
-	# default value: "org.rubyforge.rawr.Main"
+	# default value: "org.monkeybars.rawr.Main"
 	#
 	c.main_java_file = "com.handlino.compassapp.Main"
 
 	# A list of directories where source files reside
 	# default value: ["src"]
 	#
-	#c.source_dirs = ["src",'lib/ruby/gem/gems/haml-3.0.24']
+	#c.source_dirs = ["src"]
 
 	# A list of regexps of files to exclude
 	# default value: []
 	#
-	#c.source_exclude_filter = [/spec/,/test/,/example/]
+	#c.source_exclude_filter = []
 
-	# Whether Ruby source files should be compiled into .class files
-	# default value: true
+	# The base directory that holds Mirah files, or subdirectories with Mirah files.
+	# default value: "src"
 	#
-	#c.compile_ruby_files = true
+	#c.mirah_source_root = "src"
+
+	# Whether Ruby source files should be compiled into .class files. Setting this to true currently breaks packaging
+	# default value: false
+	#
+	#c.compile_ruby_files = false
 
 	# A list of individual Java library files to include.
 	# default value: []
@@ -47,22 +57,22 @@ configuration do |c|
 	# Undocumented option 'files_to_copy'
 	# default value: []
 	#
-	#c.files_to_copy = ['lib/ruby', 'lib/applescript']
+	#c.files_to_copy = []
 
 	# Undocumented option 'target_jvm_version'
 	# default value: 1.6
 	#
-	# c.target_jvm_version = 1.6
+	#c.target_jvm_version = 1.6
 
 	# Undocumented option 'jvm_arguments'
 	# default value: ""
 	#
-	#c.jvm_arguments = ""
+	c.jvm_arguments = "-Xss1m"
 
 	# Undocumented option 'java_library_path'
 	# default value: ""
 	#
-	c.java_library_path = "src"
+	#c.java_library_path = ""
 
 	# Undocumented option 'extra_user_jars'
 	# default value: {}
@@ -74,11 +84,13 @@ configuration do |c|
 	# Undocumented option 'mac_do_not_generate_plist'
 	# default value: nil
 	#
-	#c.mac_do_not_generate_plist = true
+	#c.mac_do_not_generate_plist = nil
 
-	# Undocumented option 'mac_icon_path'
-	# default value: nil
+	# working directory specified in plist file
+	# default value: "$APP_PACKAGE"
 	#
+	#c.mac_plist_working_directory = "$APP_PACKAGE"
+
 	c.mac_icon_path = Dir.pwd + "/lib/images/icon/icon-osx.icns"
 
 	# Undocumented option 'windows_icon_path'
