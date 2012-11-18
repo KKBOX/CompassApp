@@ -166,10 +166,13 @@ module FSSM::Tree
     private
 
     def ftype(ft)
-      inject({}) do |hash, (path, node)|
+      hash= {}
+
+      each do |(path, node)| 
         hash["#{path}"] = node.mtime if node.ftype == ft
-        hash
       end
+
+      hash
     end
   end
 
