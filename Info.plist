@@ -4,6 +4,8 @@
 <dict>
     <key>NSUIElement</key>
     <string>1</string>
+    <key>NSHighResolutionCapable</key>
+    <string>True</string>
     <key>CFBundleName</key>
     <string>compass.app</string>
     <key>CFBundleVersion</key>
@@ -37,7 +39,7 @@
             <key>apple.laf.useScreenMenuBar</key>
             <string>true</string>
         </dict>
-        <key>StartOnMainThread</key> 
+        <key>StartOnMainThread</key>
          <string>true</string>
         <key>VMOptions</key>
           <array>
