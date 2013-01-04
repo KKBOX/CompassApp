@@ -345,12 +345,12 @@ class PreferencePanel
     button_group.setLayout( rowlayout );
 
     @button_version_default = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_default.setText("Default (Sass 3.2.3 + Compass 0.12.2)")
+    @button_version_default.setText("Default (Sass 3.2.4 + Compass 0.12.2)")
     @button_version_default.setSelection( App::CONFIG['use_version'] == 0.12  )
     @button_version_default.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @button_version_beta = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_beta.setText("Beta (Sass 3.2.3 + Compass 0.13.alpha.0)")
+    @button_version_beta.setText("Beta (Sass 3.2.4 + Compass 0.13.alpha.0)")
     @button_version_beta.setSelection( App::CONFIG['use_version'] == 0.13  )
     @button_version_beta.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
