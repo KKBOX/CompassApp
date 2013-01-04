@@ -486,7 +486,7 @@ class Tray
     @tray_item.image = @standby_icon
     SimpleLivereload.instance.unwatch
     SimpleHTTPServer.instance.stop
-    FSEvent.stop_all_instances if Object.const_defined?("FSEvent") && FSEvent.methods.include?("stop_all_instances")
+    FSEvent.stop_all_instances if Object.const_defined?("FSEvent") && FSEvent.methods.map{|x| x.to_sym}.include?(:stop_all_instances)
   end
 
 end
