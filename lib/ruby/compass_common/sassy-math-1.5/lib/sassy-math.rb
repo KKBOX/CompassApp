@@ -48,8 +48,8 @@ module Sass::Script::Functions
     end 
     Sass::Script::Number.new(result)
   end
-  def rand
-    Sass::Script::Number.new(4)
+  def random(max = Sass::Script::Number.new(100)) ## shamelessly taken from here: https://gist.github.com/1561650
+    Sass::Script::Number.new(rand(max.value), max.numerator_units, max.denominator_units)
   end
   def hypot(a, b)
     a = a.value.to_f
@@ -153,7 +153,7 @@ end
 
 module SassyMath
   
-  VERSION = "1.2"
+  VERSION = "1.5"
   DATE = "2012-07-29"
 
 end
