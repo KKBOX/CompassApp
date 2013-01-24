@@ -315,11 +315,6 @@ class Tray
     end
   end
 
-  def clean_project_handler
-    Swt::Widgets::Listener.impl do |method, evt|
-      clean_project(true)
-    end
-  end
 
   def clean_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
