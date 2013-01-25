@@ -21,18 +21,25 @@
 //
 //  $columns  : The number of columns in the Grid Layout.
 @mixin set-container-width(
-  $columns  : $total-columns
+  $columns  : $total-columns,
+  $style    : $container-style
 ){
   $width: container-outer-width($columns);
 
-  @if $container-style == 'static' {
-    width: $width;
+  @if $style == 'static' {
+    @include if-rem(width, $width);
   } @else {
-    @if $container-style == 'fluid' {
-      width: if(unit($width) == '%', $width, auto);
+    @if $style == 'fluid' {
+      @if unit($width) == '%' { @include if-rem(width, $width); }
     } @else {
-      max-width: $width;
-      @if $legacy-support-for-ie6 { _width: $width; }
+      @include if-rem(max-width, $width);
+      @if $legacy-support-for-ie6 {
+        @if unit($width) == 'rem' {
+          _width: round(convert-length($width, px));
+        } @else {
+          _width: $width;
+        }
+      }
     }
   }
 }
@@ -45,8 +52,9 @@
 ){
   @include pie-clearfix;
   @include set-container-width($columns);
+  @include if-rem(padding-left, $grid-padding);
+  @include if-rem(padding-right, $grid-padding);
   margin: { left: auto; right: auto; }
-  padding: { left: $grid-padding; right: $grid-padding; }
 }
 
 // Set one or more layouts on a grid-containing element at any number of media-query breakpoints.
@@ -105,6 +113,7 @@
   $padding       : false,
   $from          : $from-direction
 ) {
+  $from     : unquote($from);
   $to       : opposite-position($from);
   $pos      : split-columns-value($columns,position);
   $cols     : split-columns-value($columns,columns);
@@ -147,6 +156,7 @@
 @mixin omega(
   $from     : $from-direction
 ) {
+  $from   : unquote($from);
   $to     : opposite-position($from);
   $hack   : opposite-position($omega-float);
 
@@ -169,6 +179,7 @@
   $selector : child,
   $from     : $from-direction
 ) {
+  $from     : unquote($from);
   $ie: if($n == "first", true, false);
   @include adjust-support-for($ie6: $ie, $ie7: $ie, $ie8: $ie) {
     &:#{format-nth($n,$selector)} { @include omega($from); }
@@ -184,6 +195,7 @@
 @mixin reset-columns(
   $from: $from-direction
 ) {
+  $from   : unquote($from);
   $to     : opposite-position($from);
   $hack   : opposite-position($omega-float);
 
@@ -206,6 +218,7 @@
   $context  : $total-columns,
   $from     : $from-direction
 ) {
+  $from   : unquote($from);
   $to     : opposite-position($from);
   $hack   : opposite-position($omega-float);
 
@@ -229,6 +242,7 @@
   $context  : $total-columns,
   $from     : $from-direction
 ) {
+  $from     : unquote($from);
   $ie: if($n == "first", true, false);
   @include adjust-support-for($ie6: $ie, $ie7: $ie, $ie8: $ie) {
     &:#{format-nth($n,$selector)} { @include remove-omega($context,$from); }

@@ -9,6 +9,8 @@ $browser-default-font-size-px       : 16px;
 $browser-default-font-size-percent  : 100%;
 $browser-default-font-size-pt       : 12pt;
 
+$rem-with-px-fallback               : true !default;
+
 // ---------------------------------------------------------------------------
 // Grid Functions
 
@@ -48,18 +50,18 @@ $browser-default-font-size-pt       : 12pt;
 //
 //  $columns  : The number of columns in the Grid Layout.
 @function container-outer-width(
-  $columns  : $total-columns
+  $columns  : $total-columns,
+  $width    : $container-width
 ) {
-  $width: columns-width($columns);
+  $outerwidth: if($width, $width, columns-width($columns));
 
-  @if $container-width {
-    $width: $container-width;
-    @if not $border-box-sizing { $width: handle-grid-padding($width, subtract); }
+  @if $width {
+    @if not $border-box-sizing { $outerwidth: handle-grid-padding($outerwidth, subtract); }
   } @else {
-    @if $border-box-sizing { $width: handle-grid-padding($width, add); }
+    @if $border-box-sizing { $outerwidth: handle-grid-padding($outerwidth, add); }
   }
 
-  @return $width;
+  @return $outerwidth;
 }
 
 // Return the percentage width of a single column in a given 'context'.
@@ -173,27 +175,33 @@ $browser-default-font-size-pt       : 12pt;
 //
 // $ems         : The initial value to be converted.
 // $font-size   : The current font-size in.
-@function absolute-ems(
+@function base-ems(
   $ems,
   $font-size: $base-font-size
 ){
-  $unit: unit($font-size);
+  $font-size  : if(unit($ems) == 'rem', $base-font-size, $font-size);
+  $unit       : unit($font-size);
+  $mult       : $ems / ($ems * 0 + 1);
+
   @if $unit == 'px' {
-    @return $font-size / $browser-default-font-size-px * $ems;
+    @return $font-size / $browser-default-font-size-px * $mult * 1em;
   }
   @else if $unit == '%' {
-    @return $font-size / $browser-default-font-size-percent * $ems;
+    @return $font-size / $browser-default-font-size-percent * $mult * 1em;
   }
   @else if $unit == 'em' {
-    @return $font-size / 1em * $ems;
+    @return $font-size / 1em * $mult * 1em;
   }
   @else if $unit == 'pt' {
-    @return $font-size / $browser-default-font-size-pt * $ems;
+    @return $font-size / $browser-default-font-size-pt * $mult * 1em;
   }
   @else {
     @warn 'Variable $base-font-size does not have a valid font unit. Valid units for fonts in CSS are px, pt, em, and %.';
   }
 }
+
+// This name will be deprecated...
+@function absolute-ems($ems, $font-size: $base-font-size){ @return base-ems($ems, $font-size); }
 
 // Return a length, after any em-values have been sent through absolute-ems().
 //
@@ -204,7 +212,7 @@ $browser-default-font-size-pt       : 12pt;
   $font-size: $base-font-size
 ){
   @if $length {
-    @if (unit($length) == 'em') {
+    @if (unit($length) == 'em') or (unit($length) == 'rem') {
       $length: absolute-ems($length,$font-size);
     }
   }
