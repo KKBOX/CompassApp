@@ -1,4 +1,15 @@
-INITAT=Time.now
+require 'singleton'
+
+class Main
+  include Singleton
+  
+  attr_reader :INITAT
+
+  def initilize
+    @INITAT=Time.now
+  end
+
+end
 
 # set default encoding
 if ::VERSION > "1.9"
