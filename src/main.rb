@@ -87,3 +87,8 @@ rescue Exception => e
   puts e.backtrace
   Report.new( e.message + "\n" + e.backtrace.join("\n"), nil, {:show_reset_button => true} )
 end
+
+
+if __FILE__ == $0
+  Main.new
+end
