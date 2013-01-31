@@ -57,7 +57,7 @@ class Tray
   end
 
   def run
-    puts 'tray OK, spend '+(Time.now.to_f - Main.instance.init_at.to_f).to_s
+    puts 'tray OK, spend '+(Time.now.to_f - Main.init_at.to_f).to_s
     while(!@shell.is_disposed) do
       App.display.sleep if(!App.display.read_and_dispatch) 
     end
@@ -149,7 +149,7 @@ class Tray
     Swt::Widgets::Listener.impl do |method, evt|
       if !File.exists?(App.shared_extensions_path)
         FileUtils.mkdir_p(App.shared_extensions_path)
-        FileUtils.cp(File.join(LIB_PATH, "documents", "extensions_readme.txt"), File.join(App.shared_extensions_path, "readme.txt") )
+        FileUtils.cp(File.join(Main.lib_path, "documents", "extensions_readme.txt"), File.join(App.shared_extensions_path, "readme.txt") )
       end
 
       Swt::Program.launch(App.shared_extensions_path)

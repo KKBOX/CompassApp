@@ -83,7 +83,7 @@ class SimpleLivereload
         ws.onerror do |error|
           # for http://help.livereload.com/kb/general-use/using-livereload-without-browser-extensions
           if error.kind_of?(EventMachine::WebSocket::HandshakeError)
-            ws.send_data "HTTP/1.1 200 OK\r\n\r\n"+ open(File.join(LIB_PATH, 'javascripts', "livereload.js")).read
+            ws.send_data "HTTP/1.1 200 OK\r\n\r\n"+ open(File.join(Main.lib_path, 'javascripts', "livereload.js")).read
             ws.close_connection_after_writing
           else
             ws.about

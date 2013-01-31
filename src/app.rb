@@ -16,13 +16,13 @@ module App
     "#{OS}.#{OS_VERSION}.#{org.jruby.platform.Platform::ARCH}.#{COMPILE_TIME}.#{REVISION}"
   end
   
-  AUTOCOMPLTETE_CACHE_DIR = File.join( CONFIG_DIR , 'autocomplete_cache' )
+  AUTOCOMPLTETE_CACHE_DIR = File.join( Main.config_dir , 'autocomplete_cache' )
 
-  Dir.mkdir( CONFIG_DIR ) unless File.exists?( CONFIG_DIR )
+  Dir.mkdir( Main.config_dir ) unless File.exists?( Main.config_dir )
   Dir.mkdir( AUTOCOMPLTETE_CACHE_DIR ) unless File.exists?( AUTOCOMPLTETE_CACHE_DIR )
 
-  HISTORY_FILE =  File.join( CONFIG_DIR, 'history')
-  CONFIG_FILE  =  File.join( CONFIG_DIR, 'config')
+  HISTORY_FILE =  File.join( Main.config_dir, 'history')
+  CONFIG_FILE  =  File.join( Main.config_dir, 'config')
 
   def get_system_default_gem_path
     begin
@@ -74,7 +74,7 @@ module App
       end
 
       # make sure use java version library, ex json-java, eventmachine-java
-      jruby_gems_path = File.join(LIB_PATH, "ruby", "jruby" )
+      jruby_gems_path = File.join(Main.lib_path, "ruby", "jruby" )
       scan_library( jruby_gems_path )
       require "fssm" if (OS == 'darwin' && OS_VERSION.to_f >= 10.6 ) || OS == 'linux' || OS == 'windows'
       
@@ -87,7 +87,7 @@ module App
       end
  
 
-      common_lib_path = File.join(LIB_PATH, "ruby", "compass_common" )
+      common_lib_path = File.join(Main.lib_path, "ruby", "compass_common" )
       scan_library( common_lib_path )
 
       if  App::CONFIG['use_version'] && App::CONFIG['use_version'] < 0.12 
@@ -96,11 +96,11 @@ module App
         App.save_config
       end
       
-      compass_gems_path = File.join(LIB_PATH, "ruby", "compass_#{App::CONFIG['use_version']}")
+      compass_gems_path = File.join(Main.lib_path, "ruby", "compass_#{App::CONFIG['use_version']}")
       
       scan_library(compass_gems_path)
 
-      extensions_gems_path = File.join(LIB_PATH, "ruby", "compass_extensions" )
+      extensions_gems_path = File.join(Main.lib_path, "ruby", "compass_extensions" )
       scan_library( extensions_gems_path )
 
       require "compass"
@@ -146,7 +146,7 @@ module App
   end
 
   def create_image(path)
-    Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, java.io.FileInputStream.new( File.join(LIB_PATH, 'images', path)))
+    Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, java.io.FileInputStream.new( File.join(Main.lib_path, 'images', path)))
   end
 
   def get_stdout
@@ -165,7 +165,7 @@ module App
 
   def notify(msg, target_display = nil )
     if org.jruby.platform.Platform::IS_MAC
-      system('/usr/bin/osascript', "#{LIB_PATH}/applescript/growl.scpt", msg )
+      system('/usr/bin/osascript', "#{Main.lib_path}/applescript/growl.scpt", msg )
     else
       Notification.new(msg, target_display)
     end
