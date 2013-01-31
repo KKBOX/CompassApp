@@ -57,7 +57,7 @@ class Tray
   end
 
   def run
-    puts 'tray OK, spend '+(Time.now.to_f - Main.instance.INITAT.to_f).to_s
+    puts 'tray OK, spend '+(Time.now.to_f - Main.instance.init_at.to_f).to_s
     while(!@shell.is_disposed) do
       App.display.sleep if(!App.display.read_and_dispatch) 
     end

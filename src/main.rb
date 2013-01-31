@@ -3,10 +3,10 @@ require 'singleton'
 class Main
   include Singleton
   
-  attr_reader :INITAT
+  attr_reader :init_at
 
   def initilize
-    @INITAT=Time.now
+    @init_at=Time.now
   end
 
 end
