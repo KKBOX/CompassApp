@@ -7,15 +7,21 @@ class Main
 
   def initilize
     @init_at=Time.now
+
+    set_default_encoding
+  end
+
+  def set_default_encoding
+    # set default encoding
+    if ::VERSION > "1.9"
+      Encoding.default_external = Encoding::UTF_8
+      #Encoding.default_internal = Encoding::UTF_8
+    end
   end
 
 end
 
-# set default encoding
-if ::VERSION > "1.9"
-  Encoding.default_external = Encoding::UTF_8
-  #Encoding.default_internal = Encoding::UTF_8
-end
+
 
 $LOAD_PATH << 'src'
 require 'pathname'
