@@ -12,7 +12,6 @@ module Main
     set_lib_path
     require_lib
     run_tray
-    puts 'run'
   end
 
   def set_default_encoding
