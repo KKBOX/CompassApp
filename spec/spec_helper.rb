@@ -1,6 +1,7 @@
 
 require 'rspec'
 require 'faker'
+require 'java'
 
 RSpec.configure do |config|
   # == Mock Framework

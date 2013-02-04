@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../src/app.rb'
+require '../src/app.rb'
 
 describe App do 
 

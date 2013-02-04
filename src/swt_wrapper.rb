@@ -1,4 +1,7 @@
 SWT_LIB_PATH ="#{Main.lib_path}/swt"
+puts SWT_LIB_PATH
+
+
 
 if org.jruby.platform.Platform::IS_MAC  
   os="osx"
