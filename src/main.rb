@@ -113,5 +113,8 @@ module Main
   end
 end
 
-#puts $0
-#Main.init
+
+
+if $0 == '-'
+  Main.init
+end
