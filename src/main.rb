@@ -89,13 +89,15 @@ module Main
 
       if App::CONFIG['show_welcome']
         WelcomeWindow.new
-      end
+      end   
       App.clear_autocomplete_cache
+
   end
 
 
 
   def run_tray
+
     begin
       set_config_dir
       init_app
@@ -111,5 +113,5 @@ module Main
   end
 end
 
-
+#puts $0
 #Main.init

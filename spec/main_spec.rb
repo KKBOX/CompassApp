@@ -1,6 +1,4 @@
 require 'spec_helper.rb'
-#puts $LOAD_PATH.inspect
-#puts Dir.pwd
 require '../src/main.rb'
 
 describe Main do
@@ -34,19 +32,19 @@ describe Main do
 
     end
 
-    describle "when exec Main.require_lib" do 
+    describe "when exec Main.require_lib" do 
 
     end
 
-    describle "when exec Main.set_config_dir" do 
+    describe "when exec Main.set_config_dir" do 
 
     end
 
-    describle "when exec Main.init_app" do 
+    describe "when exec Main.init_app" do 
 
     end
 
-    describle "when exec Main.run_tray" do 
+    describe "when exec Main.run_tray" do 
 
     end
 
