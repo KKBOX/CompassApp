@@ -12,7 +12,7 @@ describe Main do
 
 
   describe "#set_default_encoding" do
-    describe "when RUBY_VERSION > '1.9'" do
+    describe "when RUBY_VERSION > '1.9', exec Main.set_default_encoding" do
 
       if RUBY_VERSION > "1.9"
         it "should let Encoding.default_external be UTF-8" do
@@ -31,6 +31,22 @@ describe Main do
         Main.lib_path.should_not be_empty
         $LOAD_PATH.include?('src').should be_true
       end
+
+    end
+
+    describle "when exec Main.require_lib" do 
+
+    end
+
+    describle "when exec Main.set_config_dir" do 
+
+    end
+
+    describle "when exec Main.init_app" do 
+
+    end
+
+    describle "when exec Main.run_tray" do 
 
     end
 
