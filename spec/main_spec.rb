@@ -7,6 +7,7 @@ describe Main do
   
   before(:all) do
     # Main.init
+
   end
 
 
@@ -22,6 +23,16 @@ describe Main do
 
     end
 
-  end
+    describe "when exec Main.set_lib_path" do
+      
+      it "should let Main.lib_src not be empty" do
+        Main.lib_path.should be_nil
+        Main.set_lib_path
+        Main.lib_path.should_not be_empty
+        $LOAD_PATH.include?('src').should be_true
+      end
 
+    end
+
+  end
 end
