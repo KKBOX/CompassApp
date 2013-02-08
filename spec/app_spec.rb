@@ -1,7 +1,44 @@
 require 'spec_helper'
+
+
+require '../src/main.rb'
+Main.set_default_encoding
+Main.set_lib_path
+Main.set_config_dir
+
 require '../src/app.rb'
-
 describe App do 
+  
+  before(:all) do
 
+  end
+
+  describe "when get App.get_config" do 
+    config = App.get_config
+    
+    it "should not be empty" do
+      config.should_not be_empty
+    end
+    
+    it "should include needed attr" do
+
+      [ "show_welcome",
+        "use_version",
+        "use_specify_gem_path",
+        "notifications",
+        "save_notification_to_file",
+        "services",
+        "services_http_port",
+        "services_livereload_port",
+        "services_livereload_extensions",
+        "preferred_syntax",
+        "force_enable_fsevent"].each do |attr|
+          config.should include(attr)
+      end
+      
+    end
+
+
+  end
   
 end

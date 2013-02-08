@@ -1,3 +1,4 @@
+
 require "compile_version.rb"
 
 module App
@@ -216,7 +217,7 @@ module App
     end
   end
 
-  def  shared_extensions_path
+  def shared_extensions_path
     home_dir = java.lang.System.getProperty("user.home")
     if File.directory?(home_dir) && File.writable?( home_dir ) 
       folder_path = File.join( home_dir, '.compass','extensions' )
