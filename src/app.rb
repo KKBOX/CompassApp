@@ -118,7 +118,6 @@ module App
     open(CONFIG_FILE,'w') do |f|
       f.write YAML.dump(CONFIG)
     end
-
   end
 
   def clear_histoy

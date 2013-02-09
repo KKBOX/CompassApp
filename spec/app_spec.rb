@@ -35,10 +35,17 @@ describe App do
         "force_enable_fsevent"].each do |attr|
           config.should include(attr)
       end
-      
+
+    end
+    
+    it "it's attr 'services_http_port' should >= 0" do
+      config['services_http_port'].to_i.should be >= 0
     end
 
-
+    
+    it "it's attr 'services_livereload_port' should >= 0" do
+      config['services_livereload_port'].to_i.should be >= 0
+    end
   end
   
 end
