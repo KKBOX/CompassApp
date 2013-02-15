@@ -2,6 +2,7 @@
 require 'rspec'
 require 'faker'
 require 'java'
+require 'custom_matchers.rb'
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -13,3 +14,8 @@ RSpec.configure do |config|
   # config.mock_with :rr
   config.mock_with :rspec
 end
+
+
+
+
+
