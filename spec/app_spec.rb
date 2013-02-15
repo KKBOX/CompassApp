@@ -37,15 +37,23 @@ describe App do
       end
 
     end
-    
+
     it "it's attr 'services_http_port' should >= 0" do
       config['services_http_port'].to_i.should be >= 0
     end
 
-    
+
     it "it's attr 'services_livereload_port' should >= 0" do
       config['services_livereload_port'].to_i.should be >= 0
     end
   end
   
+  describe "when exec require_compass" do
+
+    App.require_compass
+
+    it "should have module 'Compass'" do
+      'Compass'.should be_a_module_name
+    end
+  end
 end
