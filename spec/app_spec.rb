@@ -55,5 +55,9 @@ describe App do
     it "should have module 'Compass'" do
       'Compass'.should be_a_module_name
     end
+
+    it "should have module 'Compass::Exec'" do
+      'Compass::Exec'.should be_a_module_name
+    end
   end
 end
