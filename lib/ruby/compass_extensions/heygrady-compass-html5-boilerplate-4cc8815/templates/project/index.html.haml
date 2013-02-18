@@ -32,7 +32,7 @@
       All JavaScript at the bottom, except for Modernizr / Respond.
       Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
       For optimal performance, use a custom Modernizr build: www.modernizr.com/download/
-    %script{ :src => "js/modernizr-2.0.6.min.js" }
+    %script{ :src => "javascripts/modernizr-2.0.6.min.js" }
     
   %body
     #container
@@ -46,11 +46,11 @@
     -# Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline
     %script{ :src => "//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" }
     %script
-      window.jQuery || document.write("<script src='js/jquery-1.6.2.min.js'>\x3C/script>")
+      window.jQuery || document.write("<script src='javascripts/jquery-1.6.2.min.js'>\x3C/script>")
     
     -# scripts concatenated and minified via ant build script
-    %script{ :src => "js/plugins.js" }
-    %script{ :src => "js/script.js" }
+    %script{ :src => "javascripts/plugins.js" }
+    %script{ :src => "javascripts/script.js" }
     -# end scripts
     
     -#  asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet
