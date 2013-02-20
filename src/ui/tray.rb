@@ -196,9 +196,9 @@ class Tray
       next if framework.name =~ /^_/
       next if framework.template_directories.empty?
       item = add_menu_item( framework.name, handler, Swt::SWT::CASCADE, submenu)
-    framework_submenu = Swt::Widgets::Menu.new( submenu )
-    item.menu = framework_submenu
-    framework.template_directories.each do | dir |
+      framework_submenu = Swt::Widgets::Menu.new( submenu )
+      item.menu = framework_submenu
+      framework.template_directories.each do | dir |
       add_menu_item( dir, handler, Swt::SWT::PUSH, framework_submenu)
     end
     end
