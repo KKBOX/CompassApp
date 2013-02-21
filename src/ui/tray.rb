@@ -56,6 +56,10 @@ class Tray
     add_menu_item( "Quit",      exit_handler)
   end
 
+  def shell 
+    @shell
+  end
+
   def run
     puts 'tray OK, spend '+(Time.now.to_f - INITAT.to_f).to_s
     while(!@shell.is_disposed) do
@@ -416,9 +420,7 @@ class Tray
 
         Thread.abort_on_exception = true
         @compass_thread = Thread.new do
-          Compass.reset_configuration!
-          Compass::Commands::WatchProject.new( dir, { :logger => Compass::Logger.new({ :display => current_display,
-                                                                                     :log_dir => dir}) }).execute
+          Compass::Watcher::AppWatcher.new(dir, Compass.configuration.watches).watch!
         end
 
         @watching_dir = dir

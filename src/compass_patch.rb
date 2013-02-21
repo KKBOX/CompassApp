@@ -1,66 +1,4 @@
 module Compass
-  module Commands
-    class WatchProject 
-
-      def perform # we remove  Signal.trap("INT"), add version check on configuration.watches
-        check_for_sass_files!(new_compiler_instance)
-        recompile
-        require 'fssm'
-        if options[:poll]
-          require "fssm/backends/polling"
-          # have to silence the ruby warning about chaning a constant.
-          stderr, $stderr = $stderr, StringIO.new
-          FSSM::Backends.const_set("Default", FSSM::Backends::Polling)
-          $stderr = stderr
-        end
-
-        action = FSSM::Backends::Default.to_s == "FSSM::Backends::Polling" ? "polling" : "watching"
-
-        puts ">>> Compass is #{action} for changes. Press Ctrl-C to Stop."
-
-        begin
-          FSSM.monitor do |monitor|
-            Compass.configuration.sass_load_paths.each do |load_path|
-              load_path = load_path.root if load_path.respond_to?(:root)
-              next unless load_path.is_a? String
-              monitor.path load_path do |path|
-                path.glob '**/*.s[ac]ss'
-
-                path.update &method(:recompile)
-                path.delete {|base, relative| remove_obsolete_css(base,relative); recompile(base, relative)}
-                path.create &method(:recompile)
-              end
-            end
-            Compass.configuration.watches.each do |glob, callback|
-              monitor.path Compass.configuration.project_path do |path|
-                path.glob glob
-                path.update do |base, relative|
-                  puts ">>> Change detected to: #{relative}"
-                  callback.call(base, relative)
-                end
-                path.create do |base, relative|
-                  puts ">>> New file detected: #{relative}"
-                  callback.call(base, relative)
-                end
-                path.delete do |base, relative|
-                  puts ">>> File Removed: #{relative}"
-                  callback.call(base, relative)
-                end
-              end
-            end
-
-          end
-        rescue FSSM::CallbackError => e
-          # FSSM catches exit? WTF.
-          if e.message =~ /exit/
-            exit
-          end
-        end
-
-      end
-    end
-  end
-
   module Frameworks
     def register_directory(directory)
       loaders = [
@@ -150,6 +88,11 @@ module Compass
         end
       end
     end 
+    
+    def css_files
+      @css_files = sass_files.map{|sass_file| corresponding_css_file(sass_file)}
+    end 
+
   end
 end
 

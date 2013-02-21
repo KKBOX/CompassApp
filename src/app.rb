@@ -108,9 +108,10 @@ module App
     end
 
     $LOAD_PATH.unshift('.')
-    require "fsevent_patch" if OS == 'darwin'
     require "compass_patch.rb"
     require "sass_patch.rb"
+    require "app_watcher.rb"
+
   end
 
   def save_config
