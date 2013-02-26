@@ -13,7 +13,7 @@ class Report
     layout.numColumns = 2;
     shell.layout = layout
 
-    if App.respond_to?(:create_image)
+    if defined?(App) && App.respond_to?(:create_image)
       gridData = Swt::Layout::GridData.new
       gridData.horizontalAlignment = Swt::SWT::LEFT;
       gridData.verticalAlignment = Swt::SWT::TOP;
