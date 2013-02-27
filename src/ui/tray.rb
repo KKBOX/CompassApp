@@ -67,6 +67,7 @@ class Tray
 
     while(!@shell.is_disposed) do
       App.display.sleep if(!App.display.read_and_dispatch) 
+      App.show_and_clean_notifications
     end
 
     App.display.dispose
