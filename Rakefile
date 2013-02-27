@@ -18,6 +18,7 @@ namespace :rawr do
       Dir.mkdir( @packages_dir ) unless File.exists?( @packages_dir )  
     end
 
+
     task :write_version_info do
       @revision ||= (%x{git log | head -c 17 | tail -c 10}).strip
       @compile_time ||= Time.now.strftime('%Y%m%d%H%M')
@@ -97,6 +98,14 @@ INFO_ENDL
       %x{mkdir #{@packages_dir}/linux; cp -R compass.app #{@packages_dir}/linux}
     end
 
+    desc "Create Windows Installer"
+    task :windows_installer do
+      Dir.chdir File.dirname(__FILE__)
+      %x{mkdir packages/windows_installer}
+
+      %x{makensis installer.nsi}
+    end
+
     desc "Bundles Linux, OSX and Window package"
     task :all do
       Dir.chdir File.dirname(__FILE__)
@@ -119,6 +128,8 @@ INFO_ENDL
       open( File.join(@packages_dir,'update.yml'),'w' ) do |f|
         f.write info.to_yaml
       end
+
+      Rake::Task['rawr:bundle:windows_installer'].invoke
     end
   end
 end
