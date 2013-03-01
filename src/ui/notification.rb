@@ -1,7 +1,7 @@
 class  Notification
    NOTIFICATIONS=[]
   def initialize(msg, target_display = nil )
-      target_display = Swt::Widgets::Display.get_current unless target_display
+      target_display = App.display unless target_display
       target_display.asyncExec(
         Swt::RRunnable.new do | runnable |
         shell = Swt::Widgets::Shell.new(target_display, Swt::SWT::TOP |Swt::SWT::NO_TRIM)

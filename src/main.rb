@@ -1,4 +1,5 @@
 INITAT=Time.now
+require 'java'
 
 # set default encoding
 if ::VERSION > "1.9"
@@ -17,7 +18,9 @@ end
 
 
 require "swt_wrapper"
-
+require "ui/splash_window"
+SplashWindow.instance.replace('Loading...')
+require "require_patch.rb"
 
 require 'stringio'
 require 'thread'

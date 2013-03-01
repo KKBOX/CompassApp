@@ -4,7 +4,7 @@ module App
   extend self
 
   include CompileVersion
-  VERSION = "1.21"
+  VERSION = "1.23"
   OS = org.jruby.platform.Platform::OS 
   OS_VERSION = java.lang.System.getProperty("os.version")
 
@@ -23,6 +23,24 @@ module App
 
   HISTORY_FILE =  File.join( CONFIG_DIR, 'history')
   CONFIG_FILE  =  File.join( CONFIG_DIR, 'config')
+
+  @notifications = []
+  def notifications
+    @notifications
+  end
+
+  def notifications=(x)
+    @notifications=x
+  end
+
+  def show_and_clean_notifications
+    if !App.notifications.empty?
+      App.notifications.each do |x|
+        App.notify(x)
+      end
+      App.notifications = []
+    end
+  end
 
   def get_system_default_gem_path
     begin
@@ -138,7 +156,7 @@ module App
   end 
 
   def display
-    Swt::Widgets::Display.get_current
+    @display ||= Swt::Widgets::Display.get_current
   end
 
   def create_shell(style = nil)
