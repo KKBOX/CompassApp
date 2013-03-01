@@ -33,7 +33,7 @@
 ; optional stuff
  
 ; text file to open in notepad after installation
-;!define notefile "README.markdown"
+!define notefile "README.markdown"
  
 ; license text file
 !define licensefile "LICENSE"
@@ -45,7 +45,7 @@
 !define icon "lib\images\icon\icon-win.ico"
  
 ; installer background screen
-; !define screenimage "lib\images\icon\512.png"
+!define screenimage "lib\images\icon\bmp_24.bmp"
 
 !define website "http://compass.handlino.com/"
 !define doc_website "http://compass.handlino.com/doc/"
@@ -95,48 +95,92 @@ LicenseData "${srcdir}\${licensefile}"
  
 ; pages
 ; we keep it simple - leave out selectable installation types
- 
-!ifdef licensefile
-Page license
-!endif
+BrandingText "${company}"
+
+;!ifdef licensefile
+;Page license
+;!endif
  
 ; Page components
-Page directory
-Page instfiles
+;Page directory
+;Page instfiles
  
-UninstPage uninstConfirm
-UninstPage instfiles
- 
+;UninstPage uninstConfirm
+;UninstPage instfiles
+
+!include "MUI2.nsh"
+
+; MUI Settings
+!define MUI_ICON "${srcdir}\${icon}"
+!define MUI_UNICON "${srcdir}\${icon}"
+!define MUI_HEADERIMAGE "${srcdir}\${screenimage}"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "${srcdir}\${screenimage}"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "${srcdir}\${screenimage}"
+!define MUI_INSTFILESPAGE_PROGRESSBAR colored
+!define MUI_FINISHPAGE_NOAUTOCLOSE
+!define MUI_UNFINISHPAGE_NOAUTOCLOSE
+!define MUI_ABORTWARNING_CANCEL_DEFAULT
+
+!define MUI_TEXT_WELCOME_INFO_TITLE       "Handlino Inc. Compass.app"
+!define MUI_TEXT_WELCOME_INFO_TEXT        "Handlino Inc. Welcome Text #TODO"
+!define MUI_INNERTEXT_LICENSE_BOTTOM      "Handlino Inc. License Buttom"
+!define MUI_TEXT_LICENSE_TITLE            "Handlino Inc. License Title"
+!define MUI_TEXT_LICENSE_SUBTITLE         "Handlino Inc. License Subtitle"
+!define MUI_INNERTEXT_LICENSE_TOP         "Handlino Inc. License Top"
+!define MUI_TEXT_DIRECTORY_TITLE          "Handlino Inc. Directory Title"
+!define MUI_TEXT_DIRECTORY_SUBTITLE       "Handlino Inc. Directory Subtitle"
+!define MUI_TEXT_INSTALLING_TITLE         "Handlino Inc. Installing Title"
+!define MUI_TEXT_INSTALLING_SUBTITLE      "Handlino Inc. Installing Subtitle"
+!define MUI_TEXT_FINISH_TITLE             "Handlino Inc. Finish Title"
+!define MUI_TEXT_FINISH_SUBTITLE          "Handlino Inc. Finish Subtitle"
+!define MUI_UNTEXT_CONFIRM_TITLE          "Handlino Inc. Uninstall Confirm Title"
+!define MUI_UNTEXT_CONFIRM_SUBTITLE       "Handlino Inc. Uninstall Confirm Subtitle"
+!define MUI_UNTEXT_UNINSTALLING_TITLE     "Handlino Inc. Uninstalling Title"
+!define MUI_UNTEXT_UNINSTALLING_SUBTITLE  "Handlino Inc. Uninstalling Subtitle"
+!define MUI_UNTEXT_FINISH_TITLE           "Handlino Inc. Uninstall Finish Title"
+!define MUI_UNTEXT_FINISH_SUBTITLE        "Handlino Inc. Uninstall Finish Subtitle"
+
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE license
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_UNPAGE_FINISH
+
+!insertmacro MUI_LANGUAGE "English"
 ;--------------------------------
  
 AutoCloseWindow false
 ShowInstDetails show
  
  
-!ifdef screenimage
- 
-; set up background image
-; uses BgImage plugin
- 
-Function .onGUIInit
-	; extract background BMP into temp plugin directory
-	InitPluginsDir
-	File /oname=$PLUGINSDIR\1.bmp "${screenimage}"
- 
-	BgImage::SetBg /NOUNLOAD /FILLSCREEN $PLUGINSDIR\1.bmp
-	BgImage::Redraw /NOUNLOAD
-FunctionEnd
- 
-Function .onGUIEnd
-	; Destroy must not have /NOUNLOAD so NSIS will be able to unload and delete BgImage before it exits
-	BgImage::Destroy
-FunctionEnd
- 
-!endif
- 
+;!ifdef screenimage
+; 
+;; set up background image
+;; uses BgImage plugin
+; 
+;Function .onGUIInit
+;	; extract background BMP into temp plugin directory
+;	InitPluginsDir
+;	File /oname=$PLUGINSDIR\1.bmp "${screenimage}"
+; 
+;	BgImage::SetBg /NOUNLOAD /FILLSCREEN $PLUGINSDIR\1.bmp
+;	BgImage::Redraw /NOUNLOAD
+;FunctionEnd
+; 
+;Function .onGUIEnd
+;	; Destroy must not have /NOUNLOAD so NSIS will be able to unload and delete BgImage before it exits
+;	BgImage::Destroy
+;FunctionEnd
+; 
+;!endif
+; 
 ; beginning (invisible) section
 Section
  
+  WriteRegStr HKLM "${regkey}" "Publisher" "${company}"
   WriteRegStr HKLM "${regkey}" "Install_Dir" "$INSTDIR"
   ; write uninstall strings
   WriteRegStr HKLM "${uninstkey}" "DisplayName" "${prodname} (remove only)"
@@ -226,7 +270,7 @@ UninstallText "This will uninstall ${prodname}."
 UninstallIcon "${icon}"
 !endif
  
-Section "Uninstall"
+Section "un.Uninstall"
  
   DeleteRegKey HKLM "${uninstkey}"
   DeleteRegKey HKLM "${regkey}"
