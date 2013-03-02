@@ -1,5 +1,4 @@
 SWT_LIB_PATH ="#{Main.lib_path}/swt"
-puts SWT_LIB_PATH
 
 
 

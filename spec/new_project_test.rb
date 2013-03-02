@@ -23,8 +23,9 @@ Compass::Frameworks::ALL.each do | framework |
 end
 
 
-#describe NewProjectTest do
+describe Main do
 
   
 
-#end
+
+end
