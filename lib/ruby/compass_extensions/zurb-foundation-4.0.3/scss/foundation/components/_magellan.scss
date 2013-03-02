@@ -1,0 +1,15 @@
+@if $include-html-classes {
+
+  [data-magellan-expedition] {
+    background: #fff;
+    z-index: 999;
+    min-width: 100%;
+    padding: 10px;
+
+    .sub-nav {
+      margin-bottom: 0;
+      dd { margin-bottom: 0; }
+    }
+  }
+
+}
