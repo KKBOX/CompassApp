@@ -11,7 +11,7 @@ module Main
     set_default_encoding
     set_lib_path
     require_lib
-    run_tray
+    init_app
   end
 
   def set_default_encoding
@@ -23,26 +23,31 @@ module Main
   end
 
   def set_lib_path
-    $LOAD_PATH << 'src'
     require 'pathname'
+    #$LOAD_PATH << Pathname.new(__FILE__).dirname().to_s+'src'
+    $LOAD_PATH << 'src'
     resources_dir =  Pathname.new(__FILE__).dirname().dirname().dirname().to_s()[5..-1]
-    if File.exists?( File.join(resources_dir, 'lib','ruby'))
+    if !resources_dir.nil? and File.exists?( File.join(resources_dir, 'lib','ruby'))
       @lib_path = File.join(resources_dir, 'lib')
     else
       @lib_path = File.expand_path 'lib' 
     end
   end
 
+  def file_dir
+    File.dirname(__FILE__).to_s + '/'
+  end
+
 
   def require_lib
-    require "swt_wrapper"
+    require file_dir+'swt_wrapper'
 
     require 'stringio'
     require 'thread'
     require "open-uri"
     require "yaml"
     %w{alert notification quit_window tray preference_panel report welcome_window}.each do | f |
-      require "ui/#{f}"
+      require file_dir+"ui/#{f}"
     end
 
   end
@@ -70,8 +75,9 @@ module Main
       end
   end
 
-  def init_app
-    require "app.rb"
+  def app_require_lib
+
+      require "app.rb"
       App.require_compass
      
       begin
@@ -94,14 +100,21 @@ module Main
 
   end
 
+  def init_app
+    begin
+      set_config_dir
+      app_require_lib
 
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace
+      Report.new( e.message + "\n" + e.backtrace.join("\n"), nil, {:show_reset_button => true} )
+    end
+  end
 
   def run_tray
 
     begin
-      set_config_dir
-      init_app
-
       Tray.instance.run
 
     rescue Exception => e
@@ -111,10 +124,12 @@ module Main
     end
 
   end
+
+
 end
 
 
-
-if $0 == '-'
+if $0 == '-' || $0 == __FILE__
   Main.init
+  Main.run_tray
 end

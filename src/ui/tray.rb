@@ -2,6 +2,8 @@ require "singleton"
 class Tray
   include Singleton
 
+  attr_reader :menu, :shell, :dialog
+
   def initialize()
     @http_server = nil
     @compass_thread = nil
@@ -138,8 +140,8 @@ class Tray
       if @compass_thread
         stop_watch
       else
-        dia = Swt::Widgets::DirectoryDialog.new(@shell)
-        dir = dia.open
+        @dialog = Swt::Widgets::DirectoryDialog.new(@shell)
+        dir = @dialog.open
         watch(dir) if dir 
       end
     end
@@ -213,8 +215,8 @@ class Tray
 
   def create_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      dia = Swt::Widgets::FileDialog.new(@shell,Swt::SWT::SAVE)
-      dir = dia.open
+      @dialog = Swt::Widgets::FileDialog.new(@shell,Swt::SWT::SAVE)
+      dir = @dialog.open
       if dir
         dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
 
