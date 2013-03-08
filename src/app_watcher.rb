@@ -19,6 +19,12 @@ module Compass
         super
       end
 
+      def stop
+        log_action(:info, "AppWatcher stop!",{})
+        listener.stop
+      end
+     
+
       def coffeescript_watchers
         coffee_filter = File.join(Compass.configuration.fireapp_coffeescripts_dir,  "*.coffee")
         child_coffee_filter = File.join(Compass.configuration.fireapp_coffeescripts_dir, "**", "*.coffee")
