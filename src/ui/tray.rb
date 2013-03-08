@@ -335,9 +335,10 @@ class Tray
     stop_watch
     App.try do 
       actual = App.get_stdout do
-        Compass::Commands::CleanProject.new(dir, {}).perform
+        logger = Compass::Logger.new({ :display => App.display,:log_dir => dir}) 
+        Compass::Commands::CleanProject.new(dir, {:logger => logger}).perform
         Compass.reset_configuration!
-        Compass::Commands::UpdateProject.new( dir, {}).perform
+        Compass::Commands::UpdateProject.new( dir, {:logger => logger}).perform
         Compass.reset_configuration!
       end
       App.report( actual ) if show_report
@@ -424,7 +425,8 @@ class Tray
 
         Thread.abort_on_exception = true
         @compass_thread = Thread.new do
-          Compass::Watcher::AppWatcher.new(dir, Compass.configuration.watches).watch!
+           logger = Compass::Logger.new({ :display => current_display,:log_dir => dir}) 
+           Compass::Watcher::AppWatcher.new(dir, Compass.configuration.watches, {:logger => logger}).watch!
         end
 
         @watching_dir = dir
