@@ -16,7 +16,6 @@
  
 ;    2. Altered source versions must be plainly marked as such, and must not be
 ;       misrepresented as being the original software.
- 
 ;    3. This notice may not be removed or altered from any source distribution.
  
 !define setup "setup.exe"
@@ -28,7 +27,6 @@
 !define prodname "Compass.app"
 
 !define exec "compass-app.exe"
-#!define folder "packages\windows\compass.app"
  
 ; optional stuff
  
@@ -72,7 +70,7 @@ ShowInstDetails hide
 ShowUninstDetails hide
  
 Name "${prodname}"
-Caption "${prodname}"  # TODO
+Caption "${prodname}" 
  
 !ifdef icon
 Icon "${icon}"
@@ -142,6 +140,7 @@ BrandingText "${company}"
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE license
+!define MUI_PAGE_CUSTOMFUNCTION_PRE needDirPage
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -154,32 +153,44 @@ BrandingText "${company}"
  
 AutoCloseWindow false
 ShowInstDetails show
+
+Function .onInit
+  Var /GLOBAL ORI_INSTDIR
+  ReadRegStr $ORI_INSTDIR HKLM "${regkey}" "Install_Dir"
+  
+  Var /GLOBAL ORI_INSTDIR_STR_LENGTH
+  StrLen $ORI_INSTDIR_STR_LENGTH $ORI_INSTDIR
+
+  ${if} $ORI_INSTDIR_STR_LENGTH > 0
+    messageBox MB_OKCANCEL "Please turn off Compass.app when running installer.$\n$\n \
+                            If both Compass.app and installer run at the same time, \
+                            some unpredictable things may happen.$\n$\n \
+                            Press OK to continue installing or press CANCEL to abort." IDCANCEL go_abort IDOK go_continue
+    go_abort:
+      Abort
+    go_continue:
+      messageBox MB_OK "You have an old version ${prodname} installed in $ORI_INSTDIR, and we will install the new one in the same path."
+  ${Endif}
+FunctionEnd
+
+Function needDirPage
+  ${if} $ORI_INSTDIR_STR_LENGTH > 0
+    Abort
+  ${Endif}
+FunctionEnd
  
- 
-;!ifdef screenimage
-; 
-;; set up background image
-;; uses BgImage plugin
-; 
-;Function .onGUIInit
-;	; extract background BMP into temp plugin directory
-;	InitPluginsDir
-;	File /oname=$PLUGINSDIR\1.bmp "${screenimage}"
-; 
-;	BgImage::SetBg /NOUNLOAD /FILLSCREEN $PLUGINSDIR\1.bmp
-;	BgImage::Redraw /NOUNLOAD
-;FunctionEnd
-; 
-;Function .onGUIEnd
-;	; Destroy must not have /NOUNLOAD so NSIS will be able to unload and delete BgImage before it exits
-;	BgImage::Destroy
-;FunctionEnd
-; 
-;!endif
-; 
 ; beginning (invisible) section
 Section
- 
+
+${if} $ORI_INSTDIR_STR_LENGTH > 0
+  StrCpy $INSTDIR $ORI_INSTDIR
+  
+  ; remove old files
+  Delete "$ORI_INSTDIR\compass-app.exe"
+  Delete "$ORI_INSTDIR\compass-app.exe"
+  RmDir /r "$ORI_INSTDIR\lib"
+  ${Endif}
+  
   WriteRegStr HKLM "${regkey}" "Publisher" "${company}"
   WriteRegStr HKLM "${regkey}" "Install_Dir" "$INSTDIR"
   ; write uninstall strings
@@ -196,12 +207,10 @@ Section
   WriteRegStr HKCR "${prodname}\DefaultIcon" "" "$INSTDIR\${icon}"
 !endif
  
-  SetOutPath $INSTDIR
- 
+SetOutPath $INSTDIR
  
 ; package all files, recursively, preserving attributes
 ; assume files are in the correct places
-;File /r "${srcdir}\${folder}"
 
 File "${srcdir}\packages\windows\compass.app\compass-app.exe"
 File "${srcdir}\packages\windows\compass.app\compass-app.jar"
