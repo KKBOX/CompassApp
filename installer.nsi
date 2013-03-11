@@ -169,7 +169,7 @@ Function .onInit
 
     IfFileExists $R1 AbortInstall ContinueInstall
     AbortInstall:
-      messageBox MB_OK "t looks like ${prodname} is already running. If not, remove $R1 and try again.."
+      messageBox MB_OK "It looks like ${prodname} is already running. If not, remove $R1 and try again.."
       Abort
     ContinueInstall:
       messageBox MB_OK "You have an old version ${prodname} installed in $ORI_INSTDIR, and we will install the new one in the same path."
