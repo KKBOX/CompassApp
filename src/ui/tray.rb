@@ -335,9 +335,10 @@ class Tray
     stop_watch
     App.try do 
       actual = App.get_stdout do
-        Compass::Commands::CleanProject.new(dir, {}).perform
+        logger = Compass::Logger.new({ :display => App.display,:log_dir => dir}) 
+        Compass::Commands::CleanProject.new(dir, {:logger => logger}).perform
         Compass.reset_configuration!
-        Compass::Commands::UpdateProject.new( dir, {}).perform
+        Compass::Commands::UpdateProject.new( dir, {:logger => logger}).perform
         Compass.reset_configuration!
       end
       App.report( actual ) if show_report
@@ -408,7 +409,8 @@ class Tray
     dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
     App.try do 
       Compass.reset_configuration!
-      x = Compass::Commands::UpdateProject.new( dir, {})
+      logger = Compass::Logger.new({ :display => App.display,:log_dir => dir}) 
+      x = Compass::Commands::UpdateProject.new( dir, { :logger => logger })
       if !x.new_compiler_instance.sass_files.empty? # make sure we watch a compass project
         stop_watch
 
@@ -424,7 +426,8 @@ class Tray
 
         Thread.abort_on_exception = true
         @compass_thread = Thread.new do
-          Compass::Watcher::AppWatcher.new(dir, Compass.configuration.watches).watch!
+           Thread.current[:watcher]=Compass::Watcher::AppWatcher.new(dir, Compass.configuration.watches, {:logger => logger})
+           Thread.current[:watcher].watch!
         end
 
         @watching_dir = dir
@@ -476,7 +479,11 @@ class Tray
   end
 
   def stop_watch
-    @compass_thread.kill if @compass_thread && @compass_thread.alive?
+    if @compass_thread && @compass_thread.alive?
+      @compass_thread[:watcher].stop
+      @compass_thread.kill 
+    end
+
     @compass_thread = nil
     @watch_item.text="Watch a Folder..."
     @open_project_item.dispose()   if @open_project_item && !@open_project_item.isDisposed

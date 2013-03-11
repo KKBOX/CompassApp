@@ -1,0 +1,6 @@
+[submodule "ext/ruby_http_parser/vendor/http-parser"]
+	path = ext/ruby_http_parser/vendor/http-parser
+	url = git://github.com/joyent/http-parser.git
+[submodule "ext/ruby_http_parser/vendor/http-parser-java"]
+	path = ext/ruby_http_parser/vendor/http-parser-java
+	url = git://github.com/a2800276/http-parser.java.git

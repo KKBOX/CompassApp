@@ -1,0 +1,22 @@
+PATH
+  remote: .
+  specs:
+    eventmachine (1.0.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    bluecloth (2.2.0)
+    rake (10.0.3)
+    rake-compiler (0.8.3)
+      rake
+    yard (0.8.4.1)
+
+PLATFORMS
+  java
+
+DEPENDENCIES
+  bluecloth
+  eventmachine!
+  rake-compiler (~> 0.8.1)
+  yard (>= 0.7.2)

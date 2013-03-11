@@ -1,0 +1,1 @@
+javac -d classes/ `find src -name '*.java'` && java -cp classes http_parser.lolevel.TestLoaderNG tests.dumped
