@@ -162,13 +162,16 @@ Function .onInit
   StrLen $ORI_INSTDIR_STR_LENGTH $ORI_INSTDIR
 
   ${if} $ORI_INSTDIR_STR_LENGTH > 0
-    messageBox MB_OKCANCEL "Please turn off Compass.app when running installer.$\n$\n \
-                            If both Compass.app and installer run at the same time, \
-                            some unpredictable things may happen.$\n$\n \
-                            Press OK to continue installing or press CANCEL to abort." IDCANCEL go_abort IDOK go_continue
-    go_abort:
+    
+    ReadEnvStr $R0 "TEMP"
+
+    StrCpy $R1 "$R0\lock.txt"
+
+    IfFileExists $R1 AbortInstall ContinueInstall
+    AbortInstall:
+      messageBox MB_OK "t looks like ${prodname} is already running. If not, remove $R1 and try again.."
       Abort
-    go_continue:
+    ContinueInstall:
       messageBox MB_OK "You have an old version ${prodname} installed in $ORI_INSTDIR, and we will install the new one in the same path."
   ${Endif}
 FunctionEnd

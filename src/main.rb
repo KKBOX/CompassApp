@@ -66,13 +66,19 @@ begin
 
   require "livereload"
   require "simplehttpserver"
+  
 
   if App::CONFIG['show_welcome']
     WelcomeWindow.new
   end
   App.clear_autocomplete_cache
 
+  require "lock_file"
+  lock_file = LockFile.new
+
   Tray.instance.run
+  
+  lock_file.close
 
 rescue Exception => e
   puts e.message
