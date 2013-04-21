@@ -47,8 +47,28 @@ class SwtBot
     @bot.clabel(text, idx) # Not typing error, it's `clabel`
   end
 
+  def tabItem(text, idx = 0)
+    @bot.tabItem(text, idx)
+  end
+
+  def shell(text, idx = 0)
+    @bot.shell(text, idx)
+  end
+
+  def activeShell
+    @bot.activeShell
+  end
+
+  def activeBot
+    self.activeShell.bot
+  end
+
   def bot
     @bot
+  end
+
+  def close
+    @bot.activeShell.close
   end
 
 end

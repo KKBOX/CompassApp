@@ -6,6 +6,11 @@ class Swt::Widgets::DirectoryDialog
   attr_accessor :open_path
   #@@open_path = Pathname.new(__FILE__).realpath+'/swtbot_project_test/swtbot_watch_test'
   @@open_path = '/Users/Honda/swtbot_project_test/swtbot_watch_test'
+
+  def self.open_path
+    @@open_path
+  end
+
   def open
     #Pathname.new(@@open_path).realpath.to_s  
     puts 'DirectoryDialog open: '+@@open_path
@@ -19,6 +24,11 @@ class Swt::Widgets::FileDialog
   attr_accessor :open_path
   #@@open_path = Pathname.new(__FILE__).realpath+'/swtbot_project_test/swtbot_create_test'
   @@open_path = '/Users/Honda/swtbot_project_test/swtbot_create_test'
+
+  def self.open_path
+    @@open_path
+  end
+
   def open
     #Pathname.new(@@open_path).realpath.to_s
     puts 'FileDialog open: '+@@open_path

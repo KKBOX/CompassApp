@@ -2,7 +2,7 @@ require "singleton"
 class Tray
   include Singleton
 
-  attr_reader :menu, :shell, :dialog
+  attr_reader :menu, :shell, :dialog, :watching_dir
 
   def initialize()
     @http_server = nil

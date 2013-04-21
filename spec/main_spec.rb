@@ -1,5 +1,5 @@
 require 'spec_helper.rb'
-require '../src/main.rb'
+require File.join(File.dirname(__FILE__), '../src/main')
 
 describe Main do
   

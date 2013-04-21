@@ -1,6 +1,7 @@
+require 'rubygems'
 require 'rspec'
 require 'faker'
-require 'java'
+#require 'java'
 
 RSpec.configure do |config|
   # == Mock Framework
