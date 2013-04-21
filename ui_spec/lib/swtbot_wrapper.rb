@@ -17,7 +17,7 @@ end
 appender = org.apache.log4j.ConsoleAppender.new QuietLayout.new
 org.apache.log4j.BasicConfigurator.configure(appender);
 
-
+# http://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/
 class SwtBot
 
   def initialize(shell, menu)
@@ -53,6 +53,14 @@ class SwtBot
 
   def shell(text, idx = 0)
     @bot.shell(text, idx)
+  end
+
+  def textWithLabel(text, idx = 0)
+    @bot.textWithLabel(text, idx)
+  end
+
+  def text(idx)
+    @bot.text(idx)
   end
 
   def activeShell
