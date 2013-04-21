@@ -68,7 +68,7 @@ class SwtBot
   end
 
   def close
-    @bot.activeShell.close
+    @shell.dispose
   end
 
 end
