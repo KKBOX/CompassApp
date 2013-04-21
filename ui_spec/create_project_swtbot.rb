@@ -1,15 +1,6 @@
 
 
-#require 'rspec'
-require File.join(File.dirname(__FILE__), '../src/main')
-Main.init
-
-require File.join(File.dirname(__FILE__), '../src/ui/tray')
-require File.join(File.dirname(__FILE__), 'swtbot_wrapper')
-require File.join(File.dirname(__FILE__), 'swtbot_dialog_patch')
-
-require File.join(File.dirname(__FILE__), 'spec_helper.rb')
-require 'fileutils'
+require File.join(File.dirname(__FILE__), 'ui_spec_helper.rb')
 
 bot = SwtBot.new(Tray.instance.shell, Tray.instance.menu)
 
@@ -22,7 +13,6 @@ describe Main do
   describe "when trigger 'Watch Compass Project'" do
     #before(:all) do
     #  it "should Watch Compass Project" do
-    #    puts '5'
     #    bot.menu('Watch a Folder...').click.should be_nil
     #  end
     #end
