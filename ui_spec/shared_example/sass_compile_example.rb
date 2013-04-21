@@ -1,5 +1,5 @@
 
-require File.join(File.dirname(__FILE__), 'ui_spec_helper.rb')
+require File.join(File.dirname(__FILE__), '../ui_spec_helper.rb')
 
 shared_examples_for "sass_compile_example" do
   
@@ -43,9 +43,9 @@ shared_examples_for "sass_compile_example" do
                 bot.menu('Change Options...').menu(output_style).click
 
                 test_filename = "swt_test"
-                source_file = File.join(File.dirname(__FILE__), 'test_data', test_filename+'.scss')
+                source_file = File.join(File.dirname(__FILE__), '../test_data', test_filename+'.scss')
                 test_file = File.join(css_dir, test_filename+'.css')
-                dist_file = File.join(File.dirname(__FILE__), 'test_data', '%s_line_comments'%line_comments, output_style, test_filename+'.css')
+                dist_file = File.join(File.dirname(__FILE__), '../test_data', '%s_line_comments'%line_comments, output_style, test_filename+'.css')
 
                 FileUtils.cp(source_file, sass_dir)
                 sleep(3.0)
