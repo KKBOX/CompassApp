@@ -1,14 +1,9 @@
 
-
 require File.join(File.dirname(__FILE__), 'ui_spec_helper.rb')
 
-bot = SwtBot.new(Tray.instance.shell, Tray.instance.menu)
-
-describe Main do
+shared_examples_for "sass_compile_example" do
   
-  after(:all) do
-
-  end
+  bot = SwtBot.new(Tray.instance.shell, Tray.instance.menu)
 
   describe "when trigger 'Watch Compass Project'" do
     #before(:all) do
@@ -70,18 +65,6 @@ describe Main do
     end
   end
 
-  describe "when Create a Compass Project" do
-
-  end
-
-  describe "when exec Main.set_lib_path" do
-      
-      it "should let Main.lib_src not be empty" do
-        Main.set_lib_path
-        Main.lib_path.should_not be_empty
-        $LOAD_PATH.include?('src').should be_true
-      end
-  end
 end 
 
 #bot.menu('Quit').click
