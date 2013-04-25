@@ -2,6 +2,8 @@ require "singleton"
 class Tray
   include Singleton
 
+  attr_reader :menu, :shell, :dialog, :watching_dir
+
   def initialize()
     @http_server = nil
     @compass_thread = nil
@@ -61,7 +63,7 @@ class Tray
   end
 
   def run
-    puts 'tray OK, spend '+(Time.now.to_f - INITAT.to_f).to_s
+    puts 'tray OK, spend '+(Time.now.to_f - Main.init_at.to_f).to_s
     
     SplashWindow.instance.dispose
 
@@ -146,8 +148,8 @@ class Tray
       if @compass_thread
         stop_watch
       else
-        dia = Swt::Widgets::DirectoryDialog.new(@shell)
-        dir = dia.open
+        @dialog = Swt::Widgets::DirectoryDialog.new(@shell)
+        dir = @dialog.open
         watch(dir) if dir 
       end
     end
@@ -157,7 +159,7 @@ class Tray
     Swt::Widgets::Listener.impl do |method, evt|
       if !File.exists?(App.shared_extensions_path)
         FileUtils.mkdir_p(App.shared_extensions_path)
-        FileUtils.cp(File.join(LIB_PATH, "documents", "extensions_readme.txt"), File.join(App.shared_extensions_path, "readme.txt") )
+        FileUtils.cp(File.join(Main.lib_path, "documents", "extensions_readme.txt"), File.join(App.shared_extensions_path, "readme.txt") )
       end
 
       Swt::Program.launch(App.shared_extensions_path)
@@ -204,9 +206,9 @@ class Tray
       next if framework.name =~ /^_/
       next if framework.template_directories.empty?
       item = add_menu_item( framework.name, handler, Swt::SWT::CASCADE, submenu)
-    framework_submenu = Swt::Widgets::Menu.new( submenu )
-    item.menu = framework_submenu
-    framework.template_directories.each do | dir |
+      framework_submenu = Swt::Widgets::Menu.new( submenu )
+      item.menu = framework_submenu
+      framework.template_directories.each do | dir |
       add_menu_item( dir, handler, Swt::SWT::PUSH, framework_submenu)
     end
     end
@@ -221,8 +223,8 @@ class Tray
 
   def create_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
-      dia = Swt::Widgets::FileDialog.new(@shell,Swt::SWT::SAVE)
-      dir = dia.open
+      @dialog = Swt::Widgets::FileDialog.new(@shell,Swt::SWT::SAVE)
+      dir = @dialog.open
       if dir
         dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
 

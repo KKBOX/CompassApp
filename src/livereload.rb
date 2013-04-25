@@ -104,6 +104,7 @@ class SimpleLivereload
           SimpleLivereload.instance.clients.delete ws
           puts "Browser disconnected."
         end
+
       end
     end
   end
