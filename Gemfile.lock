@@ -1,20 +1,20 @@
 GIT
   remote: git://github.com/rawr/rawr.git
-  revision: 9164e420e6802aafb52e30cab7f1f866e6334b18
+  revision: 65b1cba5c284d4ed5ecffed1d59684232308ab2f
   specs:
-    rawr (1.6.4)
+    rawr (1.6.6)
 
 GEM
   remote: http://rubygems.org/
   specs:
-    builder (3.0.0)
+    builder (3.2.0)
     diff-lcs (1.1.3)
     faker (1.1.2)
       i18n (~> 0.5)
-    hoe (3.0.7)
-      rake (~> 0.8)
-    i18n (0.6.1)
-    rake (0.9.2.2)
+    hoe (3.6.0)
+      rake (>= 0.8, < 11.0)
+    i18n (0.6.4)
+    rake (10.0.4)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -22,14 +22,14 @@ GEM
     rspec-core (2.12.2)
     rspec-expectations (2.12.1)
       diff-lcs (~> 1.1.3)
-    rspec-mocks (2.12.1)
+    rspec-mocks (2.12.2)
     s4t-utils (1.0.4)
       hoe (>= 1.3.0)
     user-choices (1.1.6.1)
       builder (>= 2.1.2)
       s4t-utils (>= 1.0.3)
       xml-simple (>= 1.0.11)
-    xml-simple (1.1.1)
+    xml-simple (1.1.2)
 
 PLATFORMS
   java
@@ -38,6 +38,6 @@ PLATFORMS
 DEPENDENCIES
   faker
   rake
-  rawr (= 1.6.4)!
+  rawr (= 1.6.6)!
   rspec (= 2.12.0)
   user-choices
