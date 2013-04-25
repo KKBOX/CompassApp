@@ -39,13 +39,16 @@ module Main
 
 
   def require_lib
-    require file_dir+'swt_wrapper'
+    require 'swt_wrapper'
+    require "ui/splash_window"
+    SplashWindow.instance.replace('Loading...')
+    require "require_patch.rb"
 
     require 'stringio'
     require 'thread'
     require "open-uri"
     require "yaml"
-    %w{alert notification quit_window tray preference_panel report welcome_window splash_window}.each do | f |
+    %w{alert notification quit_window tray preference_panel report welcome_window}.each do | f |
       require file_dir+"ui/#{f}"
     end
 
