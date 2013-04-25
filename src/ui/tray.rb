@@ -63,14 +63,10 @@ class Tray
   end
 
   def run
-<<<<<<< HEAD
     puts 'tray OK, spend '+(Time.now.to_f - Main.init_at.to_f).to_s
-=======
-    puts 'tray OK, spend '+(Time.now.to_f - INITAT.to_f).to_s
     
     SplashWindow.instance.dispose
 
->>>>>>> 9e9ca177dc62052f2f884d5688719bf9e0ac3cbb
     while(!@shell.is_disposed) do
       App.display.sleep if(!App.display.read_and_dispatch) 
       App.show_and_clean_notifications

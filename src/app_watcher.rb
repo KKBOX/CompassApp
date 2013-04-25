@@ -1,6 +1,6 @@
 
 if Compass::VERSION =~ /^0.12/
-  $LOAD_PATH.unshift File.join(LIB_PATH,'ruby','compass_0.12','backport_from_0.13','lib')
+  $LOAD_PATH.unshift File.join(Main.lib_path,'ruby','compass_0.12','backport_from_0.13','lib')
   require 'compass/watcher'
 end
 

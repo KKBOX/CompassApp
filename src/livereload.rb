@@ -104,19 +104,7 @@ class SimpleLivereload
           SimpleLivereload.instance.clients.delete ws
           puts "Browser disconnected."
         end
-<<<<<<< HEAD
 
-        ws.onerror do |error|
-          # for http://help.livereload.com/kb/general-use/using-livereload-without-browser-extensions
-          if error.kind_of?(EventMachine::WebSocket::HandshakeError)
-            ws.send_data "HTTP/1.1 200 OK\r\n\r\n"+ open(File.join(Main.lib_path, 'javascripts', "livereload.js")).read
-            ws.close_connection_after_writing
-          else
-            ws.about
-          end
-        end
-=======
->>>>>>> 9e9ca177dc62052f2f884d5688719bf9e0ac3cbb
       end
     end
   end

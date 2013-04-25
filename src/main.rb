@@ -1,30 +1,12 @@
-<<<<<<< HEAD
-=======
-INITAT=Time.now
-require 'java'
->>>>>>> 9e9ca177dc62052f2f884d5688719bf9e0ac3cbb
 
-
-<<<<<<< HEAD
 module Main
   extend self
   
   attr_reader :init_at, :lib_path, :config_dir
-=======
-$LOAD_PATH << 'src'
-require 'pathname'
-resources_dir =  Pathname.new(__FILE__).dirname().dirname().dirname().to_s()[5..-1]
-if resources_dir && File.exists?( File.join(resources_dir, 'lib','ruby'))
-  LIB_PATH = File.join(resources_dir, 'lib')
-else
-  LIB_PATH = File.expand_path 'lib' 
-end
->>>>>>> 9e9ca177dc62052f2f884d5688719bf9e0ac3cbb
 
   def init
     @init_at=Time.now
 
-<<<<<<< HEAD
     set_default_encoding
     set_lib_path
     require_lib
@@ -38,12 +20,6 @@ end
       #Encoding.default_internal = Encoding::UTF_8
     end
   end
-=======
-require "swt_wrapper"
-require "ui/splash_window"
-SplashWindow.instance.replace('Loading...')
-require "require_patch.rb"
->>>>>>> 9e9ca177dc62052f2f884d5688719bf9e0ac3cbb
 
   def set_lib_path
     require 'pathname'
@@ -69,7 +45,7 @@ require "require_patch.rb"
     require 'thread'
     require "open-uri"
     require "yaml"
-    %w{alert notification quit_window tray preference_panel report welcome_window}.each do | f |
+    %w{alert notification quit_window tray preference_panel report welcome_window splash_window}.each do | f |
       require file_dir+"ui/#{f}"
     end
 
