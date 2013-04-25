@@ -5,7 +5,7 @@ module App
   extend self
 
   include CompileVersion
-  VERSION = "1.21"
+  VERSION = "1.24"
   OS = org.jruby.platform.Platform::OS 
   OS_VERSION = java.lang.System.getProperty("os.version")
 
@@ -25,6 +25,24 @@ module App
   HISTORY_FILE =  File.join( Main.config_dir, 'history')
   CONFIG_FILE  =  File.join( Main.config_dir, 'config')
 
+  @notifications = []
+  def notifications
+    @notifications
+  end
+
+  def notifications=(x)
+    @notifications=x
+  end
+
+  def show_and_clean_notifications
+    if !App.notifications.empty?
+      App.notifications.each do |x|
+        App.notify(x)
+      end
+      App.notifications = []
+    end
+  end
+
   def get_system_default_gem_path
     begin
       %x{gem env gempath}.strip.split(/:/).first
@@ -42,7 +60,8 @@ module App
 
     x.delete("services_http_port") unless x["services_http_port"].to_i > 0
     x.delete("services_livereload_port") unless x["services_livereload_port"].to_i > 0
-                                
+    x.delete("num_of_history") unless x["num_of_history"].to_i > 0                         
+
     config={
       "show_welcome" => true,
       "use_version" => 0.12,
@@ -54,9 +73,10 @@ module App
       "services_livereload_port" => 35729,
       "services_livereload_extensions" => "css,png,jpg,gif,html,erb,haml",
       "preferred_syntax" => "scss",
-      "force_enable_fsevent" => false
+      "force_enable_fsevent" => false,
+      "num_of_history" => 5
     }.merge!(x)
-
+    
     if !config["gem_path"]
       config["gem_path"] = App.get_system_default_gem_path
     end
@@ -109,9 +129,10 @@ module App
     end
 
     $LOAD_PATH.unshift('.')
-    require "fsevent_patch" if OS == 'darwin'
     require "compass_patch.rb"
     require "sass_patch.rb"
+    require "app_watcher.rb"
+
   end
 
   def save_config
@@ -137,7 +158,7 @@ module App
   end 
 
   def display
-    Swt::Widgets::Display.get_current
+    @display ||= Swt::Widgets::Display.get_current
   end
 
   def create_shell(style = nil)

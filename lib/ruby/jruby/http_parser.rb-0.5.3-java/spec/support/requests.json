@@ -1,0 +1,400 @@
+[
+  {
+    "name": "curl get",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /test HTTP/1.1\r\nUser-Agent: curl/7.18.0 (i486-pc-linux-gnu) libcurl/7.18.0 OpenSSL/0.9.8g zlib/1.2.3.3 libidn/1.1\r\nHost: 0.0.0.0=5000\r\nAccept: */*\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/test",
+    "request_url": "/test",
+    "num_headers": 3,
+    "headers": {
+      "User-Agent": "curl/7.18.0 (i486-pc-linux-gnu) libcurl/7.18.0 OpenSSL/0.9.8g zlib/1.2.3.3 libidn/1.1",
+      "Host": "0.0.0.0=5000",
+      "Accept": "*/*"
+    },
+    "body": ""
+  },
+  {
+    "name": "firefox get",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /favicon.ico HTTP/1.1\r\nHost: 0.0.0.0=5000\r\nUser-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9) Gecko/2008061015 Firefox/3.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nAccept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\nKeep-Alive: 300\r\nConnection: keep-alive\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/favicon.ico",
+    "request_url": "/favicon.ico",
+    "num_headers": 8,
+    "headers": {
+      "Host": "0.0.0.0=5000",
+      "User-Agent": "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9) Gecko/2008061015 Firefox/3.0",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language": "en-us,en;q=0.5",
+      "Accept-Encoding": "gzip,deflate",
+      "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.7",
+      "Keep-Alive": "300",
+      "Connection": "keep-alive"
+    },
+    "body": ""
+  },
+  {
+    "name": "dumbfuck",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /dumbfuck HTTP/1.1\r\naaaaaaaaaaaaa:++++++++++\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/dumbfuck",
+    "request_url": "/dumbfuck",
+    "num_headers": 1,
+    "headers": {
+      "aaaaaaaaaaaaa": "++++++++++"
+    },
+    "body": ""
+  },
+  {
+    "name": "fragment in url",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /forums/1/topics/2375?page=1#posts-17408 HTTP/1.1\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "page=1",
+    "fragment": "posts-17408",
+    "request_path": "/forums/1/topics/2375",
+    "request_url": "/forums/1/topics/2375?page=1#posts-17408",
+    "num_headers": 0,
+    "body": ""
+  },
+  {
+    "name": "get no headers no body",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /get_no_headers_no_body/world HTTP/1.1\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/get_no_headers_no_body/world",
+    "request_url": "/get_no_headers_no_body/world",
+    "num_headers": 0,
+    "body": ""
+  },
+  {
+    "name": "get one header no body",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /get_one_header_no_body HTTP/1.1\r\nAccept: */*\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/get_one_header_no_body",
+    "request_url": "/get_one_header_no_body",
+    "num_headers": 1,
+    "headers": {
+      "Accept": "*/*"
+    },
+    "body": ""
+  },
+  {
+    "name": "get funky content length body hello",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /get_funky_content_length_body_hello HTTP/1.0\r\nconTENT-Length: 5\r\n\r\nHELLO",
+    "should_keep_alive": false,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 0,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/get_funky_content_length_body_hello",
+    "request_url": "/get_funky_content_length_body_hello",
+    "num_headers": 1,
+    "headers": {
+      "conTENT-Length": "5"
+    },
+    "body": "HELLO"
+  },
+  {
+    "name": "post identity body world",
+    "type": "HTTP_REQUEST",
+    "raw": "POST /post_identity_body_world?q=search#hey HTTP/1.1\r\nAccept: */*\r\nTransfer-Encoding: identity\r\nContent-Length: 5\r\n\r\nWorld",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "POST",
+    "query_string": "q=search",
+    "fragment": "hey",
+    "request_path": "/post_identity_body_world",
+    "request_url": "/post_identity_body_world?q=search#hey",
+    "num_headers": 3,
+    "headers": {
+      "Accept": "*/*",
+      "Transfer-Encoding": "identity",
+      "Content-Length": "5"
+    },
+    "body": "World"
+  },
+  {
+    "name": "post - chunked body: all your base are belong to us",
+    "type": "HTTP_REQUEST",
+    "raw": "POST /post_chunked_all_your_base HTTP/1.1\r\nTransfer-Encoding: chunked\r\n\r\n1e\r\nall your base are belong to us\r\n0\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "POST",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/post_chunked_all_your_base",
+    "request_url": "/post_chunked_all_your_base",
+    "num_headers": 1,
+    "headers": {
+      "Transfer-Encoding": "chunked"
+    },
+    "body": "all your base are belong to us"
+  },
+  {
+    "name": "two chunks ; triple zero ending",
+    "type": "HTTP_REQUEST",
+    "raw": "POST /two_chunks_mult_zero_end HTTP/1.1\r\nTransfer-Encoding: chunked\r\n\r\n5\r\nhello\r\n6\r\n world\r\n000\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "POST",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/two_chunks_mult_zero_end",
+    "request_url": "/two_chunks_mult_zero_end",
+    "num_headers": 1,
+    "headers": {
+      "Transfer-Encoding": "chunked"
+    },
+    "body": "hello world"
+  },
+  {
+    "name": "chunked with trailing headers. blech.",
+    "type": "HTTP_REQUEST",
+    "raw": "POST /chunked_w_trailing_headers HTTP/1.1\r\nTransfer-Encoding: chunked\r\n\r\n5\r\nhello\r\n6\r\n world\r\n0\r\nVary: *\r\nContent-Type: text/plain\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "POST",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/chunked_w_trailing_headers",
+    "request_url": "/chunked_w_trailing_headers",
+    "num_headers": 3,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Vary": "*",
+      "Content-Type": "text/plain"
+    },
+    "body": "hello world"
+  },
+  {
+    "name": "with bullshit after the length",
+    "type": "HTTP_REQUEST",
+    "raw": "POST /chunked_w_bullshit_after_length HTTP/1.1\r\nTransfer-Encoding: chunked\r\n\r\n5; ihatew3;whatthefuck=aretheseparametersfor\r\nhello\r\n6; blahblah; blah\r\n world\r\n0\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "POST",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/chunked_w_bullshit_after_length",
+    "request_url": "/chunked_w_bullshit_after_length",
+    "num_headers": 1,
+    "headers": {
+      "Transfer-Encoding": "chunked"
+    },
+    "body": "hello world"
+  },
+  {
+    "name": "with quotes",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /with_\"stupid\"_quotes?foo=\"bar\" HTTP/1.1\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "foo=\"bar\"",
+    "fragment": "",
+    "request_path": "/with_\"stupid\"_quotes",
+    "request_url": "/with_\"stupid\"_quotes?foo=\"bar\"",
+    "num_headers": 0,
+    "headers": {
+
+    },
+    "body": ""
+  },
+  {
+    "name": "apachebench get",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /test HTTP/1.0\r\nHost: 0.0.0.0:5000\r\nUser-Agent: ApacheBench/2.3\r\nAccept: */*\r\n\r\n",
+    "should_keep_alive": false,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 0,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/test",
+    "request_url": "/test",
+    "num_headers": 3,
+    "headers": {
+      "Host": "0.0.0.0:5000",
+      "User-Agent": "ApacheBench/2.3",
+      "Accept": "*/*"
+    },
+    "body": ""
+  },
+  {
+    "name": "query url with question mark",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /test.cgi?foo=bar?baz HTTP/1.1\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "foo=bar?baz",
+    "fragment": "",
+    "request_path": "/test.cgi",
+    "request_url": "/test.cgi?foo=bar?baz",
+    "num_headers": 0,
+    "headers": {
+
+    },
+    "body": ""
+  },
+  {
+    "name": "newline prefix get",
+    "type": "HTTP_REQUEST",
+    "raw": "\r\nGET /test HTTP/1.1\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/test",
+    "request_url": "/test",
+    "num_headers": 0,
+    "headers": {
+
+    },
+    "body": ""
+  },
+  {
+    "name": "upgrade request",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /demo HTTP/1.1\r\nHost: example.com\r\nConnection: Upgrade\r\nSec-WebSocket-Key2: 12998 5 Y3 1  .P00\r\nSec-WebSocket-Protocol: sample\r\nUpgrade: WebSocket\r\nSec-WebSocket-Key1: 4 @1  46546xW%0l 1 5\r\nOrigin: http://example.com\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/demo",
+    "request_url": "/demo",
+    "num_headers": 7,
+    "upgrade": 1,
+    "headers": {
+      "Host": "example.com",
+      "Connection": "Upgrade",
+      "Sec-WebSocket-Key2": "12998 5 Y3 1  .P00",
+      "Sec-WebSocket-Protocol": "sample",
+      "Upgrade": "WebSocket",
+      "Sec-WebSocket-Key1": "4 @1  46546xW%0l 1 5",
+      "Origin": "http://example.com"
+    },
+    "body": ""
+  },
+  {
+    "name": "connect request",
+    "type": "HTTP_REQUEST",
+    "raw": "CONNECT home0.netscape.com:443 HTTP/1.0\r\nUser-agent: Mozilla/1.1N\r\nProxy-authorization: basic aGVsbG86d29ybGQ=\r\n\r\n",
+    "should_keep_alive": false,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 0,
+    "method": "CONNECT",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "",
+    "request_url": "home0.netscape.com:443",
+    "num_headers": 2,
+    "upgrade": 1,
+    "headers": {
+      "User-agent": "Mozilla/1.1N",
+      "Proxy-authorization": "basic aGVsbG86d29ybGQ="
+    },
+    "body": ""
+  },
+  {
+    "name": "report request",
+    "type": "HTTP_REQUEST",
+    "raw": "REPORT /test HTTP/1.1\r\n\r\n",
+    "should_keep_alive": true,
+    "message_complete_on_eof": false,
+    "http_major": 1,
+    "http_minor": 1,
+    "method": "REPORT",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/test",
+    "request_url": "/test",
+    "num_headers": 0,
+    "headers": {
+
+    },
+    "body": ""
+  },
+  {
+    "name": "request with no http version",
+    "type": "HTTP_REQUEST",
+    "raw": "GET /\r\n\r\n",
+    "should_keep_alive": false,
+    "message_complete_on_eof": false,
+    "http_major": 0,
+    "http_minor": 9,
+    "method": "GET",
+    "query_string": "",
+    "fragment": "",
+    "request_path": "/",
+    "request_url": "/",
+    "num_headers": 0,
+    "headers": {
+
+    },
+    "body": ""
+  }
+]

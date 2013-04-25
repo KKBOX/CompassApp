@@ -1,35 +1,50 @@
 require "singleton"
 require 'em-websocket'
 require 'json'
+
 module EventMachine
   module WebSocket
-    class Connection 
-      def receive_data(data)
-        debug [:receive_data, data]
-
-        if @handler
-          @handler.receive_data(data)
+    class Connection
+      def dispatch(data)
+        if data.match(/\A<policy-file-request\s*\/>/)
+          send_flash_cross_domain_file
+          # we need livereload.js
+        elsif data.match(/\AGET \/?livereload.js/)
+          send_livereloadjs_file
         else
-          dispatch(data)
+          @handshake ||= begin
+                           handshake = Handshake.new(@secure || @secure_proxy)
+
+                           handshake.callback { |upgrade_response, handler_klass|
+                             debug [:accepting_ws_version, handshake.protocol_version]
+                             debug [:upgrade_response, upgrade_response]
+                             self.send_data(upgrade_response)
+                             @handler = handler_klass.new(self, @debug)
+                             @handshake = nil 
+                             trigger_on_open(handshake)
+                           }   
+
+                           handshake.errback { |e| 
+                             debug [:error, e]
+                             trigger_on_error(e)
+                             # Handshake errors require the connection to be aborted
+                             abort
+                           }   
+
+                           handshake
+                         end 
+
+          @handshake.receive_data(data)
         end 
-      rescue HandshakeError => e
-        debug [:error, e]
-        trigger_on_error(e)
-        # Errors during the handshake require the connection to be aborted
+      end 
+      def send_livereloadjs_file
+        debug [:send_livereloadjs_file, '' ]
+        send_data open(File.join(LIB_PATH, 'javascripts', "livereload.js")){|f| f.read}
 
-        #abort # comment for failover normailhttp request
-
-      rescue WebSocketError => e
-        debug [:error, e]
-        trigger_on_error(e)
-        close_websocket_private(1002) # 1002 indicates a protocol error
-      rescue => e
-        debug [:error, e]
-        # These are application errors - raise unless onerror defined
-        trigger_on_error(e) || raise(e)
-        # There is no code defined for application errors, so use 3000
-        # (which is reserved for frameworks)
-        close_websocket_private(3000)
+        # handle the cross-domain request transparently
+        # no need to notify the user about this connection
+        @onclose = nil
+        close_connection_after_writing
       end 
 
     end
@@ -45,8 +60,6 @@ class SimpleLivereload
   end
 
   def watch(dir, options)
-    unwatch
-    start_watch_project(dir)
     start_websocket_server(options)
   end
 
@@ -58,13 +71,14 @@ class SimpleLivereload
       :debug => false
     }.merge(options)
 
+
     Thread.abort_on_exception = true
     @livereload_thread = Thread.new do 
       EventMachine::WebSocket.start( options ) do |ws|
         ws.onopen do
           begin
             puts "Browser connected."; 
-            ws.send "!!ver:#{1.6}";
+            #ws.send "!!ver:#{1.6}";
             SimpleLivereload.instance.clients << ws
           rescue
             puts $!
@@ -73,12 +87,24 @@ class SimpleLivereload
         end
         ws.onmessage do |msg|
           puts "Browser URL: #{msg}"
+          begin
+            msg = JSON.parse(msg)
+            if msg["command"]=='hello'
+              ws.send JSON.dump({
+                "command"    => 'hello',
+                "protocols"  => ['http://livereload.com/protocols/official-7'],
+                "serverName" => "Compass.app"
+              })
+            end
+          rescue
+          end
         end
 
         ws.onclose do
           SimpleLivereload.instance.clients.delete ws
           puts "Browser disconnected."
         end
+<<<<<<< HEAD
 
         ws.onerror do |error|
           # for http://help.livereload.com/kb/general-use/using-livereload-without-browser-extensions
@@ -89,6 +115,8 @@ class SimpleLivereload
             ws.about
           end
         end
+=======
+>>>>>>> 9e9ca177dc62052f2f884d5688719bf9e0ac3cbb
       end
     end
   end
@@ -97,15 +125,18 @@ class SimpleLivereload
     if @livereload_thread && @livereload_thread.alive?
       EventMachine::WebSocket.stop
     end
-    @watch_project_thread.kill if @watch_project_thread && @watch_project_thread.alive?
   end
 
+  def alive?
+    @livereload_thread && @livereload_thread.alive?
+  end
 
   def send_livereload_msg( base, relative )
-    data = JSON.dump( ['refresh', { :path => File.join(base, relative),
-                     :apply_js_live  => true,
-                     :apply_css_live => true,
-                     :apply_images_live => true }] )
+    data = JSON.dump( {
+      :command => "reload",
+      :path    => URI.escape(File.join(base, relative)),
+      :liveCSS => true,
+    } )
     @clients.each do |ws|
       EM::next_tick do
         ws.send(data)
@@ -113,35 +144,6 @@ class SimpleLivereload
     end 
   end 
 
-  def start_watch_project(dir)
-    @watch_project_thread = Thread.new do
-      FSSM.monitor do |monitor|
-        monitor.path dir do |path|
-
-          if defined?(::App) 
-            extensions = ::App::CONFIG["services_livereload_extensions"]
-          else
-            extensions = "css,png,jpg,gif,html,erb,haml"
-          end
-
-          path.glob "**/*.{#{extensions}}"
-
-          path.update do |base, relative|
-            puts ">>> Change detected to: #{relative}"
-            SimpleLivereload.instance.send_livereload_msg( base, relative )
-          end 
-          path.create do |base, relative|
-            puts ">>> New file detected: #{relative}"
-            SimpleLivereload.instance.send_livereload_msg( base, relative )
-          end 
-          path.delete do |base, relative|
-            puts ">>> File Removed: #{relative}"
-            SimpleLivereload.instance.send_livereload_msg( base, relative )
-          end 
-        end 
-      end 
-    end 
-  end 
 
 end
 

@@ -58,10 +58,22 @@ class Tray
     add_menu_item( "Quit",      exit_handler)
   end
 
+  def shell 
+    @shell
+  end
+
   def run
+<<<<<<< HEAD
     puts 'tray OK, spend '+(Time.now.to_f - Main.init_at.to_f).to_s
+=======
+    puts 'tray OK, spend '+(Time.now.to_f - INITAT.to_f).to_s
+    
+    SplashWindow.instance.dispose
+
+>>>>>>> 9e9ca177dc62052f2f884d5688719bf9e0ac3cbb
     while(!@shell.is_disposed) do
       App.display.sleep if(!App.display.read_and_dispatch) 
+      App.show_and_clean_notifications
     end
 
     App.display.dispose
@@ -210,7 +222,7 @@ class Tray
     @history_dirs.reverse.each do | dir |
       add_compass_item(dir)
     end
-    App.set_histoy(@history_dirs[0,5])
+    App.set_histoy(@history_dirs[0, App::CONFIG["num_of_history"]])
   end
 
   def create_project_handler
@@ -306,7 +318,7 @@ class Tray
   def exit_handler
     Swt::Widgets::Listener.impl do |method, evt|
       stop_watch
-      App.set_histoy(@history_dirs[0,5])
+      App.set_histoy(@history_dirs[0, App::CONFIG["num_of_history"]])
       @shell.close
     end
   end
@@ -329,9 +341,10 @@ class Tray
     stop_watch
     App.try do 
       actual = App.get_stdout do
-        Compass::Commands::CleanProject.new(dir, {}).perform
+        logger = Compass::Logger.new({ :display => App.display,:log_dir => dir}) 
+        Compass::Commands::CleanProject.new(dir, {:logger => logger}).perform
         Compass.reset_configuration!
-        Compass::Commands::UpdateProject.new( dir, {}).perform
+        Compass::Commands::UpdateProject.new( dir, {:logger => logger}).perform
         Compass.reset_configuration!
       end
       App.report( actual ) if show_report
@@ -402,7 +415,8 @@ class Tray
     dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
     App.try do 
       Compass.reset_configuration!
-      x = Compass::Commands::UpdateProject.new( dir, {})
+      logger = Compass::Logger.new({ :display => App.display,:log_dir => dir}) 
+      x = Compass::Commands::UpdateProject.new( dir, { :logger => logger })
       if !x.new_compiler_instance.sass_files.empty? # make sure we watch a compass project
         stop_watch
 
@@ -418,9 +432,8 @@ class Tray
 
         Thread.abort_on_exception = true
         @compass_thread = Thread.new do
-          Compass.reset_configuration!
-          Compass::Commands::WatchProject.new( dir, { :logger => Compass::Logger.new({ :display => current_display,
-                                                                                     :log_dir => dir}) }).execute
+           Thread.current[:watcher]=Compass::Watcher::AppWatcher.new(dir, Compass.configuration.watches, {:logger => logger})
+           Thread.current[:watcher].watch!
         end
 
         @watching_dir = dir
@@ -472,7 +485,11 @@ class Tray
   end
 
   def stop_watch
-    @compass_thread.kill if @compass_thread && @compass_thread.alive?
+    if @compass_thread && @compass_thread.alive?
+      @compass_thread[:watcher].stop
+      @compass_thread.kill 
+    end
+
     @compass_thread = nil
     @watch_item.text="Watch a Folder..."
     @open_project_item.dispose()   if @open_project_item && !@open_project_item.isDisposed

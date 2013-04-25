@@ -8,6 +8,7 @@ class SimpleHTTPServer
   def start(dir, options)
     mime_types = WEBrick::HTTPUtils::DefaultMimeTypes
     mime_types.store 'js', 'application/javascript'
+    mime_types.store 'svg', 'image/svg+xml'
 
     options={
       :Port => 24680,
