@@ -23,7 +23,6 @@ module Main
 
   def set_lib_path
     require 'pathname'
-    #$LOAD_PATH << Pathname.new(__FILE__).dirname().to_s+'src'
     $LOAD_PATH << 'src'
     resources_dir =  Pathname.new(__FILE__).dirname().dirname().dirname().to_s()[5..-1]
     if !resources_dir.nil? and File.exists?( File.join(resources_dir, 'lib','ruby'))
@@ -31,10 +30,6 @@ module Main
     else
       @lib_path = File.expand_path 'lib' 
     end
-  end
-
-  def file_dir
-    File.dirname(__FILE__).to_s + '/'
   end
 
 
@@ -49,7 +44,7 @@ module Main
     require "open-uri"
     require "yaml"
     %w{alert notification quit_window tray preference_panel report welcome_window}.each do | f |
-      require file_dir+"ui/#{f}"
+      require "ui/#{f}"
     end
 
   end
