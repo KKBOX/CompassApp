@@ -11,7 +11,7 @@ module ChunkyPNG
   class Datastream
 
     # The signature that each PNG file or stream should begin with.
-    SIGNATURE = [137, 80, 78, 71, 13, 10, 26, 10].pack('C8')
+    SIGNATURE = ChunkyPNG.force_binary([137, 80, 78, 71, 13, 10, 26, 10].pack('C8'))
 
     # The header chunk of this datastream.
     # @return [ChunkyPNG::Chunk::Header]
@@ -98,8 +98,8 @@ module ChunkyPNG
       #    the beginning of the stream.
       def verify_signature!(io)
         signature = io.read(ChunkyPNG::Datastream::SIGNATURE.length)
-        unless signature == ChunkyPNG::Datastream::SIGNATURE
-          raise ChunkyPNG::SignatureMismatch, "PNG signature not found!"
+        unless ChunkyPNG.force_binary(signature) == ChunkyPNG::Datastream::SIGNATURE
+          raise ChunkyPNG::SignatureMismatch, "PNG signature not found, found #{signature.inspect} instead of #{ChunkyPNG::Datastream::SIGNATURE.inspect}!"
         end
       end
     end
