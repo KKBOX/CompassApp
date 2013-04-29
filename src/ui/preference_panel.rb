@@ -350,7 +350,7 @@ class PreferencePanel
     @button_version_default.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @button_version_beta = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_beta.setText("Beta (Sass 3.2.8 + Compass 0.13.alpha.2)")
+    @button_version_beta.setText("Beta (Sass 3.2.8 + Compass 0.13.alpha.4)")
     @button_version_beta.setSelection( App::CONFIG['use_version'] == 0.13  )
     @button_version_beta.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
