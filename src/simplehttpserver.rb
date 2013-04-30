@@ -29,6 +29,7 @@ class SimpleHTTPServer
     @http_server.shutdown if @http_server
     @http_server = nil 
     @http_server_thread.kill if @http_server_thread && @http_server_thread.alive?
+    sleep 1 if org.jruby.platform.Platform::IS_WINDOWS # windows need time to release port 
   end
 
 end
