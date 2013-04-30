@@ -9,6 +9,10 @@ class SimpleHTTPServer
     mime_types = WEBrick::HTTPUtils::DefaultMimeTypes
     mime_types.store 'js', 'application/javascript'
     mime_types.store 'svg', 'image/svg+xml'
+    mime_types.store 'mp3', 'audio/mpeg'
+    mime_types.store 'mp4', 'video/mp4'
+    mime_types.store 'ogv', 'video/ogg'
+    mime_types.store 'webm', 'video/webm'
 
     options={
       :Port => 24680,
