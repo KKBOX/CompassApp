@@ -411,6 +411,8 @@ class Tray
     dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
     App.try do 
       Compass.reset_configuration!
+      Dir.chdir(dir)
+
       logger = Compass::Logger.new({ :display => App.display,:log_dir => dir}) 
       x = Compass::Commands::UpdateProject.new( dir, { :logger => logger })
       if !x.new_compiler_instance.sass_files.empty? # make sure we watch a compass project
