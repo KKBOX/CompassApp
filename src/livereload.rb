@@ -39,7 +39,7 @@ module EventMachine
       end 
       def send_livereloadjs_file
         debug [:send_livereloadjs_file, '' ]
-        send_data open(File.join(LIB_PATH, 'javascripts', "livereload.js")){|f| f.read}
+        send_data open(File.join(Main.lib_path, 'javascripts', "livereload.js")){|f| f.read}
 
         # handle the cross-domain request transparently
         # no need to notify the user about this connection
