@@ -14,6 +14,28 @@ module Compass
         setup_listener
       end
 
+      def listen_callback(modified_file, added_file, removed_file)
+        #log_action(:info, ">>> Listen Callback fired added: #{added_file}, mod: #{modified_file}, rem: #{removed_file}", {})
+        action = nil
+        action ||= :modified unless modified_file.empty?
+        action ||= :added unless added_file.empty?
+        action ||= :removed unless removed_file.empty?
+
+        files = modified_file + added_file + removed_file
+        # run watchers
+        sass_watchers.each do |watcher|
+          files.each do |file|
+            if watcher.is_a? Array # for compass 0.12 watcher format
+              glob,callback = watcher
+              callback.call(project_path, file, action) if File.fnmatch(glob, file)
+            else
+              watcher.run_callback(project_path, file, action) if watcher.match?(file)
+            end
+          end
+        end
+        java.lang.System.gc()
+      end
+
       def watch!
         compile
         super
@@ -27,7 +49,7 @@ module Compass
           log_action(:warning, "#{e.message}\n#{e.backtrace}", {})
         end
       end
-     
+
 
       def coffeescript_watchers
         coffee_filter = File.join(Compass.configuration.fireapp_coffeescripts_dir,  "*.coffee")
@@ -46,10 +68,10 @@ module Compass
       end
 
       def livereload_watchers
-       ::App::CONFIG["services_livereload_extensions"].split(/,/).map do |ext|
-         filter = "**.#{ext}"
-         Watcher::Watch.new(filter, &method(:livereload_callback)) 
-       end
+        ::App::CONFIG["services_livereload_extensions"].split(/,/).map do |ext|
+          filter = "**.#{ext}"
+          Watcher::Watch.new(filter, &method(:livereload_callback)) 
+        end
       end
 
       def livereload_callback(base, file, action)

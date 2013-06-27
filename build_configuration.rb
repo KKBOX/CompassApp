@@ -68,7 +68,7 @@ configuration do |c|
 	# Undocumented option 'jvm_arguments'
 	# default value: ""
 	#
-	c.jvm_arguments = "-Xss1m"
+  c.jvm_arguments = "-Xss1m -XX:-UseParallelOldGC -XX:NewRatio=4  -Xmx384m -Xms128m"
 
 	# Undocumented option 'java_library_path'
 	# default value: ""
