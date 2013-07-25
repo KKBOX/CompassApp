@@ -81,6 +81,7 @@ module Main
         require "ninesixty"
         require "html5-boilerplate"
         require "compass-h5bp"
+        require "compass-normalize"
         require "bootstrap-sass"
         require "susy"
         require "zurb-foundation"
