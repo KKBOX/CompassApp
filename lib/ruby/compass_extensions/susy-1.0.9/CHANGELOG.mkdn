@@ -1,6 +1,31 @@
 Susy Changelog
 ==============
 
+v1.0.9 [June 19, 2013]
+----------------------
+
+* Fix clearing with `isolate-grid` mixin.
+* Allow changing nth-selectors in `isolate-grid` mixin.
+
+v1.0.8 [March 25, 2013]
+-----------------------
+
+* Fix more edge mixed-unit conflicts with `container-style: static`.
+
+v1.0.7 [March 19, 2013]
+-----------------------
+
+* Fix edge-case where `$container-style` and `$container-width` cause conflict.
+
+v1.0.6 [March 18, 2013]
+-----------------------
+
+* Add `isolate` and `isolate-grid` mixins.
+* Add `bleed` mixin.
+* Add `$style` argument to grid mixins.
+* Fix documentation typos.
+* Switch from `#` to `*` in legacy-ie hacks.
+
 v1.0.5 [Nov 27, 2012]
 ---------------------
 
@@ -267,3 +292,5 @@ older…
 
 * not documented here.
 * check the commit log.
+* Susy was created.
+
