@@ -22,7 +22,7 @@
 // ========================================================================== */
 
 @media print {
-  @include html5-boilerplate-print(false);
+  @include h5bp-media-print;
   
   /* Style adjustments for print go here */
 }

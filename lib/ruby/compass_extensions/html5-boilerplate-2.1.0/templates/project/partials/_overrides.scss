@@ -3,59 +3,45 @@
 // =============================================================================
 // HTML5 display definitions
 // =============================================================================
-@include h5bp-normalize-html5;
+@include h5bp-display;
 
 // =============================================================================
 // Base
 // =============================================================================
-@include h5bp-normalize-base( $base-font-family, $base-font-size, $base-line-height, $font-color );
-@include h5bp-normalize-selection( $selected-background-color, $selected-font-color );
+@include h5bp-base;
+@include h5bp-selection;
 
 // =============================================================================
 // Links
 // =============================================================================
-@include h5bp-normalize-links( $link-color, $link-visited-color, $link-hover-color );
+@include h5bp-links;
 
 // =============================================================================
 // Typography
 // =============================================================================
-@include h5bp-normalize-typography((
-  abbr,
-  bold,
-  blockquote,
-  dfn,
-  hr,
-  ins,
-  mark,
-  monospace,
-  pre,
-  quotes,
-  small,
-  subsup
-));
+@include h5bp-typography;
 
 // =============================================================================
 // Lists
 // =============================================================================
-@include h5bp-normalize-lists;
+@include h5bp-lists;
 
 // =============================================================================
 // Embedded content
 // =============================================================================
-@include h5bp-normalize-images;
-@include h5bp-normalize-svg;
+@include h5bp-embeds;
 
 // =============================================================================
 // Figures
 // =============================================================================
-@include h5bp-normalize-figures;
+@include h5bp-figures;
 
 // =============================================================================
 // Forms
 // =============================================================================
-@include h5bp-normalize-forms;
+@include h5bp-forms;
 
 // =============================================================================
 // Tables
 // =============================================================================
-@include h5bp-normalize-tables;
+@include h5bp-tables;
