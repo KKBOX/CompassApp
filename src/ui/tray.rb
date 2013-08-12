@@ -204,7 +204,7 @@ class Tray
   def build_compass_framework_menuitem( submenu, handler )
     Compass::Frameworks::ALL.each do | framework |
       next if framework.name =~ /^_/
-      next if framework.template_directories.empty?
+      next if framework.templates_directory.empty?
 
       # get default compass extension name from folder name
       if framework.templates_directory =~ /lib[\/\\]ruby[\/\\]compass_extensions[\/\\]([^\/\\]+)/
@@ -237,18 +237,20 @@ class Tray
         dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
 
         # if select a pattern
-        if Compass::Frameworks::ALL.any?{ | f| f.name == evt.widget.getParent.getParentItem.text }
-          framework = evt.widget.getParent.getParentItem.text
+        if framework = Compass::Frameworks::ALL.find{ | f| 
+          f.name == evt.widget.getParent.getParentItem.text || f.templates_directory =~ %r{compass_extensions[\/\\]#{evt.widget.getParent.getParentItem.text}}
+        }
+          framework_name = framework.name
           pattern = evt.widget.text
         else
-          framework = evt.widget.txt
+          framework_name = evt.widget.txt
           pattern = 'project'
         end
 
         App.try do 
           actual = App.get_stdout do
             Compass::Commands::CreateProject.new( dir, 
-                                                 { :framework        => framework, 
+                                                 { :framework        => framework_name, 
                                                    :pattern          => pattern, 
                                                    :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
             }).execute
@@ -267,18 +269,21 @@ class Tray
   def install_project_handler
     Swt::Widgets::Listener.impl do |method, evt|
       # if select a pattern
-      if Compass::Frameworks::ALL.any?{ | f| f.name == evt.widget.getParent.getParentItem.text }
-        framework = evt.widget.getParent.getParentItem.text
+      if framework = Compass::Frameworks::ALL.find{ | f| 
+        f.name == evt.widget.getParent.getParentItem.text || f.templates_directory =~ %r{compass_extensions[\/\\]#{evt.widget.getParent.getParentItem.text}}
+      }
+        framework_name = framework.name
         pattern = evt.widget.text
       else
-        framework = evt.widget.txt
+        framework_name = evt.widget.txt
         pattern = 'project'
       end
+
 
       App.try do 
         actual = App.get_stdout do
           Compass::Commands::StampPattern.new( @watching_dir, 
-                                              { :framework => framework, 
+                                              { :framework => framework_name, 
                                                 :pattern => pattern,
                                                 :preferred_syntax => App::CONFIG["preferred_syntax"].to_sym 
           } ).execute
