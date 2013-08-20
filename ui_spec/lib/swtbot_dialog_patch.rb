@@ -10,6 +10,10 @@ class Swt::Widgets::DirectoryDialog
     @@open_path
   end
 
+  def self.open_path=(path)
+    @@open_path = Pathname(path).realpath
+  end
+
   def open
     #Pathname.new(@@open_path).realpath.to_s  
     puts 'DirectoryDialog open: '+@@open_path
@@ -25,6 +29,10 @@ class Swt::Widgets::FileDialog
 
   def self.open_path
     @@open_path
+  end
+
+  def self.open_path=(path)
+    @@open_path = Pathname(path).realpath
   end
 
   def open
