@@ -19,7 +19,7 @@ class ProgressWindow
       gridData.horizontalAlignment = Swt::SWT::LEFT;
       gridData.verticalAlignment = Swt::SWT::CENTER;
       @img_label = Swt::Widgets::Label.new(@shell, Swt::SWT::LEFT)
-      img= Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, java.io.FileInputStream.new( File.join(LIB_PATH, 'images', 'icon', '64.png')))
+      img= Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, java.io.FileInputStream.new( File.join(Main.lib_path, 'images', 'icon', '64.png')))
 
       @img_label.setImage( img )
       @img_label.setLayoutData(gridData)
