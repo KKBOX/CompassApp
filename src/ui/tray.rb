@@ -275,6 +275,12 @@ class Tray
     end
   end
 
+  def change_options_handler 
+    Swt::Widgets::Listener.impl do |method, evt|
+      ChangeOptionsPanel.instance.open
+    end
+  end
+
   def preference_handler 
     Swt::Widgets::Listener.impl do |method, evt|
       PreferencePanel.instance.open
