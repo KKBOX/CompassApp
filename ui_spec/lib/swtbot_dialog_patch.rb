@@ -4,8 +4,7 @@ require 'pathname'
 class Swt::Widgets::DirectoryDialog
   
   attr_accessor :open_path
-  #@@open_path = Pathname.new(__FILE__).realpath+'/swtbot_project_test/swtbot_watch_test'
-  @@open_path = '/Users/Honda/swtbot_project_test/swtbot_watch_test'
+  @@open_path = Pathname.new(__FILE__).realpath+'/test_project/swtbot_watch_test'
 
   def self.open_path
     @@open_path
@@ -22,8 +21,7 @@ end
 class Swt::Widgets::FileDialog
   
   attr_accessor :open_path
-  #@@open_path = Pathname.new(__FILE__).realpath+'/swtbot_project_test/swtbot_create_test'
-  @@open_path = '/Users/Honda/swtbot_project_test/swtbot_create_test'
+  @@open_path = Pathname.new(__FILE__).realpath+'/test_project/swtbot_create_test'
 
   def self.open_path
     @@open_path
@@ -68,5 +66,23 @@ end
 class WelcomeWindow
   def initialize()
     puts 'WelcomeWindow show'
+  end
+end
+
+class SplashWindow
+  include Singleton
+  def initialize(msg="Starting", target_display = nil, &block)
+    puts 'SplashWindow show'
+  end
+
+  def replace(msg)
+    puts 'Alert replace: '+msg
+  end
+
+  def isDisposed
+    true
+  end
+
+  def dispose
   end
 end
