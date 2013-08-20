@@ -177,28 +177,9 @@ class Tray
     Compass.add_project_configuration(file_name)
   end
 
-  def build_change_options_menuitem( index )
-
-    @changeoptions_item = add_menu_item( "Change Options...", empty_handler , Swt::SWT::CASCADE, @menu, index)
-    submenu = Swt::Widgets::Menu.new( @menu )
-    @changeoptions_item.menu = submenu
-
-    outputstyle_item = add_menu_item( "Output Style", nil, Swt::SWT::PUSH, submenu)
-
-    %W{nested expanded compact compressed}.each do |output_style|
-      item = add_menu_item( output_style,     outputstyle_handler, Swt::SWT::RADIO, submenu )
-      item.setSelection(true) if compass_project_config.output_style.to_s == output_style
-    end
-
-    add_menu_separator(submenu)
-
-    options_item = add_menu_item( "Options", nil, Swt::SWT::PUSH, submenu)
-
-    linecomments_item  = add_menu_item( "Line Comments", linecomments_handler, Swt::SWT::CHECK, submenu )
-    linecomments_item.setSelection(true) if compass_project_config.line_comments
-
-    debuginfo_item    = add_menu_item( "Debug Info",   debuginfo_handler,   Swt::SWT::CHECK, submenu )
-    debuginfo_item.setSelection(true) if compass_project_config.sass_options && compass_project_config.sass_options[:debug_info] 
+  def build_change_options_panel( index )
+    @changeoptions_item = add_menu_item( "Change Options...", change_options_handler , Swt::SWT::PUSH, @menu, index)
+    
   end
 
   def build_compass_framework_menuitem( submenu, handler )
@@ -471,7 +452,9 @@ class Tray
 
         @install_item.menu = Swt::Widgets::Menu.new( @menu )
         build_compass_framework_menuitem( @install_item.menu, install_project_handler )
-        build_change_options_menuitem( @menu.indexOf(@install_item) +1 )
+        
+        build_change_options_panel(@menu.indexOf(@install_item) +1 )
+
         @clean_item =  add_menu_item( "Clean && Compile", 
                                      clean_project_handler, 
                                      Swt::SWT::PUSH,
