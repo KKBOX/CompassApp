@@ -1,6 +1,6 @@
 class Object
   def require(ruby_file)
-    unless SplashWindow.instance.shell.isDisposed
+    unless SplashWindow.instance.shell && SplashWindow.instance.shell.isDisposed
       SplashWindow.instance.replace("Loading #{ruby_file}") 
     end
     super
