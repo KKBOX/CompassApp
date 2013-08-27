@@ -4,14 +4,14 @@ require 'pathname'
 class Swt::Widgets::DirectoryDialog
   
   attr_accessor :open_path
-  @@open_path = Pathname.new(__FILE__).realpath+'/test_project/swtbot_watch_test'
+  @@open_path = Pathname.new(File.join(File.dirname(__FILE__), '..', 'test_project', 'swtbot_watch_test')).realpath
 
   def self.open_path
     @@open_path
   end
 
   def self.open_path=(path)
-    @@open_path = Pathname(path).realpath
+    @@open_path = Pathname.new(path).realpath
   end
 
   def open
@@ -25,14 +25,14 @@ end
 class Swt::Widgets::FileDialog
   
   attr_accessor :open_path
-  @@open_path = Pathname.new(__FILE__).realpath+'/test_project/swtbot_create_test'
+  @@open_path = Pathname.new(File.join(File.dirname(__FILE__), '..', 'test_project', 'swtbot_create_test')).realpath
 
   def self.open_path
     @@open_path
   end
 
   def self.open_path=(path)
-    @@open_path = Pathname(path).realpath
+    @@open_path = Pathname.new(path).realpath
   end
 
   def open
