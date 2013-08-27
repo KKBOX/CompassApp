@@ -1,5 +1,5 @@
 
-require File.join(File.dirname(__FILE__), 'ui_spec_helper.rb')
+require File.join(File.dirname(__FILE__), 'lib/helper/ui_spec_helper.rb')
 
 describe "create_project_test" do
   
@@ -7,7 +7,6 @@ describe "create_project_test" do
 
   describe "create by FileDialog path" do
     it "should new a Compass Project" do
-      #bot.menu('Preference...').click
       bot.menu('Create Compass Project').menu('compass').menu('project').click
     end
   end
@@ -17,7 +16,7 @@ describe "create_project_test" do
       _path = Swt::Widgets::FileDialog.open_path
       Swt::Widgets::FileDialog.open_path = Swt::Widgets::DirectoryDialog.open_path
 
-      bot.menu('Create Compass Project').menu('compass').menu('project')
+      bot.menu('Create Compass Project').menu('compass').menu('project').click
       
       Swt::Widgets::FileDialog.open_path = _path
     end
