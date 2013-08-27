@@ -33,16 +33,18 @@ shared_examples_for "sass_compile_example" do
                 puts "Change Options"
 
                 # -- set line commtents --
-                change_panel_bot.checkBox('Line Comments').deselect
                 change_panel_bot.checkBox('Line Comments').select if line_comments == 'enable'
+                change_panel_bot.checkBox('Line Comments').deselect if line_comments == 'disable'
 
                 puts "Line Comments"
 
                 # -- set output style --
-                #change_panel_bot.comboBox('Output Style').setSelection(output_style)
+                change_panel_bot.comboBoxInGroup('Sass').setSelection(output_style)
+
+                puts "Output Style"
 
                 # -- save --
-                change_panel_bot.button('Save')
+                change_panel_bot.button('Save').click
 
                 puts "Save"
 
