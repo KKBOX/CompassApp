@@ -28,6 +28,7 @@ describe "create_project_test" do
 
   describe "click Quit" do
     it "should exit CompassApp" do
+      Main.run_tray
       bot.menu('Quit').click
     end
   end
