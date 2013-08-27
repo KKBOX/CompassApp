@@ -5,14 +5,12 @@ describe "create_project_test" do
   
   bot = SwtBot.new(Tray.instance.shell, Tray.instance.menu)
 
-  describe "create by FileDialog path" do
-    it "should new a Compass Project" do
+  describe "click Create Compass Project" do
+    it "should create by FileDialog path" do
       bot.menu('Create Compass Project').menu('compass').menu('project').click
     end
-  end
-
-  describe "create by DirectoryDialog path" do
-    it "should new a Compass Project" do
+    
+    it "should create by DirectoryDialog path" do
       _path = Swt::Widgets::FileDialog.open_path
       Swt::Widgets::FileDialog.open_path = Swt::Widgets::DirectoryDialog.open_path
 
@@ -22,9 +20,9 @@ describe "create_project_test" do
     end
   end
 
-  describe "create by FileDialog path" do
+  describe "click Quit" do
     it "should exit CompassApp" do
-      @bot.menu('Quit').click
+      bot.menu('Quit').click
     end
   end
 end 
