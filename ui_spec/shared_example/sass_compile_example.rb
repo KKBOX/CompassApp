@@ -1,6 +1,4 @@
 
-require File.join(File.dirname(__FILE__), '../ui_spec_helper.rb')
-
 shared_examples_for "sass_compile_example" do
   
   bot = SwtBot.new(Tray.instance.shell, Tray.instance.menu)

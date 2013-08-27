@@ -1,6 +1,5 @@
 
-
-require File.join(File.dirname(__FILE__), 'ui_spec_helper.rb')
+require File.join(File.dirname(__FILE__), 'lib/helper/ui_spec_helper.rb')
 require File.join(File.dirname(__FILE__), 'shared_example/sass_compile_example.rb')
 
 
