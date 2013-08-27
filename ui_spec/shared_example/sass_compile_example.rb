@@ -30,13 +30,21 @@ shared_examples_for "sass_compile_example" do
                 bot.menu('Change Options...').click
                 change_panel_bot = SwtBot.new(bot.shell('Change Options').widget, Tray.instance.menu)
 
+                puts "Change Options"
 
                 # -- set line commtents --
                 change_panel_bot.checkBox('Line Comments').deselect
                 change_panel_bot.checkBox('Line Comments').select if line_comments == 'enable'
 
+                puts "Line Comments"
+
                 # -- set output style --
-                change_panel_bot.comboBox('Output Style:').setSelection(output_style)
+                #change_panel_bot.comboBox('Output Style').setSelection(output_style)
+
+                # -- save --
+                change_panel_bot.button('Save')
+
+                puts "Save"
 
                 test_filename = "swt_test"
                 source_file = File.join(File.dirname(__FILE__), '../test_data', test_filename+'.scss')

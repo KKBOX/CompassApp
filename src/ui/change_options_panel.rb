@@ -187,6 +187,7 @@ class ChangeOptionsPanel
     layoutdata.left = Swt::Layout::FormAttachment.new( output_style_label, 1, Swt::SWT::RIGHT)
     layoutdata.top  = Swt::Layout::FormAttachment.new( output_style_label, 0, Swt::SWT::CENTER)
     @output_style_combo  = Swt::Widgets::Combo.new(group, Swt::SWT::DEFAULT)
+    @output_style_combo.setText("Output Style")
     @output_style_combo.setLayoutData( layoutdata )
     %W{nested expanded compact compressed}.each do |output_style|
       @output_style_combo.add(output_style)
