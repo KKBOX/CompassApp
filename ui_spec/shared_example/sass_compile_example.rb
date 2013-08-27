@@ -16,61 +16,70 @@ shared_examples_for "sass_compile_example" do
       sass_dir = File.join(Swt::Widgets::DirectoryDialog.open_path, Tray.instance.compass_project_config.sass_dir)
       css_dir = File.join(Swt::Widgets::DirectoryDialog.open_path, Tray.instance.compass_project_config.css_dir)
 
-      %W{enable disable}.each do |line_comments| 
-        describe "and option 'line comments=%s'" % line_comments do
+      %W{enable disable}.each do |relative_assets| 
+        describe "and option 'relative assets=%s'" % relative_assets do
 
+          %W{disable}.each do |line_comments| 
+            describe "and option 'line comments=%s'" % line_comments do
 
-          %W{compact compressed expanded nested}.each do |output_style|
-            describe "and option 'output style=%s'" % output_style  do
+              %W{disable}.each do |debug_info| 
+                describe "and option 'debug info=%s'" % debug_info do
 
+                  %W{compact compressed expanded nested}.each do |output_style|
+                    describe "and option 'output style=%s'" % output_style  do
 
-              it "should compile scss/sass to css" do
+                      it "should compile scss/sass to css" do
 
-                # -- open change options panel --
-                bot.menu('Change Options...').click
-                change_panel_bot = SwtBot.new(bot.shell('Change Options').widget, Tray.instance.menu)
+                        test_filename = "swt_test"
+                        source_file = File.join(File.dirname(__FILE__), '../test_data/sass', test_filename+'.scss')
+                        test_file = File.join(css_dir, test_filename+'.css')
+                        dist_file = File.join(File.dirname(__FILE__), '../test_data/%s_relative_assets/%s_line_comments/%s_debug_info/%s/%s.css' % [relative_assets, line_comments, debug_info, output_style, test_filename])
 
-                puts "Change Options"
+                        FileUtils.rm_rf(sass_dir)
+                        FileUtils.cp(source_file, sass_dir)
 
-                # -- set line commtents --
-                change_panel_bot.checkBox('Line Comments').select if line_comments == 'enable'
-                change_panel_bot.checkBox('Line Comments').deselect if line_comments == 'disable'
+                        # -- open change options panel --
+                        bot.menu('Change Options...').click
+                        change_panel_bot = SwtBot.new(bot.shell('Change Options').widget, Tray.instance.menu)
 
-                puts "Line Comments"
+                        puts "Change Options"
 
-                # -- set output style --
-                change_panel_bot.comboBoxInGroup('Sass').setSelection(output_style)
+                        # -- set relative assets --
+                        change_panel_bot.checkBox('Relative Assets').select if relative_assets == 'enable'
+                        change_panel_bot.checkBox('Relative Assets').deselect if relative_assets == 'disable'
 
-                puts "Output Style"
+                        # -- set line commtents --
+                        change_panel_bot.checkBox('Line Comments').select if line_comments == 'enable'
+                        change_panel_bot.checkBox('Line Comments').deselect if line_comments == 'disable'
 
-                # -- save --
-                change_panel_bot.button('Save').click
+                        # -- set relative assets --
+                        change_panel_bot.checkBox('Debug Info').select if debug_info == 'enable'
+                        change_panel_bot.checkBox('Debug Info').deselect if debug_info == 'disable'
 
-                puts "Save"
+                        # -- set output style --
+                        change_panel_bot.comboBoxInGroup('Sass').setSelection(output_style)
 
-                test_filename = "swt_test"
-                source_file = File.join(File.dirname(__FILE__), '../test_data', test_filename+'.scss')
-                test_file = File.join(css_dir, test_filename+'.css')
-                dist_file = File.join(File.dirname(__FILE__), '../test_data', '%s_line_comments'%line_comments, output_style, test_filename+'.css')
+                        # -- save --
+                        change_panel_bot.button('Save').click
 
-                FileUtils.cp(source_file, sass_dir)
-                sleep(3.0)
-                FileUtils.compare_file(test_file, dist_file).should be_true
+                        
+                        #sleep(3.0)
+                        FileUtils.compare_file(test_file, dist_file).should be_true
 
-                #puts source_file
-                #puts test_file
-                #puts dist_file
+                        #puts source_file
+                        #puts test_file
+                        #puts dist_file
+                      end
+                    end
+                  end
+                end
               end
-
             end
           end
-
         end
       end
-
     end
   end
-
 end 
 
 #bot.menu('Quit').click
