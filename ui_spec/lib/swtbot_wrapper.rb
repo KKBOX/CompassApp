@@ -79,5 +79,14 @@ class SwtBot
     @shell.dispose
   end
 
+  def widget(matcher, idx = 0)
+    @bot.widget(matcher, idx)
+  end
+
+  def regexMenu(regex, idx = 0)
+    matcher = org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withRegex(regex)
+    com.handlino.swtbot.patch.SWTBotUtils.findSwtBotMenuWitchMatcherByMenu(@menu, matcher, idx)
+  end
+
 end
 
