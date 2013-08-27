@@ -9,7 +9,7 @@ describe "create_project_test" do
     it "should create by FileDialog path" do
       bot.menu('Create Compass Project').menu('compass').menu('project').click
     end
-    
+
     it "should create by DirectoryDialog path" do
       _path = Swt::Widgets::FileDialog.open_path
       Swt::Widgets::FileDialog.open_path = Swt::Widgets::DirectoryDialog.open_path
@@ -17,6 +17,12 @@ describe "create_project_test" do
       bot.menu('Create Compass Project').menu('compass').menu('project').click
       
       Swt::Widgets::FileDialog.open_path = _path
+    end
+  end
+
+  describe "click Stop" do
+    it "should stop watch project" do
+      bot.regexMenu('^Stop watching ').click
     end
   end
 
