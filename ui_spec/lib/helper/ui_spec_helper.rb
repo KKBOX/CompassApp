@@ -17,4 +17,19 @@ require File.join(UI_SPEC_DIR, 'lib/swtbot_dialog_patch')
 
 
 
+module UiSpecHelper
+  extend self
+
+  @bot = SwtBot.new(Tray.instance.shell, Tray.instance.menu)
+
+  def stop_watch
+    #Tray.instance.stop_watch
+    @bot.regexMenu('^Stop watching ').click
+  end
+
+  def quit
+    @bot.menu('Quit').click
+  end
+end
+
 
