@@ -119,6 +119,14 @@ class SimpleLivereload
     @livereload_thread && @livereload_thread.alive?
   end
 
+  def kill
+    if @livereload_thread && @livereload_thread.alive?
+      EventMachine::WebSocket.stop
+      @livereload_thread.kill
+    end
+    @livereload_thread = nil
+  end
+
   def send_livereload_msg( base, relative )
     data = JSON.dump( {
       :command => "reload",

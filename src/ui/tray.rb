@@ -314,6 +314,7 @@ class Tray
   def exit_handler
     Swt::Widgets::Listener.impl do |method, evt|
       stop_watch
+      SimpleLivereload.instance.kill if SimpleLivereload.instance.alive?
       App.set_histoy(@history_dirs[0, App::CONFIG["num_of_history"]])
       @shell.close
     end
@@ -452,10 +453,7 @@ class Tray
   end
 
   def stop_watch
-    if @compass_thread && @compass_thread.alive?
-      @compass_thread[:watcher].stop
-      @compass_thread.kill 
-    end
+    stop_server
 
     @compass_thread = nil
     @watch_item.text="Watch a Folder..."
@@ -465,9 +463,17 @@ class Tray
     @changeoptions_item.dispose()   if @changeoptions_item && !@changeoptions_item.isDisposed
     @watching_dir = nil
     @tray_item.image = @standby_icon
+    end
+
+  def stop_server
+    if @compass_thread && @compass_thread.alive?
+      @compass_thread[:watcher].stop if !@compass_thread[:watcher]
+      @compass_thread.kill 
+    end
     SimpleLivereload.instance.unwatch
     SimpleHTTPServer.instance.stop
     FSEvent.stop_all_instances if Object.const_defined?("FSEvent") && FSEvent.methods.map{|x| x.to_sym}.include?(:stop_all_instances)
+
   end
 
 end
