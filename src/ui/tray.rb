@@ -377,36 +377,6 @@ class Tray
     end
   end
 
-  def outputstyle_handler
-    Swt::Widgets::Listener.impl do |method, evt|
-      if evt.widget.getSelection 
-        update_config( "output_style", ":#{evt.widget.text}" )
-        clean_project
-      end
-    end
-  end
-
-  def linecomments_handler
-    Swt::Widgets::Listener.impl do |method, evt|
-      update_config( "line_comments", evt.widget.getSelection.to_s )
-      clean_project
-    end
-  end
-
-  def debuginfo_handler
-    Swt::Widgets::Listener.impl do |method, evt|
-
-      sass_options = compass_project_config.sass_options
-      sass_options = {} if !sass_options.is_a? Hash
-      sass_options[:debug_info] = evt.widget.getSelection
-
-      update_config( "sass_options", sass_options.inspect )
-
-      Compass::Commands::CleanProject.new(@watching_dir, {}).perform
-      clean_project
-    end
-  end 
-
   def watch(dir)
     dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
     App.try do 
