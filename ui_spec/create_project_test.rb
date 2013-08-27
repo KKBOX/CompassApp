@@ -21,43 +21,13 @@ describe "create_project_test" do
       Swt::Widgets::FileDialog.open_path = _path
     end
   end
+
+  describe "create by FileDialog path" do
+    it "should exit CompassApp" do
+      @bot.menu('Quit').click
+    end
+  end
 end 
 
-#bot.menu('Quit').click
-
-=begin
-bot = SwtBot.new(Tray.instance.shell, Tray.instance.menu)
-
-
-
-
-
-#bot.menu('Watch a Folder...').click
-#bot.menu('Create Compass Project').menu('blueprint').menu('buttons').click
-
-#puts Tray.instance.dialog
-
-
-
-Compass::Frameworks::ALL.each do | framework |
-  next if framework.name =~ /^_/
-  next if framework.template_directories.empty?
-  #puts framework.name
-  framework.template_directories.each do | dir |
-    #puts "  "+dir.to_s
-  end
-end
-
-
-#describe Main do
-  #when "create project ''" do
-    #it "" do
-    #end
-  #end
-#end
-=end
-
-
-#Main.run_tray
 
 
