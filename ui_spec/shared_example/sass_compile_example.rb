@@ -16,29 +16,27 @@ shared_examples_for "sass_compile_example" do
       sass_dir = File.join(Swt::Widgets::DirectoryDialog.open_path, Tray.instance.compass_project_config.sass_dir)
       css_dir = File.join(Swt::Widgets::DirectoryDialog.open_path, Tray.instance.compass_project_config.css_dir)
 
-      puts sass_dir
-      puts css_dir
-
       %W{enable disable}.each do |line_comments| 
-        describe "and option 'line comments' is %s" % line_comments do
+        describe "and option 'line comments=%s'" % line_comments do
 
 
           %W{compact compressed expanded nested}.each do |output_style|
-            describe "and option 'output style' is %s" % output_style  do
+            describe "and option 'output style=%s'" % output_style  do
 
 
-              it "should compile scss/sass to css by 'line comments: %s' & 'output style: %s" % [line_comments, output_style] do
+              it "should compile scss/sass to css" do
+
+                # -- open change options panel --
+                bot.menu('Change Options...').click
+                change_panel_bot = SwtBot.new(bot.shell('Change Options').widget, Tray.instance.menu)
+
 
                 # -- set line commtents --
-                line_comments_item = bot.menu('Change Options...').menu('Line Comments')
-                if (line_comments == 'enable' and not line_comments_item.isChecked) or 
-                   (line_comments == 'disable' and line_comments_item.isChecked) 
-                then
-                  line_comments_item.click
-                end
+                change_panel_bot.checkBox('Line Comments').deselect
+                change_panel_bot.checkBox('Line Comments').select if line_comments == 'enable'
 
                 # -- set output style --
-                bot.menu('Change Options...').menu(output_style).click
+                change_panel_bot.comboBox('Output Style:').setSelection(output_style)
 
                 test_filename = "swt_test"
                 source_file = File.join(File.dirname(__FILE__), '../test_data', test_filename+'.scss')

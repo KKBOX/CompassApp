@@ -35,8 +35,8 @@ class SwtBot
     @bot.button(text, idx)
   end
 
-  def ccomboBox(text, idx = 0)
-    @bot.ccomboBox(text, idx) # Not typing error, it's `ccomboBox`
+  def comboBox(text, idx = 0)
+    @bot.comboBoxWithLabel(text, idx) # Not typing error, it's `ccomboBox`
   end 
 
   def checkBox(text, idx = 0)
