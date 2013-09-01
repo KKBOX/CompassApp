@@ -22,7 +22,7 @@ shared_examples_for "sass_compile_example" do
           %W{enable disable}.each do |line_comments| 
             describe "and option 'line comments=%s'" % line_comments do
 
-              %W{enable disable}.each do |debug_info| 
+              %W{disable}.each do |debug_info| 
                 describe "and option 'debug info=%s'" % debug_info do
 
                   %W{compact compressed expanded nested}.each do |output_style|
