@@ -4,8 +4,8 @@ ORIGIN_DIR=$(pwd)
 BASE_DIR=$(dirname $0)
 
 IMAGES_DIR="images"
-SRC_DIR="sass"
-SASS_FILE="$SRC_DIR/swt_test.scss"
+SASS_DIR="sass"
+SASS_FILE="$SASS_DIR/swt_test.scss"
 
 relative_assets=(enable disable)
 line_comments=(enable disable)
@@ -18,7 +18,10 @@ for r in ${relative_assets[@]}; do
     for d in ${debug_info[@]}; do
       for o in ${output_style[@]}; do
         CSS_DIR="${r}_relative_assets/${l}_line_comments/${d}_debug_info/$o"
-        
+        SRC_DIR="$CSS_DIR/../$SASS_DIR"
+        mkdir -p "$BASE_DIR/$SRC_DIR"
+        cp "$BASE_DIR/$SASS_FILE" "$BASE_DIR/$SRC_DIR"
+
         options=""
         if [ "$r" == "enable" ]; then
           options="$options --relative-assets"
