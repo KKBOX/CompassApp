@@ -19,10 +19,10 @@ shared_examples_for "sass_compile_example" do
       %W{enable disable}.each do |relative_assets| 
         describe "and option 'relative assets=%s'" % relative_assets do
 
-          %W{disable}.each do |line_comments| 
+          %W{enable disable}.each do |line_comments| 
             describe "and option 'line comments=%s'" % line_comments do
 
-              %W{disable}.each do |debug_info| 
+              %W{enable disable}.each do |debug_info| 
                 describe "and option 'debug info=%s'" % debug_info do
 
                   %W{compact compressed expanded nested}.each do |output_style|
@@ -36,7 +36,8 @@ shared_examples_for "sass_compile_example" do
                         dist_file = File.join(File.dirname(__FILE__), '../test_data/%s_relative_assets/%s_line_comments/%s_debug_info/%s/%s.css' % [relative_assets, line_comments, debug_info, output_style, test_filename])
 
                         FileUtils.rm_rf(sass_dir)
-                        FileUtils.cp(source_file, sass_dir)
+                        FileUtils.mkdir_p(sass_dir)
+                        FileUtils.cp_r(source_file, sass_dir)
 
                         # -- open change options panel --
                         bot.menu('Change Options...').click
@@ -62,9 +63,13 @@ shared_examples_for "sass_compile_example" do
                         # -- save --
                         change_panel_bot.button('Save').click
 
-                        
+                        puts Pathname.new(test_file).realpath
+                        puts File.read(test_file)
+                        puts Pathname.new(dist_file).realpath
+                        puts File.read(dist_file)
                         #sleep(3.0)
                         FileUtils.compare_file(test_file, dist_file).should be_true
+
 
                         #puts source_file
                         #puts test_file
