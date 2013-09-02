@@ -8,7 +8,6 @@ class Tray
     @http_server = nil
     @compass_thread = nil
     @watching_dir = nil
-    @history_dirs  = App.get_history
     @shell    = App.create_shell(Swt::SWT::ON_TOP | Swt::SWT::MODELESS)
 
     if org.jruby.platform.Platform::IS_MAC
@@ -126,10 +125,6 @@ class Tray
   end
 
   def clear_history
-    @menu.items.each do |item|
-      item.dispose if @history_dirs.include?(item.text)
-    end
-    @history_dirs = []
     App.clear_histoy
     build_history_menuitem
   end
@@ -204,10 +199,9 @@ class Tray
   end
 
   def build_history_menuitem
-    @history_dirs.reverse.each do | dir |
+    App.get_history.reverse.each do | dir |
       add_compass_item(dir)
     end
-    App.set_histoy(@history_dirs[0, App::CONFIG["num_of_history"]])
   end
 
   def create_project_handler
@@ -314,7 +308,6 @@ class Tray
   def exit_handler
     Swt::Widgets::Listener.impl do |method, evt|
       stop_watch
-      App.set_histoy(@history_dirs[0, App::CONFIG["num_of_history"]])
       @shell.close
     end
   end
@@ -405,11 +398,15 @@ class Tray
       end
 
       @watching_dir = dir
+
+      history_dirs = App.get_history
       @menu.items.each do |item|
-        item.dispose if @history_dirs.include?(item.text)
+        item.dispose if history_dirs.include?(item.text)
       end
-      @history_dirs.delete_if { |x| x == dir }
-      @history_dirs.unshift(dir)
+      history_dirs.delete_if { |x| x == dir }
+      history_dirs.unshift(dir)
+      App.set_histoy(history_dirs)
+
       build_history_menuitem
 
 

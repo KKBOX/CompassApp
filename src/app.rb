@@ -146,6 +146,7 @@ module App
   end
 
   def set_histoy(dirs)
+    dirs = dirs[0, App::CONFIG["num_of_history"]]
     File.open(HISTORY_FILE, 'w') do |out|
       YAML.dump(dirs, out)
     end 
