@@ -47,6 +47,7 @@ INFO_ENDL
         %x{cp -R lib/#{copy_dir} #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/lib }
       end
 
+      %x{chmod 644 #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/Java/compass-app.jar}
       Dir.chdir CONFIG.osx_output_dir
       %x{mv #{CONFIG.project_name}.app compass.app;}
       @osx_bundle_file="compass.app.osx.#{@compile_time}-#{@revision}.zip"
@@ -68,7 +69,7 @@ INFO_ENDL
         %x{cp -R lib/#{copy_dir} #{CONFIG.windows_output_dir}/lib }
       end
       
-      %x{mv package/windows/package/windows/*.exe package/windows}
+      %x{chmod 644 #{CONFIG.windows_output_dir}/compass-app.jar}
       %x{rm -rf package/windows/package}
       Dir.chdir 'package'
       %x{rm -rf compass.app windows/*.xml; mv windows compass.app}
@@ -92,6 +93,7 @@ INFO_ENDL
         f.write("#!/usr/bin/env bash\ncd $(dirname $0)\njava -client -jar compass-app.jar")
       end
       %x{chmod +x package/compass.app/run.sh}
+      %x{chmod 644 package/compass.app/compass-app.jar}
       Dir.chdir 'package'
       @linux_bundle_file="compass.app.linux.#{@compile_time}-#{@revision}.zip"
       %x{zip -9 -r #{@packages_dir}/#{@linux_bundle_file} compass.app}

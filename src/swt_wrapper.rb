@@ -1,4 +1,6 @@
-SWT_LIB_PATH ="#{LIB_PATH}/swt"
+SWT_LIB_PATH ="#{Main.lib_path}/swt"
+
+require 'java'
 
 if org.jruby.platform.Platform::IS_MAC  
   os="osx"
@@ -12,6 +14,14 @@ if org.jruby.platform.Platform::ARCH =~ /64/
   arch="64"
 else
   arch="32"
+end
+
+# for Ubuntu Unity, because they hard code the white list
+# http://bazaar.launchpad.net/~unity-team/unity/trunk/view/head:/panel/PanelTray.cpp#L33
+if org.jruby.platform.Platform::IS_LINUX
+  SWT_APP_NAME = "JavaEmbeddedFrame"  
+else
+  SWT_APP_NAME = "Compass.app"
 end
 
 require "#{SWT_LIB_PATH}/swt_#{os}#{arch}"

@@ -8,6 +8,7 @@ class SimpleHTTPServer
   def start(dir, options)
     mime_types = WEBrick::HTTPUtils::DefaultMimeTypes
     mime_types.store 'js', 'application/javascript'
+    mime_types.store 'svg', 'image/svg+xml'
 
     options={
       :Port => 24680,
@@ -28,6 +29,7 @@ class SimpleHTTPServer
     @http_server.shutdown if @http_server
     @http_server = nil 
     @http_server_thread.kill if @http_server_thread && @http_server_thread.alive?
+    sleep 1 if org.jruby.platform.Platform::IS_WINDOWS # windows need time to release port 
   end
 
 end

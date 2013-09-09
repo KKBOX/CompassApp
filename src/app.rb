@@ -1,10 +1,11 @@
+
 require "compile_version.rb"
 
 module App
   extend self
 
   include CompileVersion
-  VERSION = "1.23"
+  VERSION = "1.27"
   OS = org.jruby.platform.Platform::OS 
   OS_VERSION = java.lang.System.getProperty("os.version")
 
@@ -16,13 +17,13 @@ module App
     "#{OS}.#{OS_VERSION}.#{org.jruby.platform.Platform::ARCH}.#{COMPILE_TIME}.#{REVISION}"
   end
   
-  AUTOCOMPLTETE_CACHE_DIR = File.join( CONFIG_DIR , 'autocomplete_cache' )
+  AUTOCOMPLTETE_CACHE_DIR = File.join( Main.config_dir , 'autocomplete_cache' )
 
-  Dir.mkdir( CONFIG_DIR ) unless File.exists?( CONFIG_DIR )
+  Dir.mkdir( Main.config_dir ) unless File.exists?( Main.config_dir )
   Dir.mkdir( AUTOCOMPLTETE_CACHE_DIR ) unless File.exists?( AUTOCOMPLTETE_CACHE_DIR )
 
-  HISTORY_FILE =  File.join( CONFIG_DIR, 'history')
-  CONFIG_FILE  =  File.join( CONFIG_DIR, 'config')
+  HISTORY_FILE =  File.join( Main.config_dir, 'history')
+  CONFIG_FILE  =  File.join( Main.config_dir, 'config')
 
   @notifications = []
   def notifications
@@ -59,7 +60,8 @@ module App
 
     x.delete("services_http_port") unless x["services_http_port"].to_i > 0
     x.delete("services_livereload_port") unless x["services_livereload_port"].to_i > 0
-                                
+    x.delete("num_of_history") unless x["num_of_history"].to_i > 0                         
+
     config={
       "show_welcome" => true,
       "use_version" => 0.12,
@@ -71,9 +73,10 @@ module App
       "services_livereload_port" => 35729,
       "services_livereload_extensions" => "css,png,jpg,gif,html,erb,haml",
       "preferred_syntax" => "scss",
-      "force_enable_fsevent" => false
+      "force_enable_fsevent" => false,
+      "num_of_history" => 5
     }.merge!(x)
-
+    
     if !config["gem_path"]
       config["gem_path"] = App.get_system_default_gem_path
     end
@@ -92,7 +95,7 @@ module App
       end
 
       # make sure use java version library, ex json-java, eventmachine-java
-      jruby_gems_path = File.join(LIB_PATH, "ruby", "jruby" )
+      jruby_gems_path = File.join(Main.lib_path, "ruby", "jruby" )
       scan_library( jruby_gems_path )
       require "fssm" if (OS == 'darwin' && OS_VERSION.to_f >= 10.6 ) || OS == 'linux' || OS == 'windows'
       
@@ -105,7 +108,7 @@ module App
       end
  
 
-      common_lib_path = File.join(LIB_PATH, "ruby", "compass_common" )
+      common_lib_path = File.join(Main.lib_path, "ruby", "compass_common" )
       scan_library( common_lib_path )
 
       if  App::CONFIG['use_version'] && App::CONFIG['use_version'] < 0.12 
@@ -114,11 +117,11 @@ module App
         App.save_config
       end
       
-      compass_gems_path = File.join(LIB_PATH, "ruby", "compass_#{App::CONFIG['use_version']}")
+      compass_gems_path = File.join(Main.lib_path, "ruby", "compass_#{App::CONFIG['use_version']}")
       
       scan_library(compass_gems_path)
 
-      extensions_gems_path = File.join(LIB_PATH, "ruby", "compass_extensions" )
+      extensions_gems_path = File.join(Main.lib_path, "ruby", "compass_extensions" )
       scan_library( extensions_gems_path )
 
       require "compass"
@@ -136,7 +139,6 @@ module App
     open(CONFIG_FILE,'w') do |f|
       f.write YAML.dump(CONFIG)
     end
-
   end
 
   def clear_histoy
@@ -165,7 +167,7 @@ module App
   end
 
   def create_image(path)
-    Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, java.io.FileInputStream.new( File.join(LIB_PATH, 'images', path)))
+    Swt::Graphics::Image.new( Swt::Widgets::Display.get_current, java.io.FileInputStream.new( File.join(Main.lib_path, 'images', path)))
   end
 
   def get_stdout
@@ -183,11 +185,11 @@ module App
   end
 
   def notify(msg, target_display = nil )
-    if org.jruby.platform.Platform::IS_MAC
-      system('/usr/bin/osascript', "#{LIB_PATH}/applescript/growl.scpt", msg )
-    else
+    #if org.jruby.platform.Platform::IS_MAC
+    #  system('/usr/bin/osascript', "#{Main.lib_path}/applescript/growl.scpt", msg )
+    #else
       Notification.new(msg, target_display)
-    end
+    #end
   end
 
   def report(msg, target_display = nil, options={}, &block)
@@ -235,7 +237,7 @@ module App
     end
   end
 
-  def  shared_extensions_path
+  def shared_extensions_path
     home_dir = java.lang.System.getProperty("user.home")
     if File.directory?(home_dir) && File.writable?( home_dir ) 
       folder_path = File.join( home_dir, '.compass','extensions' )

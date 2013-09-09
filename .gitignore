@@ -9,3 +9,4 @@ src/compile_version.rb
 .rbenv-version
 tmp
 .bundle
+ui_spec/test_project/*
