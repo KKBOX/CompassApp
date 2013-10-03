@@ -33,10 +33,10 @@ If you want to build your own copy, you will need [JRuby](http://jruby.org/) and
 
 ## License
 
-Copyright (c) 2012 Handlino Inc.
+Copyright (c) 2012 KKBOX Inc.
 Licensed under GPL v2.
 
-[compassapp]: http://compass.handlino.com/
+[compassapp]: http://compass.kkbox.com/
 [compassapp-github]: http://github.com/handlino/compassapp
 [sass]: http://sass-lang.com/
 [compass]: http://compass-style.org/
