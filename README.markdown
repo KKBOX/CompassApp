@@ -1,4 +1,4 @@
-![Compass.app](http://compass.handlino.com/images/logo.png)
+![Compass.app](http://compass.kkbox.com/images/logo.png)
 
 # Compass.app
 
