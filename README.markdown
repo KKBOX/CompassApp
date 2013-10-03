@@ -37,6 +37,6 @@ Copyright (c) 2012 KKBOX Inc.
 Licensed under GPL v2.
 
 [compassapp]: http://compass.kkbox.com/
-[compassapp-github]: http://github.com/handlino/compassapp
+[compassapp-github]: http://github.com/kkbox/compassapp
 [sass]: http://sass-lang.com/
 [compass]: http://compass-style.org/
