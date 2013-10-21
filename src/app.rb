@@ -130,7 +130,6 @@ module App
 
     $LOAD_PATH.unshift('.')
     require "compass_patch.rb"
-    require "sass_patch.rb"
     require "app_watcher.rb"
 
   end

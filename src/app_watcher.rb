@@ -9,27 +9,34 @@ module Compass
     class  AppWatcher < ProjectWatcher
       def initialize(project_path, watches=[], options={}, poll=false)
         super
-        #@sass_watchers += coffeescript_watchers
-        @sass_watchers += livereload_watchers
+        @watchers << livereload_watchers
         setup_listener
       end
 
-      def listen_callback(modified_file, added_file, removed_file)
-        #log_action(:info, ">>> Listen Callback fired added: #{added_file}, mod: #{modified_file}, rem: #{removed_file}", {})
-        action = nil
-        action ||= :modified unless modified_file.empty?
-        action ||= :added unless added_file.empty?
-        action ||= :removed unless removed_file.empty?
+      def listen_callback(modified_files, added_files, removed_files)
+        #log_action(:info, ">>> Listen Callback fired added: #{added_files}, mod: #{modified_files}, rem: #{removed_files}", {})
+        files = {:modified => modified_files,
+                 :added    => added_files,
+                 :removed  => removed_files}
 
-        files = modified_file + added_file + removed_file
-        # run watchers
-        sass_watchers.each do |watcher|
-          files.each do |file|
-            if watcher.is_a? Array # for compass 0.12 watcher format
-              glob,callback = watcher
-              callback.call(project_path, file, action) if File.fnmatch(glob, file)
-            else
-              watcher.run_callback(project_path, file, action) if watcher.match?(file)
+        run_once, run_each = watchers.partition {|w| w.run_once_per_changeset?}
+
+        run_once.each do |watcher|
+          if file = files.values.flatten.detect{|f| watcher.match?(f) }
+            action = files.keys.detect{|k| files[k].include?(file) }
+            watcher.run_callback(project_path, relative_to(file, project_path), action)
+          end
+        end
+
+        run_each.each do |watcher|
+          files.each do |action, list|
+            list.each do |file|
+              if watcher.is_a? Array # for compass 0.12 watcher format
+                glob,callback = watcher
+                callback.call(project_path, file, action) if File.fnmatch(glob, file)
+              else
+                watcher.run_callback(project_path, relative_to(file, project_path), action) if watcher.match?(file)
+              end
             end
           end
         end
@@ -51,27 +58,9 @@ module Compass
       end
 
 
-      def coffeescript_watchers
-        coffee_filter = File.join(Compass.configuration.fireapp_coffeescripts_dir,  "*.coffee")
-        child_coffee_filter = File.join(Compass.configuration.fireapp_coffeescripts_dir, "**", "*.coffee")
-
-        [ Watcher::Watch.new(child_coffee_filter, &method(:coffee_callback) ),
-          Watcher::Watch.new(coffee_filter, &method(:coffee_callback) ) ]
-      end
-
-      def coffee_callback(base, file, action)
-        log_action(:info, "#{file} was #{action}", options)
-        puts( "#{file} was #{action}", options)
-        CoffeeCompiler.compile_folder( Compass.configuration.fireapp_coffeescripts_dir,
-                                      Compass.configuration.javascripts_dir, 
-                                      Compass.configuration.fireapp_coffeescript_options );
-      end
-
       def livereload_watchers
-        ::App::CONFIG["services_livereload_extensions"].split(/,/).map do |ext|
-          filter = "**.#{ext}"
-          Watcher::Watch.new(filter, &method(:livereload_callback)) 
-        end
+        filter = "**.{#{::App::CONFIG["services_livereload_extensions"]}}"
+        Watcher::Watch.new(filter, &method(:livereload_callback)) 
       end
 
       def livereload_callback(base, file, action)
