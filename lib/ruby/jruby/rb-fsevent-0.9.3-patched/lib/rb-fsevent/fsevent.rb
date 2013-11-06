@@ -53,7 +53,7 @@ class FSEvent
       Process.kill('KILL', @pipe.pid)
       @pipe.close
     end
-  rescue IOError
+  rescue IOError, Errno::ESRCH
   ensure
     @running = false
   end
