@@ -155,7 +155,7 @@ class PreferencePanel
     layoutdata.left = Swt::Layout::FormAttachment.new( livereload_service_info, 0, Swt::SWT::LEFT )
     layoutdata.top  = Swt::Layout::FormAttachment.new( livereload_service_info, 00, Swt::SWT::BOTTOM)
     livereload_service_help_info = Swt::Widgets::Link.new( composite, Swt::SWT::LEFT | Swt::SWT::WRAP)
-    livereload_service_help_info.setText("You have to install <a href=\"https://github.com/handlino/CompassApp/wiki/Preferences\">livereload browser extension or use livereload-js</a> to use this feature.")
+    livereload_service_help_info.setText("You have to install <a href=\"https://github.com/kkbox/CompassApp/wiki/Preferences\">livereload browser extension or use livereload-js</a> to use this feature.")
     livereload_service_help_info.setLayoutData(layoutdata)
     livereload_service_help_info.addListener(Swt::SWT::Selection, Swt::Widgets::Listener.impl do |method, evt| 
        Swt::Program.launch(evt.text)
@@ -345,12 +345,12 @@ class PreferencePanel
     button_group.setLayout( rowlayout );
 
     @button_version_default = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_default.setText("Default (Sass 3.2.10 + Compass 0.12.2)")
+    @button_version_default.setText("Default (Sass 3.2.12 + Compass 0.12.2)")
     @button_version_default.setSelection( App::CONFIG['use_version'] == 0.12  )
     @button_version_default.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @button_version_beta = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_beta.setText("Beta (Sass 3.2.10 + Compass 0.13.alpha.4)")
+    @button_version_beta.setText("Beta (Sass 3.3.0.rc1 + Compass 0.13.alpha.8)")
     @button_version_beta.setSelection( App::CONFIG['use_version'] == 0.13  )
     @button_version_beta.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
