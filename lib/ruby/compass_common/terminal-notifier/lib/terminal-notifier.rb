@@ -1,5 +1,5 @@
 module TerminalNotifier
-  BIN_PATH = File.expand_path('../../vendor/compassapp-notifier/compassapp-notifier.app/Contents/MacOS/Compass.app', __FILE__)
+  BIN_PATH = File.expand_path('../../vendor/compassapp-notifier/compassapp-notifier.app/Contents/MacOS/compassapp', __FILE__)
 
   class UnsupportedPlatformError < StandardError; end
   # Returns wether or not the current platform is Mac OS X 10.8, or higher.

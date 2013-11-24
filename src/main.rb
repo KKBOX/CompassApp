@@ -76,6 +76,7 @@ module Main
 
       require "app.rb"
       App.require_compass
+      require "notifier"
      
       begin
         require "ninesixty"

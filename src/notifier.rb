@@ -3,7 +3,7 @@ require "terminal-notifier"
 
 class Notifier
 
-	@@default_options = {:title => "Fire.app"}
+	@@default_options = {:title => "Compass.app"}
 
 	def self.notify(msg, options = {})
 		options = @@default_options.merge(options)
