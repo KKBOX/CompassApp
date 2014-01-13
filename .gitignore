@@ -11,3 +11,4 @@ src/compile_version.rb
 tmp
 .bundle
 ui_spec/test_project/*
+ui_spec/*

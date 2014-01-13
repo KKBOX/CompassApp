@@ -145,6 +145,8 @@ module App
   end
 
   def set_histoy(dirs)
+    dirs = dirs.uniq[0, App::CONFIG["num_of_history"]]
+    puts dirs
     File.open(HISTORY_FILE, 'w') do |out|
       YAML.dump(dirs, out)
     end 
@@ -184,12 +186,15 @@ module App
   end
 
   def notify(msg, target_display = nil )
-    #if org.jruby.platform.Platform::IS_MAC
-    #  system('/usr/bin/osascript', "#{Main.lib_path}/applescript/growl.scpt", msg )
-    #else
+    if Notifier.is_support
+      Notifier.notify(msg)
+    else
       Notification.new(msg, target_display)
-    #end
+      target_display.wake if target_display
+    end
   end
+
+
 
   def report(msg, target_display = nil, options={}, &block)
     Report.new(msg, target_display, options, &block)
