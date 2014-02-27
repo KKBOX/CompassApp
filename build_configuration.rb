@@ -62,13 +62,12 @@ configuration do |c|
 	# Undocumented option 'target_jvm_version'
 	# default value: 1.6
 	#
-	c.target_jvm_version = 1.6
-  c.source_jvm_version = 1.6
+	c.target_jvm_version = 1.7
 
 	# Undocumented option 'jvm_arguments'
 	# default value: ""
 	#
-  c.jvm_arguments = "-Xss1m -XX:-UseParallelOldGC -XX:NewRatio=4  -Xmx384m -Xms128m"
+	c.jvm_arguments = "-Xss1m -XX:-UseParallelOldGC -XX:NewRatio=4  -Xmx384m -Xms128m"
 
 	# Undocumented option 'java_library_path'
 	# default value: ""
