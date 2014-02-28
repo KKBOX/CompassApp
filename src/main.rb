@@ -22,14 +22,16 @@ module Main
   end
 
   def set_lib_path
-    require 'pathname'
     $LOAD_PATH << 'src'
-    resources_dir =  Pathname.new(__FILE__).dirname().dirname().dirname().to_s()[5..-1]
-    if !resources_dir.nil? and File.exists?( File.join(resources_dir, 'lib','ruby'))
-      @lib_path = File.join(resources_dir, 'lib')
+
+    require 'uri'
+    resources_dir = File.join(File.dirname( File.dirname(File.dirname( URI.parse(__FILE__).path ))), 'Resources')
+    if File.exists?( File.join(resources_dir, 'lib','ruby'))
+          @lib_path = File.join(resources_dir, 'lib')
     else
-      @lib_path = File.expand_path 'lib' 
+          @lib_path = File.expand_path 'lib'
     end
+
   end
 
 

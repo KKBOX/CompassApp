@@ -42,9 +42,13 @@ INFO_ENDL
       %x{mkdir -p  #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/lib/swt}
       %x{cp -R lib/swt/swt_osx* #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/lib/swt}
 
-      %w{ruby images applescript documents javascripts}.each do | copy_dir |
+      %w{ruby images documents javascripts}.each do | copy_dir |
         %x{cp -R lib/#{copy_dir} #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/lib }
       end
+
+      %x{rm #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/MacOS/JavaApplicationStub }
+      %x{cp lib/java-appbundler/JavaAppLauncher #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/MacOS }
+      %x{mv #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/Java #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Java  }
 
       %x{chmod 644 #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/Java/compass-app.jar}
       Dir.chdir CONFIG.osx_output_dir

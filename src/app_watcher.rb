@@ -33,6 +33,8 @@ module Compass
         run_once.each do |watcher|
           if file = files.values.flatten.detect{|f| watcher.match?(f) }
             action = files.keys.detect{|k| files[k].include?(file) }
+            log_action(:warning, Dir.pwd, {})
+            log_action(:warning, project_path.inspect,{})
             watcher.run_callback(project_path, relative_to(file, project_path), action)
           end
         end
