@@ -430,11 +430,7 @@ class PreferencePanel
   def compass_version_button_handler 
     Swt::Widgets::Listener.impl do |method, evt|   
       if  ( @button_version_default.getSelection && App::CONFIG['use_version'] == 0.12 ) ||    
-<<<<<<< HEAD
-        ( @button_version_beta.getSelection && App::CONFIG['use_version'] == 1.0) ||
-=======
           ( @button_version_beta.getSelection && App::CONFIG['use_version'] == 1.0 ) ||
->>>>>>> 5c3995edceb2c2515328f6f2e275160a09ef1161
           ( @use_specify_gem_path_btn.getSelection && App::CONFIG['use_version'] == false &&
             App::CONFIG['gem_path'] == @gem_path_text.getText )
         @apply_group.setVisible(false)
