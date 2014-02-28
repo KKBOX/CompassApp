@@ -373,13 +373,14 @@ class Tray
   def watch(dir)
     dir.gsub!('\\','/') if org.jruby.platform.Platform::IS_WINDOWS
     App.try do 
+      stop_watch
+
+      logger = Compass::Logger.new({ :display => App.display,:log_dir => dir}) 
       Compass.reset_configuration!
       Dir.chdir(dir)
 
-      logger = Compass::Logger.new({ :display => App.display,:log_dir => dir}) 
       x = Compass::Commands::UpdateProject.new( dir, { :logger => logger })
         
-      stop_watch
 
       if App::CONFIG['services'].include?( :http )
         SimpleHTTPServer.instance.start(Compass.configuration.project_path, :Port =>  App::CONFIG['services_http_port'])

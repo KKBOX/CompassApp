@@ -6,6 +6,15 @@ end
 
 module Compass
   module Watcher
+    
+    class LivereloadWatch < Watch
+      def match?(changed_path)
+        @glob.split(/,/).each do  |ext|
+          changed_path =~ Regexp.new("#{ext}\\Z")
+        end
+      end
+    end
+
     class  AppWatcher < ProjectWatcher
       def initialize(project_path, watches=[], options={}, poll=false)
         super
@@ -59,9 +68,9 @@ module Compass
 
 
       def livereload_watchers
-        filter = "**.{#{::App::CONFIG["services_livereload_extensions"]}}"
-        Watcher::Watch.new(filter, &method(:livereload_callback)) 
+        Watcher::LivereloadWatch.new(::App::CONFIG["services_livereload_extensions"], &method(:livereload_callback))
       end
+
 
       def livereload_callback(base, file, action)
         puts ">>> #{action} detected to: #{file}"
