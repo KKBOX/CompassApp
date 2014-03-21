@@ -37,6 +37,7 @@
     <key>JVMOptions</key>
     <array>
         <string>-Dapple.laf.useScreenMenuBar=true</string> 
+        <string>-Dfile.encoding=UTF-8</string>
         <string>-XstartOnFirstThread</string> 
         <string>-Xss1m</string>
         <string>-XX:-UseParallelOldGC</string>
