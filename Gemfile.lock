@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/rawr/rawr.git
-  revision: 9164e420e6802aafb52e30cab7f1f866e6334b18
+  revision: 66a7e4eae68a0c63ca2dd66deeffcf833626adf4
   specs:
-    rawr (1.6.4)
+    rawr (1.6.6)
 
 GEM
   remote: http://rubygems.org/
@@ -38,6 +38,6 @@ PLATFORMS
 DEPENDENCIES
   faker
   rake
-  rawr (= 1.6.4)!
+  rawr (= 1.6.6)!
   rspec (= 2.12.0)
   user-choices
