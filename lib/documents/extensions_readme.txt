@@ -3,7 +3,7 @@ Install Compass Extension
 
 Compass.app uses Compass extension as project template. If you put Compass extensions inside this folder, Compass.app will try to load it when the application starts.
 
-For more detailed information, please refer: https://github.com/handlino/CompassApp/wiki/Use-compass-extensions
+For more detailed information, please refer: https://github.com/kkbox/CompassApp/wiki/Use-compass-extensions
 
 
 Create Your Own Project Template
@@ -25,4 +25,4 @@ If you do not have a manifest.rb, Compass will use "easy mode" and put everythin
 
 For more detailed information, please refer: http://compass-style.org/help/tutorials/extensions/
 
-You can also download our sample project template and give it a try: https://github.com/handlino/compass-handlino
+You can also download our sample project template and give it a try: https://github.com/kkbox/compass-handlino

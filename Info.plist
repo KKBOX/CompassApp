@@ -27,7 +27,7 @@
     <key>Java</key>
     <dict>
         <key>MainClass</key>
-        <string>com.handlino.compassapp.Main</string>
+        <string>com.kkbox.compassapp.Main</string>
         <key>JVMVersion</key>
         <string>1.6*</string>
         <key>ClassPath</key>

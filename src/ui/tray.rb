@@ -289,7 +289,7 @@ class Tray
 
   def open_about_link_handler 
     Swt::Widgets::Listener.impl do |method, evt|
-      Swt::Program.launch('http://compass.handlino.com')
+      Swt::Program.launch('http://compass.kkbox.com')
     end
   end
 

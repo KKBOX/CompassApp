@@ -1,4 +1,4 @@
-package com.handlino.compassapp;
+package com.kkbox.compassapp;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
