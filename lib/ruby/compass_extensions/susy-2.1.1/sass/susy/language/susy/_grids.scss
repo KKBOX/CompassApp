@@ -1,0 +1,37 @@
+// Grid Syntax
+// ===========
+
+// Layout
+// ------
+// Set a new layout using a shorthand
+// - $layout: <settings>
+@mixin layout(
+  $layout
+) {
+  $susy: map-merge($susy, parse-grid($layout)) !global;
+}
+
+// Use Grid
+// --------
+// Use an arbitrary layout for a section of code
+// - $layout: <settings>
+@mixin with-layout(
+  $layout
+) {
+  $old: $susy;
+
+  @include layout($layout);
+  @content;
+
+  $susy: $old !global;
+}
+
+// Layout
+// ------
+// Return a parsed layout map based on shorthand syntax
+// - $layout: <settings>
+@function layout(
+  $layout: $susy
+) {
+  @return parse-grid($layout);
+}
