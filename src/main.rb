@@ -85,7 +85,7 @@ module Main
         require "compass-h5bp"
         require "bootstrap-sass"
         require "susy"
-        require "zurb-foundation"
+        require "zurb-foundation-compass-template"
       rescue LoadError
       end
 
