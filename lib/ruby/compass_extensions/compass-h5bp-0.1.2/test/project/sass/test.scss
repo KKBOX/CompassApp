@@ -1,0 +1,22 @@
+@import "h5bp";
+
+@include h5bp-main;
+@include h5bp-helpers;
+
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+    body { margin: 0; } //HACK: scss class can't be empty
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+    body { margin: 0; } //HACK: scss class can't be empty
+}
+
+@media print {
+  @include h5bp-media-print;
+}
