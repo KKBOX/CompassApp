@@ -22,7 +22,7 @@ configuration do |c|
 	# The fully-qualified name of the main Java file used to initiate the application.
 	# default value: "org.monkeybars.rawr.Main"
 	#
-	c.main_java_file = "com.handlino.compassapp.Main"
+	c.main_java_file = "com.kkbox.compassapp.Main"
 
 	# A list of directories where source files reside
 	# default value: ["src"]
@@ -62,12 +62,12 @@ configuration do |c|
 	# Undocumented option 'target_jvm_version'
 	# default value: 1.6
 	#
-	#c.target_jvm_version = 1.6
+	c.target_jvm_version = 1.7
 
 	# Undocumented option 'jvm_arguments'
 	# default value: ""
 	#
-	c.jvm_arguments = "-Xss1m"
+	c.jvm_arguments = "-Xss1m -XX:-UseParallelOldGC -XX:NewRatio=4  -Xmx384m -Xms128m"
 
 	# Undocumented option 'java_library_path'
 	# default value: ""

@@ -52,43 +52,6 @@ module Compass
 
   class Compiler
 
-    # Compile one Sass file
-    def compile(sass_filename, css_filename)
-      start_time = end_time = nil 
-      css_content = logger.red do
-        timed do
-          engine(sass_filename, css_filename).render
-        end 
-      end 
-      duration = options[:time] ? "(#{(css_content.__duration * 1000).round / 1000.0}s)" : ""
-      write_file(css_filename, css_content, options.merge(:force => true, :extra => duration))
-     
-      Compass.configuration.run_stylesheet_saved(css_filename)
-      
-      # PATCH: write wordlist File
-      sass_filename_str = sass_filename.gsub(/[^a-z0-9]/i, '_')
-      File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_project" ), 'w' ) do |f|
-        f.write Compass.configuration.project_path
-      end
-
-      if ::Sass::Tree::MixinDefNode.mixins
-        File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_mixin" ), 'w' ) do |f|
-
-          ::Sass::Tree::MixinDefNode.mixins.uniq.sort.each do |name|
-            f.puts "\"#{name}\""
-          end
-        end
-      end
-
-      if  ::Sass::Tree::VariableNode.variables
-        File.open( File.join( App::AUTOCOMPLTETE_CACHE_DIR, sass_filename_str + "_variable" ), 'w' ) do |f|
-          ::Sass::Tree::VariableNode.variables.uniq.sort.each do |name|
-            f.puts "\"$#{name}\""
-          end
-        end
-      end
-    end 
-    
     def css_files
       @css_files = sass_files.map{|sass_file| corresponding_css_file(sass_file)}
     end 

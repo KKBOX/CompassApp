@@ -5,7 +5,7 @@ module App
   extend self
 
   include CompileVersion
-  VERSION = "1.24"
+  VERSION = "1.27"
   OS = org.jruby.platform.Platform::OS 
   OS_VERSION = java.lang.System.getProperty("os.version")
 
@@ -108,7 +108,7 @@ module App
       end
  
 
-      common_lib_path = File.join(Main.lib_path, "ruby", "compass_common" )
+      common_lib_path = File.join(Main.lib_path, "ruby", "common" )
       scan_library( common_lib_path )
 
       if  App::CONFIG['use_version'] && App::CONFIG['use_version'] < 0.12 
@@ -130,7 +130,6 @@ module App
 
     $LOAD_PATH.unshift('.')
     require "compass_patch.rb"
-    require "sass_patch.rb"
     require "app_watcher.rb"
 
   end
@@ -146,6 +145,8 @@ module App
   end
 
   def set_histoy(dirs)
+    dirs = dirs.uniq[0, App::CONFIG["num_of_history"]]
+    puts dirs
     File.open(HISTORY_FILE, 'w') do |out|
       YAML.dump(dirs, out)
     end 
@@ -185,12 +186,15 @@ module App
   end
 
   def notify(msg, target_display = nil )
-    if org.jruby.platform.Platform::IS_MAC
-      system('/usr/bin/osascript', "#{Main.lib_path}/applescript/growl.scpt", msg )
+    if Notifier.is_support
+      Notifier.notify(msg)
     else
       Notification.new(msg, target_display)
+      target_display.wake if target_display
     end
   end
+
+
 
   def report(msg, target_display = nil, options={}, &block)
     Report.new(msg, target_display, options, &block)

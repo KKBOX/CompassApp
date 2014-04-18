@@ -22,31 +22,31 @@ module Main
   end
 
   def set_lib_path
-    require 'pathname'
-    #$LOAD_PATH << Pathname.new(__FILE__).dirname().to_s+'src'
     $LOAD_PATH << 'src'
-    resources_dir =  Pathname.new(__FILE__).dirname().dirname().dirname().to_s()[5..-1]
-    if !resources_dir.nil? and File.exists?( File.join(resources_dir, 'lib','ruby'))
-      @lib_path = File.join(resources_dir, 'lib')
-    else
-      @lib_path = File.expand_path 'lib' 
-    end
-  end
 
-  def file_dir
-    File.dirname(__FILE__).to_s + '/'
+    require 'uri'
+    resources_dir = File.join(File.dirname( File.dirname(File.dirname( URI.parse(__FILE__).path ))), 'Resources')
+    if File.exists?( File.join(resources_dir, 'lib','ruby'))
+          @lib_path = File.join(resources_dir, 'lib')
+    else
+          @lib_path = File.expand_path 'lib'
+    end
+
   end
 
 
   def require_lib
-    require file_dir+'swt_wrapper'
+    require 'swt_wrapper'
+    require "ui/splash_window"
+    SplashWindow.instance.replace('Loading...')
+    require "require_patch.rb"
 
     require 'stringio'
     require 'thread'
     require "open-uri"
     require "yaml"
-    %w{alert notification quit_window tray preference_panel report welcome_window splash_window}.each do | f |
-      require file_dir+"ui/#{f}"
+    %w{alert notification quit_window tray preference_panel report welcome_window change_options_panel progress_window}.each do | f |
+      require "ui/#{f}"
     end
 
   end
@@ -78,14 +78,16 @@ module Main
 
       require "app.rb"
       App.require_compass
+      require "notifier"
      
       begin
         require "ninesixty"
         require "html5-boilerplate"
         require "compass-h5bp"
+        require "compass-normalize"
         require "bootstrap-sass"
         require "susy"
-        require "zurb-foundation"
+        require "zurb-foundation-compass-template"
       rescue LoadError
       end
 
