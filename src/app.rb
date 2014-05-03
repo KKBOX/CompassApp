@@ -111,8 +111,8 @@ module App
       common_lib_path = File.join(Main.lib_path, "ruby", "common" )
       scan_library( common_lib_path )
 
-      if  App::CONFIG['use_version'] && App::CONFIG['use_version'] < 0.12 
-        alert("Welcome to use Compass.app v1.13!\nCompass.app is using Compass 0.12 by default. Compass #{App::CONFIG['use_version']} is no longer supported.\nPlease check our site for more information.")
+      if  App::CONFIG['use_version'] && App::CONFIG['use_version'] < 1.0
+        alert("Welcome to use Compass.app v1.13!\nCompass.app is using Compass 1.0 by default. Compass #{App::CONFIG['use_version']} is no longer supported.\nPlease check our site for more information.")
         App::CONFIG['use_version']=0.12
         App.save_config
       end
