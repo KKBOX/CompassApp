@@ -64,7 +64,7 @@ module App
 
     config={
       "show_welcome" => true,
-      "use_version" => 0.12,
+      "use_version" => 1.0,
       "use_specify_gem_path" => false,
       "notifications" => [ :error, :warning ],
       "save_notification_to_file" => true,
@@ -113,7 +113,7 @@ module App
 
       if  App::CONFIG['use_version'] && App::CONFIG['use_version'] < 1.0
         alert("Welcome to use Compass.app v1.13!\nCompass.app is using Compass 1.0 by default. Compass #{App::CONFIG['use_version']} is no longer supported.\nPlease check our site for more information.")
-        App::CONFIG['use_version']=0.12
+        App::CONFIG['use_version']=1.0
         App.save_config
       end
       
