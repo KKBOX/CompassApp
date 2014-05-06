@@ -109,11 +109,20 @@ class Tray
     menuitem
   end
 
-  def add_compass_item(dir)
+  def add_compass_item(dir, type = :history)
     if File.exists?(dir)
       menuitem = Swt::Widgets::MenuItem.new(@menu , Swt::SWT::PUSH, @menu.indexOf(@history_item) + 1 )
       menuitem.text = "#{dir}"
       menuitem.addListener(Swt::SWT::Selection, compass_switch_handler)
+
+      if type == :history
+        history_icon = App.create_image("icon/history-16.png")
+        menuitem.setImage(history_icon)
+      else
+        favorite_icon = App.create_image("icon/favorite-16.png")
+        menuitem.setImage(favorite_icon)
+      end
+
       menuitem
     end
   end
@@ -126,7 +135,28 @@ class Tray
 
   def clear_history
     App.clear_histoy
-    build_history_menuitem
+    rebuild_history_menuitem
+  end
+
+  def add_favorite_handler(dir)
+    Swt::Widgets::Listener.impl do |method, evt|
+      favorite = App.get_favorite
+      history = App.get_history
+      if favorite.include?(dir)
+        favorite.delete(dir)
+        history.unshift(dir)
+      else
+        favorite.unshift(dir)
+        history.delete(dir)
+      end
+      App.set_favorite(favorite)
+      @is_favorite_item.setSelection( true ) if App.get_favorite.include?(dir) && @is_favorite_item && !@is_favorite_item.isDisposed
+
+      App.set_histoy(history)
+
+      rebuild_history_menuitem
+      
+    end
   end
 
   def compass_switch_handler
@@ -198,10 +228,29 @@ class Tray
     end
   end
 
+  def rebuild_history_menuitem
+    delete_history_menuitem
+    build_history_menuitem
+  end
+
+  def delete_history_menuitem
+    @history_menuitem.each do |x|
+      x.dispose if x && !x.isDisposed
+    end if @history_menuitem
+    @history_menuitem = []
+  end
+
   def build_history_menuitem
+    @history_menuitem ||= [] 
+
     App.get_history.reverse.each do | dir |
-      add_compass_item(dir)
+      @history_menuitem.push add_compass_item(dir, :history)
     end
+
+    App.get_favorite.reverse.each do | dir |
+      @history_menuitem.push add_compass_item(dir, :favorite)
+    end
+
   end
 
   def create_project_handler
@@ -400,23 +449,39 @@ class Tray
 
       @watching_dir = dir
 
-      history_dirs = App.get_history
+      favorite = App.get_favorite
+      history = App.get_history
+
       @menu.items.each do |item|
-        item.dispose if history_dirs.include?(item.text)
+        item.dispose if history.include?(item.text) || favorite.include?(item.text)
       end
-      history_dirs.delete_if { |x| x == dir }
-      history_dirs.unshift(dir)
-      App.set_histoy(history_dirs)
+
+      if favorite.delete(dir)
+        favorite.unshift(dir)
+      else 
+        history.delete(dir)
+        history.unshift(dir)
+      end
+      App.set_favorite(favorite)
+      App.set_histoy(history)
 
       build_history_menuitem
 
 
       @watch_item.text="Stop watching " + dir
+
+      @is_favorite_item = add_menu_item( "Favorite", 
+                                          add_favorite_handler(dir), 
+                                          Swt::SWT::CHECK,
+                                          @menu, 
+                                          @menu.indexOf(@watch_item) +1 )
+      @is_favorite_item.setSelection( true ) if App.get_favorite.include?(dir)
+
       @open_project_item =  add_menu_item( "Open Project Folder", 
                                           open_project_handler, 
                                           Swt::SWT::PUSH,
                                           @menu, 
-                                          @menu.indexOf(@watch_item) +1 )
+                                          @menu.indexOf(@is_favorite_item) +1 )
 
       @install_item =  add_menu_item( "Install...", 
                                      install_project_handler, 
@@ -460,6 +525,7 @@ class Tray
     @open_project_item.dispose()   if @open_project_item && !@open_project_item.isDisposed
     @install_item.dispose() if @install_item && !@install_item.isDisposed
     @clean_item.dispose()   if @clean_item && !@clean_item.isDisposed
+    @is_favorite_item.dispose()   if @is_favorite_item && !@is_favorite_item.isDisposed
     @changeoptions_item.dispose()   if @changeoptions_item && !@changeoptions_item.isDisposed
     @watching_dir = nil
     @tray_item.image = @standby_icon
