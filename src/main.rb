@@ -87,7 +87,7 @@ module Main
         require "compass-normalize"
         require "bootstrap-sass"
         require "susy"
-        require "zurb-foundation"
+        require "zurb-foundation-compass-template"
       rescue LoadError
       end
 

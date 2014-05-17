@@ -1,0 +1,35 @@
+@include normalize-version('Figures');
+
+// ==========================================================================
+// Grouping
+// ==========================================================================
+
+// Addresses margin not present in IE 8/9 and Safari 5.
+
+figure {
+    margin: 1em 40px;
+}
+
+// Address differences between Firefox and other browsers.
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+// Contain overflow in all browsers.
+
+pre {
+    overflow: auto;
+}
+
+// Address odd `em`-unit font size rendering in all browsers.
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, monospace;
+    font-size: 1em;
+}

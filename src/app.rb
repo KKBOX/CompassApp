@@ -22,6 +22,7 @@ module App
   Dir.mkdir( Main.config_dir ) unless File.exists?( Main.config_dir )
   Dir.mkdir( AUTOCOMPLTETE_CACHE_DIR ) unless File.exists?( AUTOCOMPLTETE_CACHE_DIR )
 
+  FAVORITE_FILE =  File.join( Main.config_dir, 'favorite')
   HISTORY_FILE =  File.join( Main.config_dir, 'history')
   CONFIG_FILE  =  File.join( Main.config_dir, 'config')
 
@@ -64,7 +65,7 @@ module App
 
     config={
       "show_welcome" => true,
-      "use_version" => 0.12,
+      "use_version" => 1.0,
       "use_specify_gem_path" => false,
       "notifications" => [ :error, :warning ],
       "save_notification_to_file" => true,
@@ -111,9 +112,9 @@ module App
       common_lib_path = File.join(Main.lib_path, "ruby", "common" )
       scan_library( common_lib_path )
 
-      if  App::CONFIG['use_version'] && App::CONFIG['use_version'] < 0.12 
-        alert("Welcome to use Compass.app v1.13!\nCompass.app is using Compass 0.12 by default. Compass #{App::CONFIG['use_version']} is no longer supported.\nPlease check our site for more information.")
-        App::CONFIG['use_version']=0.12
+      if  App::CONFIG['use_version'] && App::CONFIG['use_version'] < 1.0
+        alert("Welcome to use Compass.app v1.13!\nCompass.app is using Compass 1.0 by default. Compass #{App::CONFIG['use_version']} is no longer supported.\nPlease check our site for more information.")
+        App::CONFIG['use_version']=1.0
         App.save_config
       end
       
@@ -144,6 +145,12 @@ module App
     set_histoy([])
   end
 
+  def set_favorite(dirs)
+    File.open(FAVORITE_FILE, 'w') do |out|
+      YAML.dump(dirs, out)
+    end 
+  end 
+
   def set_histoy(dirs)
     dirs = dirs.uniq[0, App::CONFIG["num_of_history"]]
     puts dirs
@@ -151,6 +158,12 @@ module App
       YAML.dump(dirs, out)
     end 
   end 
+
+  def get_favorite
+    dirs = YAML.load_file( FAVORITE_FILE ) if File.exists?(FAVORITE_FILE)
+    return dirs if dirs
+    return []
+  end
 
   def get_history
     dirs = YAML.load_file( HISTORY_FILE ) if File.exists?(HISTORY_FILE)

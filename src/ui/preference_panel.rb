@@ -345,14 +345,9 @@ class PreferencePanel
     button_group.setLayout( rowlayout );
 
     @button_version_default = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_default.setText("Default (Sass 3.2.12 + Compass 0.12.2)")
-    @button_version_default.setSelection( App::CONFIG['use_version'] == 0.12  )
+    @button_version_default.setText("Default (Sass 3.3.7 + Compass 1.0.0.alpha.19)")
+    @button_version_default.setSelection( App::CONFIG['use_version'] == 1.0 )
     @button_version_default.addListener(Swt::SWT::Selection, compass_version_button_handler)
-
-    @button_version_beta = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_beta.setText("Beta (Sass 3.3.0.rc5 + Compass 1.0.0.alpha.18)")
-    @button_version_beta.setSelection( App::CONFIG['use_version'] == 1.0 )
-    @button_version_beta.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
     @use_specify_gem_path_btn = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
     @use_specify_gem_path_btn.setText("Custom (advanced users only)")
@@ -398,8 +393,6 @@ class PreferencePanel
     compass_version_apply_button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
       if @button_version_default.getSelection
         App::CONFIG['use_version'] = 0.12
-      elsif @button_version_beta.getSelection
-        App::CONFIG['use_version'] = 1.0
       else
         App::CONFIG['use_version'] = false
       end
@@ -429,8 +422,7 @@ class PreferencePanel
 
   def compass_version_button_handler 
     Swt::Widgets::Listener.impl do |method, evt|   
-      if  ( @button_version_default.getSelection && App::CONFIG['use_version'] == 0.12 ) ||    
-          ( @button_version_beta.getSelection && App::CONFIG['use_version'] == 1.0 ) ||
+      if  ( @button_version_default.getSelection && App::CONFIG['use_version'] == 1.0 ) ||   
           ( @use_specify_gem_path_btn.getSelection && App::CONFIG['use_version'] == false &&
             App::CONFIG['gem_path'] == @gem_path_text.getText )
         @apply_group.setVisible(false)

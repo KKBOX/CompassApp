@@ -1,0 +1,18 @@
+@include normalize-version('Links');
+
+// ==========================================================================
+// Links
+// ==========================================================================
+
+// Remove the gray background color from active links in IE 10.
+
+a {
+    background: transparent;
+}
+
+// Improves readability when focused and also mouse hovered in all browsers.
+
+a:active,
+a:hover {
+    outline: 0;
+}

@@ -1,0 +1,10 @@
+@mixin normalize-version($partial: false) {
+  $version: 'v3.0.0';
+  
+  @if $partial {
+    /*! normalize.css #{$version} | #{$partial} | MIT License | git.io/normalize */
+  }
+  @else {
+    /*! normalize.css #{$version} | MIT License | git.io/normalize */
+  }
+}
