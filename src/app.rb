@@ -105,7 +105,7 @@ module App
       
     rescue LoadError => e
       if CONFIG["use_specify_gem_path"]
-        alert("Load custom Compass fail, use default Compass v0.12 library, please check the Gem Path")
+        alert("Load custom Compass fail, use default Compass v1.0 library, please check the Gem Path")
       end
  
 
