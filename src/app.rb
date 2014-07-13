@@ -93,13 +93,20 @@ module App
         ENV["GEM_HOME"] = CONFIG["gem_path"]
         ENV["GEM_PATH"] = CONFIG["gem_path"]
         require "rubygems"
+      else
+        # we dont use system rubygem
+        ENV["GEM_HOME"] = ""
+        ENV["GEM_PATH"] = ""
       end
 
       # make sure use java version library, ex json-java, eventmachine-java
       jruby_gems_path = File.join(Main.lib_path, "ruby", "jruby" )
       scan_library( jruby_gems_path )
-      require "fssm" if (OS == 'darwin' && OS_VERSION.to_f >= 10.6 ) || OS == 'linux' || OS == 'windows'
-      
+
+      require 'rb-fsevent' if OS == 'darwin' && App::CONFIG['force_enable_fsevent']
+      require 'rb-inotify' if OS == 'linux'
+      require 'listen'
+
       require "compass"
       require "compass/exec"
       
