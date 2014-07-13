@@ -1,12 +1,12 @@
-# ruby-ffi http://wiki.github.com/ffi/ffi [![Build Status](https://travis-ci.org/ffi/ffi.png?branch=master)](https://travis-ci.org/ffi/ffi)
+# ruby-ffi https://wiki.github.com/ffi/ffi [![Build Status](https://travis-ci.org/ffi/ffi.png?branch=master)](https://travis-ci.org/ffi/ffi)
 
 ## Description
 
 Ruby-FFI is a ruby extension for programmatically loading dynamic
 libraries, binding functions within them, and calling those functions
 from Ruby code. Moreover, a Ruby-FFI extension works without changes
-on Ruby and JRuby. Discover why should you write your next extension
-using Ruby-FFI [here](http://wiki.github.com/ffi/ffi/why-use-ffi).
+on Ruby and JRuby. [Discover why you should write your next extension
+using Ruby-FFI](https://wiki.github.com/ffi/ffi/why-use-ffi).
 
 ## Features/problems
 
@@ -33,8 +33,8 @@ MyLib.puts 'Hello, World using libc!'
 For less minimalistic and more sane examples you may look at:
 
 * the samples/ folder
-* the examples on the [wiki](http://wiki.github.com/ffi/ffi)
-* the projects using FFI listed on this page (http://wiki.github.com/ffi/ffi/projects-using-ffi)
+* the examples on the [wiki](https://wiki.github.com/ffi/ffi)
+* the projects using FFI listed on this page (https://wiki.github.com/ffi/ffi/projects-using-ffi)
 
 ## Requirements
 
@@ -57,7 +57,7 @@ or from the git repository on github:
 
 ## License
 
-The ffi library is covered by the LGPL3 license, also see the LICENSE file.
+The ffi library is covered by the BSD license, also see the LICENSE file.
 The specs are shared with Rubyspec and are licensed by the same license
 as Rubyspec, see the LICENSE.SPECS file.
 

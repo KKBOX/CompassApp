@@ -242,7 +242,10 @@ module INotify
     #
     # @raise [SystemCallError] if closing the underlying file descriptor fails.
     def close
-      return if Native.close(@fd) == 0
+      if Native.close(@fd) == 0
+        @watchers.clear
+        return
+      end
 
       raise SystemCallError.new("Failed to properly close inotify socket" +
        case FFI.errno
