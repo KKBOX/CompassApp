@@ -229,10 +229,9 @@ module App
 
   def scan_library( dir )
     Dir.new( dir ).entries.reject{|e| e =~ /^\./}.each do | subfolder|
-    lib_path = File.join(dir, subfolder,'lib')
-    $LOAD_PATH.unshift( File.join( dir, subfolder, 'lib') ) if File.exists?(lib_path)
+      lib_path = File.expand_path( File.join(dir, subfolder,'lib') )
+      $LOAD_PATH.unshift( lib_path ) if File.exists?(lib_path)
     end
-
   end
 
   def clear_autocomplete_cache
