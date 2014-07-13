@@ -67,7 +67,9 @@ int main(int argc, char *argv[]) {
         [alert setAlertStyle:NSCriticalAlertStyle];
         [alert setMessageText:[exception reason]];
         [alert runModal];
-
+        if ([[exception name] isEqualToString:@JAVA_LAUNCH_ERROR]) {
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.java.com/download"]];
+        }
         result = 1;
     }
 
@@ -106,16 +108,14 @@ int launch(char *commandName) {
 
     if (jli_LaunchFxnPtr == NULL) {
         [[NSException exceptionWithName:@JAVA_LAUNCH_ERROR
-            reason:NSLocalizedString(@"JRELoadError", @UNSPECIFIED_ERROR)
-            userInfo:nil] raise];
+             reason:@"Please update Java to 1.7, visit https://www.java.com/download" userInfo:nil] raise];
     }
 
     // Get the main class name
     NSString *mainClassName = [infoDictionary objectForKey:@JVM_MAIN_CLASS_NAME_KEY];
     if (mainClassName == nil) {
         [[NSException exceptionWithName:@JAVA_LAUNCH_ERROR
-            reason:NSLocalizedString(@"MainClassNameRequired", @UNSPECIFIED_ERROR)
-            userInfo:nil] raise];
+            reason:@"Main class name is required." userInfo:nil] raise];
     }
 
     // Set the class path
@@ -127,8 +127,7 @@ int launch(char *commandName) {
     NSArray *javaDirectoryContents = [defaultFileManager contentsOfDirectoryAtPath:javaPath error:nil];
     if (javaDirectoryContents == nil) {
         [[NSException exceptionWithName:@JAVA_LAUNCH_ERROR
-            reason:NSLocalizedString(@"JavaDirectoryNotFound", @UNSPECIFIED_ERROR)
-            userInfo:nil] raise];
+            reason:@"Unable to enumerate Java directory contents." userInfo:nil] raise];
     }
 
     for (NSString *file in javaDirectoryContents) {
