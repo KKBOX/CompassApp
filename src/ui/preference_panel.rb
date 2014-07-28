@@ -345,7 +345,7 @@ class PreferencePanel
     button_group.setLayout( rowlayout );
 
     @button_version_default = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_default.setText("Default (Sass 3.3.7 + Compass 1.0.0.alpha.19)")
+    @button_version_default.setText("Default (Sass 3.3.10 + Compass 1.0.0.alpha.20)")
     @button_version_default.setSelection( App::CONFIG['use_version'] == 1.0 )
     @button_version_default.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
@@ -392,7 +392,7 @@ class PreferencePanel
     compass_version_apply_button.setText("Apply Change")
     compass_version_apply_button.addListener(Swt::SWT::Selection,Swt::Widgets::Listener.impl do |method, evt|   
       if @button_version_default.getSelection
-        App::CONFIG['use_version'] = 0.12
+        App::CONFIG['use_version'] = 1.0
       else
         App::CONFIG['use_version'] = false
       end

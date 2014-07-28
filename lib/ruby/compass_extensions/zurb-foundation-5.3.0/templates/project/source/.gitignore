@@ -1,0 +1,8 @@
+Thumbs.db
+.DS_Store
+*~
+.sass-cache
+compass_app_log.txt
+document_root
+tmp
+.bundle

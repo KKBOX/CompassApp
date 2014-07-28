@@ -1,9 +1,3 @@
-
-if Compass::VERSION =~ /^0.12/
-  $LOAD_PATH.unshift File.join(Main.lib_path,'ruby','compass_0.12','backport_from_0.13','lib')
-  require 'compass/watcher'
-end
-
 module Compass
   module Watcher
     
@@ -42,12 +36,7 @@ module Compass
         run_each.each do |watcher|
           files.each do |action, list|
             list.each do |file|
-              if watcher.is_a? Array # for compass 0.12 watcher format
-                glob,callback = watcher
-                callback.call(project_path, file, action) if File.fnmatch(glob, file)
-              else
-                watcher.run_callback(project_path, relative_to(file, project_path), action) if watcher.match?(file)
-              end
+              watcher.run_callback(project_path, relative_to(file, project_path), action) if watcher.match?(file)
             end
           end
         end

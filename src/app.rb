@@ -93,19 +93,26 @@ module App
         ENV["GEM_HOME"] = CONFIG["gem_path"]
         ENV["GEM_PATH"] = CONFIG["gem_path"]
         require "rubygems"
+      else
+        # we dont use system rubygem
+        ENV["GEM_HOME"] = ""
+        ENV["GEM_PATH"] = ""
       end
 
       # make sure use java version library, ex json-java, eventmachine-java
       jruby_gems_path = File.join(Main.lib_path, "ruby", "jruby" )
       scan_library( jruby_gems_path )
-      require "fssm" if (OS == 'darwin' && OS_VERSION.to_f >= 10.6 ) || OS == 'linux' || OS == 'windows'
-      
+
+      require 'rb-fsevent' if OS == 'darwin' && App::CONFIG['force_enable_fsevent']
+      require 'rb-inotify' if OS == 'linux'
+      require 'listen'
+
       require "compass"
       require "compass/exec"
       
     rescue LoadError => e
       if CONFIG["use_specify_gem_path"]
-        alert("Load custom Compass fail, use default Compass v0.12 library, please check the Gem Path")
+        alert("Load custom Compass fail, use default Compass v1.0 library, please check the Gem Path")
       end
  
 
@@ -229,10 +236,9 @@ module App
 
   def scan_library( dir )
     Dir.new( dir ).entries.reject{|e| e =~ /^\./}.each do | subfolder|
-    lib_path = File.join(dir, subfolder,'lib')
-    $LOAD_PATH.unshift( File.join( dir, subfolder, 'lib') ) if File.exists?(lib_path)
+      lib_path = File.expand_path( File.join(dir, subfolder,'lib') )
+      $LOAD_PATH.unshift( lib_path ) if File.exists?(lib_path)
     end
-
   end
 
   def clear_autocomplete_cache
