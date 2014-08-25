@@ -25,7 +25,9 @@ module Main
     $LOAD_PATH << 'src'
 
     require 'uri'
-    resources_dir = File.join(File.dirname( File.dirname(File.dirname( URI.parse(__FILE__).path ))), 'Resources')
+    require 'cgi'
+    main_file_path = CGI.unescape(URI.parse(URI.escape(__FILE__)).path)
+    resources_dir = File.join(File.dirname( File.dirname(File.dirname( main_file_path ))), 'Resources')
     if File.exists?( File.join(resources_dir, 'lib','ruby'))
           @lib_path = File.join(resources_dir, 'lib')
     else
@@ -48,6 +50,7 @@ module Main
     %w{alert notification quit_window tray preference_panel report welcome_window change_options_panel progress_window}.each do | f |
       require "ui/#{f}"
     end
+
 
   end
 
@@ -79,6 +82,12 @@ module Main
       require "app.rb"
       App.require_compass
       require "notifier"
+     
+      
+      %w{compass_patch hook_utils base_compass_hooker watch_hooker}.each do | f |
+        require "hook/#{f}"
+      end
+
      
       begin
         require "ninesixty"
