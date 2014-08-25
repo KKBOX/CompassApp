@@ -49,6 +49,10 @@ module Main
       require "ui/#{f}"
     end
 
+    %w{compass_patch hook_utils base_compass_hooker watch_hooker}.each do | f |
+      require "hook/#{f}"
+    end
+
   end
 
   def set_config_dir
