@@ -49,9 +49,6 @@ module Main
       require "ui/#{f}"
     end
 
-    %w{compass_patch hook_utils base_compass_hooker watch_hooker}.each do | f |
-      require "hook/#{f}"
-    end
 
   end
 
@@ -83,6 +80,12 @@ module Main
       require "app.rb"
       App.require_compass
       require "notifier"
+     
+      
+      %w{compass_patch hook_utils base_compass_hooker watch_hooker}.each do | f |
+        require "hook/#{f}"
+      end
+
      
       begin
         require "ninesixty"
