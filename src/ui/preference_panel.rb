@@ -345,7 +345,7 @@ class PreferencePanel
     button_group.setLayout( rowlayout );
 
     @button_version_default = Swt::Widgets::Button.new(button_group, Swt::SWT::RADIO )
-    @button_version_default.setText("Default (Sass 3.3.10 + Compass 1.0.0.alpha.20)")
+    @button_version_default.setText("Default (Sass 3.4.1 + Compass 1.0.0)")
     @button_version_default.setSelection( App::CONFIG['use_version'] == 1.0 )
     @button_version_default.addListener(Swt::SWT::Selection, compass_version_button_handler)
 
