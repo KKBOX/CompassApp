@@ -1,7 +1,5 @@
 
-require 'after_do'
 require 'pathname'
-
 require 'compass/commands'
 
 # expose listener
@@ -33,6 +31,14 @@ class Compass::Commands::WatchProject
   define_method("new_compiler_instance") do |*args, &block| 
     @sass_compiler = m.bind(self).(*args, &block)
   end
+
+  notify_watches = instance_method("notify_watches")
+  define_method("notify_watches") do |*args, &block| 
+    notify_watches.bind(self).(*args, &block)
+    java.lang.System.gc()
+  end
+
+  
 
 end
 
@@ -115,9 +121,4 @@ class Sass::Plugin::Compiler
     end
   end
 
-end
-
-Compass::Commands::WatchProject.extend AfterDo
-Compass::Commands::WatchProject.after :notify_watches do |modified, added, removed|
-  java.lang.System.gc()
 end
