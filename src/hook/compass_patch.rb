@@ -69,6 +69,16 @@ class Compass::Commands::CleanProject
 
 end
 
+class Compass::Commands::StampPattern
+
+  m = instance_method("perform")
+  define_method("perform") do |*args, &block| 
+    m.bind(self).(*args, &block)
+    FileUtils.rm_rf(Compass.configuration.cache_path)
+  end
+
+end
+
 # class Compass::Configuration::Watch
   
 #   m = instance_method("match?")
