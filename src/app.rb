@@ -160,7 +160,6 @@ module App
 
   def set_histoy(dirs)
     dirs = dirs.uniq[0, App::CONFIG["num_of_history"]]
-    puts dirs
     File.open(HISTORY_FILE, 'w') do |out|
       YAML.dump(dirs, out)
     end 

@@ -1,3 +1,0 @@
-[submodule "lib/ruby/compass_extensions/zurb-foundation-compass-template"]
-	path = lib/ruby/compass_extensions/zurb-foundation-compass-template
-	url = git@github.com:HondaDai/zurb-foundation-compass-template.git
