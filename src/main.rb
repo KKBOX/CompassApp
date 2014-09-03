@@ -22,7 +22,7 @@ module Main
   end
 
   def set_lib_path
-    $LOAD_PATH << 'src'
+    $LOAD_PATH << File.expand_path("src")
 
     require 'uri'
     require 'cgi'
