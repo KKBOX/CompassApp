@@ -1,7 +1,7 @@
 
 module Main
   extend self
-  
+
   attr_reader :init_at, :lib_path, :config_dir
 
   def init
@@ -60,7 +60,7 @@ module Main
     options = {}
     OptionParser.new do |opts|
       opts.banner = "Usage: example.rb [options]"
-      
+
       options[:config_dir] = File.join( java.lang.System.getProperty("user.home") , '.compass-ui' )
       opts.on("-c PATH", "--config-dir PATH", "config dir path") do |v|
         options[:config_dir] = v
@@ -69,7 +69,7 @@ module Main
     end.parse!
 
     # TODO: dirty, need refactor
-      if File.directory?(File.dirname(options[:config_dir])) && File.writable?(File.dirname(options[:config_dir])) 
+      if File.directory?(File.dirname(options[:config_dir])) && File.writable?(File.dirname(options[:config_dir]))
         @config_dir = options[:config_dir]
       else
         @config_dir = File.join(Dir.pwd, 'config')
@@ -82,19 +82,20 @@ module Main
       require "app.rb"
       App.require_compass
       require "notifier"
-     
-      
+
+
       %w{compass_patch hook_utils base_compass_hooker watch_hooker}.each do | f |
         require "hook/#{f}"
       end
 
-     
+
       begin
         require "ninesixty"
         require "html5-boilerplate"
         require "compass-h5bp"
         require "compass-normalize"
         require "bootstrap-sass"
+        require "breakpoint"
         require "susy"
         require "zurb-foundation"
       rescue LoadError
@@ -105,7 +106,7 @@ module Main
 
       if App::CONFIG['show_welcome']
         WelcomeWindow.new
-      end   
+      end
       App.clear_autocomplete_cache
 
   end
