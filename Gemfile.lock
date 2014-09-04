@@ -39,4 +39,5 @@ DEPENDENCIES
   rake
   rawr (= 1.6.6)!
   rspec (= 2.12.0)
+  rubyzip
   user-choices
