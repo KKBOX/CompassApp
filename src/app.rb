@@ -5,7 +5,7 @@ module App
   extend self
 
   include CompileVersion
-  VERSION = "1.27"
+  VERSION = "1.28.1"
   OS = org.jruby.platform.Platform::OS 
   OS_VERSION = java.lang.System.getProperty("os.version")
 
