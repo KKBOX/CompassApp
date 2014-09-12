@@ -28,10 +28,11 @@ class  AppWatcher < Compass::Commands::WatchProject
 
   def custom_watcher(dir, extensions, callback)
     filter = File.join(dir, extensions)
-    childe_filter = File.join(dir, "**", extensions)
+    child_filter = File.join(dir, "**", extensions)
 
-    [Compass::Configuration::Watch.new(filter, &callback),
-     Compass::Configuration::Watch.new(childe_filter, &callback)]
+    #[Compass::Configuration::Watch.new(filter, &callback),
+    # Compass::Configuration::Watch.new(child_filter, &callback)]
+    [Compass::Configuration::Watch.new(child_filter, &callback)]
   end
 
   def livereload_watchers
