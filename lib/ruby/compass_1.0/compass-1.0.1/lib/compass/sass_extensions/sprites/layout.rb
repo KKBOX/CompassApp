@@ -1,4 +1,5 @@
-require 'rational'
+require 'rational' unless RUBY_VERSION >= '1.9.2'
+
 module Compass
   module SassExtensions
     module Sprites
