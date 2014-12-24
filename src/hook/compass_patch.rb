@@ -104,7 +104,7 @@ class Sass::Plugin::Compiler
     sassfile_path = Pathname.new(args[0])
     project_path = Pathname.new(Compass.configuration.project_path)
 
-    if sassfile_path.exist? and project_path.exist? and sassfile_path.realpath.to_s =~ Regexp.new("^#{project_path.realpath.to_s}")
+    if sassfile_path.exist? and project_path.exist? and sassfile_path.realpath.to_s.start_with?(project_path.realpath.to_s)
       m.bind(self).(*args, &block)
     end
   end
