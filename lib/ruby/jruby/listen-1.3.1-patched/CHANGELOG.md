@@ -1,3 +1,24 @@
+# !!! CHANGELOG moved to Github [releases](https://github.com/guard/listen/releases) page !!!
+
+
+## 1.2.2 - Jun 17, 2013
+
+### Bug fix
+
+- Rescue all error on sha1_checksum generation. ([@thibaudgg][])
+
+## 1.2.1 - Jun 11, 2013
+
+### Improvement
+
+- Ignore 'bundle' folder by default. ([@thibaudgg][])
+
+## 1.2.0 - Jun 11, 2013
+
+### Improvement
+
+- [#124][] New `force_adapter` option, skip the `.listen_test` adapter test. ([@nicobrevin][])
+
 ## 1.1.6 - Jun 4, 2013
 
 ### Change
@@ -78,7 +99,7 @@
 
 - [#98][] New method: `Listen.to!` which blocks the current thread. ([@rymai][])
 - [#98][] New method: `Listen::Listener#start!` to start the listener and block the current thread. ([@martikaljuve][] & [@rymai][])
-- [#95][] Make `Listen::Listener` capable of listening to multiple directories, deprecates `Listen::MultiListener`. ([@rymai][])
+- [#95][] Make `Listen::Listener` capable of listening to multiple directories, deprecates `Listen::MultiListener`, defaults `Listener#relative_paths` to `true` when listening to a single directory (see [#131][]). ([@rymai][])
 - [#85][] Compute the SHA1 sum only for regular files. ([@antifuchs][])
 - New methods: `Listen::Adapter#pause`, `Listen::Adapter#unpause` and `Listen::Adapter#paused?`. ([@rymai][])
 - Refactor `Listen::DirectoryRecord` internals. ([@rymai][])
@@ -310,6 +331,9 @@
 [#118]: https://github.com/guard/listen/issues/118
 [#120]: https://github.com/guard/listen/issues/120
 [#122]: https://github.com/guard/listen/issues/122
+[#124]: https://github.com/guard/listen/issues/124
+[#131]: https://github.com/guard/listen/issues/131
+[@21croissants]: https://github.com/21croissants
 [@Maher4Ever]: https://github.com/Maher4Ever
 [@ahoward]: https://github.com/ahoward
 [@akerbos]: https://github.com/akerbos
@@ -329,9 +353,11 @@
 [@napcs]: https://github.com/napcs
 [@netzpirat]: https://github.com/netzpirat
 [@nex3]: https://github.com/nex3
+[@nicobrevin]: https://github.com/nicobrevin
 [@nilbus]: https://github.com/nilbus
 [@nysalor]: https://github.com/nysalor
 [@piotr-sokolowski]: https://github.com/piotr-sokolowski
+[@rehevkor5]: https://github.com/rehevkor5
 [@rymai]: https://github.com/rymai
 [@scottdavis]: https://github.com/scottdavis
 [@sunaku]: https://github.com/sunaku

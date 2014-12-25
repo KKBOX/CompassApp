@@ -21,6 +21,7 @@ module Listen
     # @option options [Boolean] relative_paths whether or not to use relative-paths in the callback
     # @option options [Boolean] force_polling whether to force the polling adapter or not
     # @option options [String, Boolean] polling_fallback_message to change polling fallback message or remove it
+    # @option options [Class] force_adapter force the use of this adapter class, skipping usual adapter selection
     #
     # @yield [modified, added, removed] the changed files
     # @yieldparam [Array<String>] modified the list of modified files
@@ -180,6 +181,21 @@ module Listen
       self
     end
 
+    # Sets whether to force the use of a particular adapter, rather than
+    # going through usual adapter selection process on start.
+    #
+    # @example Force use of Linux polling
+    #   force_adapter Listen::Adapters::Linux
+    #
+    # @param [Class] adapter class to use for file system event notification.
+    #
+    # @return [Listen::Listener] the listener
+    #
+    def force_adapter(adapter_class)
+      @adapter_options[:force_adapter] = adapter_class
+      self
+    end
+
     # Sets whether the paths in the callback should be
     # relative or absolute.
     #
@@ -235,6 +251,9 @@ module Listen
       unless changes.values.all? { |paths| paths.empty? }
         block.call(changes[:modified], changes[:added], changes[:removed])
       end
+    rescue => ex
+      Kernel.warn "[Listen warning]: Change block raise an execption: #{$!}"
+      Kernel.warn "Backtrace:\n\t#{ex.backtrace.join("\n\t")}"
     end
 
     private
@@ -254,7 +273,7 @@ module Listen
       if directories.size > 1 && options[:relative_paths]
         Kernel.warn "[Listen warning]: #{RELATIVE_PATHS_WITH_MULTIPLE_DIRECTORIES_WARNING_MESSAGE}"
       end
-      @use_relative_paths = directories.one? && options.delete(:relative_paths) { true }
+      @use_relative_paths = directories.one? && options.delete(:relative_paths) { false }
     end
 
     # Build the directory record concurrently and initialize the adapter.

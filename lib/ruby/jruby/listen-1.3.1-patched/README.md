@@ -9,7 +9,7 @@ The Listen gem listens to file modifications and notifies you about the changes.
 * OS-specific adapters for Mac OS X 10.6+, Linux, *BSD and Windows.
 * Automatic fallback to polling if OS-specific adapter doesn't work.
 * Detects file modification, addition and removal.
-* Checksum comparison for modifications made under the same second.
+* File content checksum comparison for modifications made under the same second.
 * Allows supplying regexp-patterns to ignore and filter paths for better results.
 * Tested on all Ruby environments via [Travis CI](https://travis-ci.org/guard/listen).
 
@@ -19,7 +19,7 @@ Still not implemented, pull requests are welcome.
 
 * Symlinks support. [#25](https://github.com/guard/listen/issues/25)
 * Signal handling. [#105](https://github.com/guard/listen/issues/105)
-* Non-recursive directory scaning. [#111](https://github.com/guard/listen/issues/111)
+* Non-recursive directory scanning. [#111](https://github.com/guard/listen/issues/111)
 
 ## Install
 
@@ -87,6 +87,7 @@ listener = listener.filter(/\.rb$/)
 listener = listener.latency(0.5)
 listener = listener.force_polling(true)
 listener = listener.polling_fallback_message(false)
+listener = listener.force_adapter(Listen::Adapters::Linux)
 listener = listener.change(&callback)
 listener.start
 ```
@@ -207,6 +208,9 @@ or via ["Object" API](#object-api) methods:
 :latency => 0.5                               # Set the delay (**in seconds**) between checking for changes
                                               # default: 0.25 sec (1.0 sec for polling)
 
+:force_adapter => Listen::Adapters::Linux     # Force the use of a particular adapter class
+                                              # default: none
+
 :force_polling => true                        # Force the use of the polling adapter
                                               # default: none
 
@@ -275,6 +279,11 @@ The Listen gem will choose the best and working adapter for your machine automat
 want to force the use of the polling adapter, either use the `:force_polling` option
 while initializing the listener or call the `#force_polling` method on your listener
 before starting it.
+
+It is also possible to force the use of a particular adapter, by using the `:force_adapter`
+option.  This option skips the usual adapter choosing mechanism and uses the given
+adapter class instead.  The adapter choosing mechanism requires write permission
+to your watched directories and will needlessly load code, which isn't always desirable.
 
 ## Polling fallback
 
