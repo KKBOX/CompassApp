@@ -174,7 +174,7 @@ module Listen
       directories = directories.sort_by { |el| el.length }.reverse # diff sub-dir first
 
       directories.each do |directory|
-        next unless directory[@directory] || directory[@directory.gsub(/\//,'\\') # Path is or inside directory, fix path on windows
+        next unless directory[@directory] || directory[@directory.gsub(/\//,'\\')] # Path is or inside directory, fix path on windows
 
         detect_modifications_and_removals(directory, options)
         detect_additions(directory, options)
