@@ -1,4 +1,17 @@
 module Compass
+  module Configuration
+    class Watch
+      # patch for windows
+      def match?(changed_path)
+        if org.jruby.platform.Platform::IS_WINDOWS
+          changed_path.gsub!("\\","/")
+        end
+
+        File.fnmatch(full_glob, changed_path, File::FNM_PATHNAME)
+      end
+    end
+  end
+
   module Frameworks
     def register_directory(directory)
       loaders = [
