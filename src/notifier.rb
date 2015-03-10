@@ -11,7 +11,7 @@ class Notifier
 	end
 
 	def self.is_support
-		org.jruby.platform.Platform::IS_MAC && java.lang.System.getProperty("os.version").to_f >= 10.8
+    TerminalNotifier.available?
 	end
 
 end
