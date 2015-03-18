@@ -11,7 +11,7 @@ class Notifier
 	end
 
 	def self.is_support
-    TerminalNotifier.available?
+    org.jruby.platform.Platform::IS_MAC && TerminalNotifier.available?
 	end
 
 end
