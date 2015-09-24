@@ -1,4 +1,4 @@
-![Compass.app](http://compass.kkbox.com/images/logo.png)
+We have decided to discontinue the Compass.app & Fire.app projects. You can still get the source code under GPL as always, and we have put the latest binary on GitHub for free. [What happened?](https://github.com/KKBOX/compassapp/wiki/farewell)
 
 # Compass.app
 
@@ -18,10 +18,7 @@ Compass.app is written in **Java (JRuby)**, so you must install JRE(Java Runtime
 
 ## Download
 
-You can buy Compass.app from [our official site][compassapp]. Once you bought it, We will send an email with download links to your PayPal's email address. You will also get 1.x updates for free.
-
-Compass.app is **GPLv2 licensed** because we love open source so much. The source code is [available on GitHub][compassapp-github]. You can build it your own, or even modify it based on your needs.
-
+You can download [the latest release](https://github.com/KKBOX/compassapp/releases).
 
 ## Install
 
@@ -37,6 +34,5 @@ Copyright (c) 2012 KKBOX Inc.
 Licensed under GPL v2.
 
 [compassapp]: http://compass.kkbox.com/
-[compassapp-github]: http://github.com/kkbox/compassapp
 [sass]: http://sass-lang.com/
 [compass]: http://compass-style.org/
