@@ -40,24 +40,34 @@ public class Main {
       System.err.println("Error loading run configuration file '" + runConfigFile + "', using defaults: " + npe );
     }
 
+    String trailingPathSlash = "";
+
     for(String line : config_data) {
 
       String[] parts = line.split(":");
+       
+    if("load_path_slash".equals(parts[0].replaceAll(" ", ""))) {
+        trailingPathSlash = parts[1].replaceAll(" ", "");
+      }
       if("main_ruby_file".equals(parts[0].replaceAll(" ", ""))) {
         mainRubyFile = parts[1].replaceAll(" ", "");
       }
 
       if("source_dirs".equals(parts[0].replaceAll(" ", ""))) {
         String[] source_dirs = parts[1].split(";");
-
+        
         for(String s : parts[1].split(";") ){
           String d = s.replaceAll(" ", "");
-          runtime.evalScriptlet( "$: << '"+d+"/'" );
+         // System.err.println("Add '" +  d + trailingPathSlash + "' to $:"); // JGBDEBUG
+          runtime.evalScriptlet( "$: << '" + d + "'" );
+          //runtime.evalScriptlet( "$: << '" + d + trailingPathSlash + "'" );
+          runtime.evalScriptlet( "$: << 'file://" + (new Path()).getJarPath() + "!/" +  d + "'" );
         }
       }
     }
 
     runtime.evalScriptlet("require '" + mainRubyFile + "'");
+    JavaEmbedUtils.terminate(runtime);
   }
 
   public static URL getResource(String path) {

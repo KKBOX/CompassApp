@@ -27,7 +27,7 @@ module Main
     require 'uri'
     require 'cgi'
     main_file_path = CGI.unescape(URI.parse(URI.escape(__FILE__)).path)
-    resources_dir = File.join(File.dirname( File.dirname(File.dirname( main_file_path ))), 'Resources')
+    resources_dir = File.join(File.dirname(File.dirname(File.dirname(File.dirname( main_file_path )))), 'Resources')
     if File.exists?( File.join(resources_dir, 'lib','ruby'))
           @lib_path = File.join(resources_dir, 'lib')
     else

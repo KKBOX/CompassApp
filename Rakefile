@@ -50,7 +50,7 @@ INFO_ENDL
       %x{cp lib/java-appbundler/JavaAppLauncher #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/MacOS }
       %x{mv #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/Java #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Java  }
 
-      %x{chmod 644 #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Resources/Java/compass-app.jar}
+      %x{chmod 644 #{CONFIG.osx_output_dir}/#{CONFIG.project_name}.app/Contents/Java/compass-app.jar}
       Dir.chdir CONFIG.osx_output_dir
       %x{mv #{CONFIG.project_name}.app compass.app;}
       @osx_bundle_file="compass.app.osx.#{@compile_time}-#{@revision}.zip"
