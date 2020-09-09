@@ -21,7 +21,7 @@ GEM
     rspec-expectations (2.12.1)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.12.2)
-    rubyzip (1.1.6)
+    rubyzip (2.3.0)
     s4t-utils (1.0.4)
       hoe (>= 1.3.0)
     user-choices (1.1.6.1)
